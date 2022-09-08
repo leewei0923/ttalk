@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* arco的元素配置 */
+
+.arco-icon {
+  font-size: 32;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1;
+}

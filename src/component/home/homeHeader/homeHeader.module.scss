@@ -1,0 +1,77 @@
+@import '/src/styles/color.scss';
+
+.container {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  background-color: $gray-1;
+  justify-content: space-around;
+
+  // 标题
+  .title_box {
+    margin: auto 0px;
+  }
+
+  // 选项
+  .option_box {
+    display: flex;
+    margin: auto 0;
+    column-gap: 20px;
+  }
+
+  //
+  .person_box {
+    display: flex;
+    position: relative;
+    right: 0;
+    column-gap: 40px;
+  }
+}
+
+.title_box {
+  .title_text {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 15px;
+  }
+}
+
+.option_box {
+  .option_item {
+    margin: 0 30px;
+    font-size: 20px;
+  }
+}
+
+// 头像
+.person_box {
+  .product_rect {
+    margin: auto 0;
+    width: 50px;
+    height: 50px;
+  }
+
+  .personal_card_box {
+    display: flex;
+    margin: auto 0;
+    column-gap: 10px;
+
+    .avatar_img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    .nickname {
+      margin: auto 0;
+    }
+  }
+
+  .tryBtn {
+    width: 140px;
+    background-color: #d3b7d8;
+    border: none;
+    color: white;
+    font-size: 18px; 
+  }
+}
