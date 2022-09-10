@@ -1,0 +1,78 @@
+.container {
+  position: relative;
+  top: 50%;
+  width: 320px;
+  height: 500px;
+  background-color: #d3b7d8;
+  transform: translate(20px, -50%);
+  border-radius: 20px;
+  font-size: 1.2rem;
+  transition: 0.6s;
+
+  h2 {
+    color: white;
+    letter-spacing: 4px;
+    margin: 120px 0 25px 0;
+    text-align: center;
+  }
+
+  .login_account,
+  .login_password {
+    margin-top: 15px;
+    width: 247px;
+    height: 42px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid white;
+    padding-bottom: 3px;
+    font-size: 0.8em;
+    text-align: start;
+    position: relative;
+    left: 50%;
+    text-indent: 10px;
+    transform: translate(-50%, 0);
+
+    &:focus {
+      color: #a262ad;
+      outline: none;
+      border-bottom: 1px solid #a262ad80;
+    }
+
+    &:focus::placeholder {
+      opacity: 0;
+    }
+
+    &::placeholder {
+      color: white;
+    }
+  }
+
+  .login_btn {
+    display: block;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    margin: 40px 0 20px 0;
+    width: 165px;
+    height: 42px;
+    border-radius: 20px;
+    border: none;
+    color: #d3b7d8;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.6s;
+
+    &:active {
+      border: 2px solid white;
+      color: white;
+      background-color: #d3b7d8;
+      transition: 0.6s;
+    }
+  }
+}
+
+.switch_register_left {
+    transition: 0.6s;
+  transform: translate(calc(100% - 20px), -50%);
+}

@@ -4,10 +4,10 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'prettier',
     'plugin:react/recommended',
     'standard-with-typescript',
-    'plugin:@typescript-eslint/eslint-recommended'
+    'plugin:@typescript-eslint/eslint-recommended',
+    'prettier'
   ],
   overrides: [],
   parserOptions: {
@@ -22,6 +22,7 @@ module.exports = {
     semi: ['off', 'always'],
     '@typescript-eslint/semi': ['off', 'always'],
     'space-before-function-paren': [0, 'always'],
-    '@typescript-eslint/space-before-function-paren': [0, 'alway']
+    '@typescript-eslint/space-before-function-paren': [0, 'alway'],
+    'multiline-ternary': [0, 'always']
   }
 };
