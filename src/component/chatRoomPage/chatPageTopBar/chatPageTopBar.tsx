@@ -6,7 +6,6 @@ export function ChatPageTopBar(): JSX.Element {
   return (
     <div className={styles.container}>
 
-
       {/* 搜索框 */}
       <div className={styles.search_box}>
         <div className={styles.search_input_box}>

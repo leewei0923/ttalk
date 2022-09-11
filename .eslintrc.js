@@ -18,7 +18,7 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    indent: ['error', 2],
+    indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['off', 'always'],
     '@typescript-eslint/semi': ['off', 'always'],
     'space-before-function-paren': [0, 'always'],

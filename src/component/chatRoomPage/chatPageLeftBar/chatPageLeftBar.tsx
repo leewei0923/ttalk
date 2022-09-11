@@ -1,20 +1,12 @@
-import {
-  IconCommon,
-  IconMessage,
-  IconStar,
-  IconUser,
-  IconUserGroup
-} from '@arco-design/web-react/icon';
-import React from 'react';
-import classnames from 'classnames';
+import React, { useState } from 'react';
+import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
 
 export function ChatPageLeftBar(): JSX.Element {
-  const defaultClassNames = {
-    left_nav_btn_box: classnames({
-      [styles.left_nav_btn_box]: true,
-      [styles.isSlected]: true
-    })
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const onSwitchTab = function (index: number): void {
+    setCurrentTab(index);
   };
 
   return (
@@ -29,12 +21,28 @@ export function ChatPageLeftBar(): JSX.Element {
       </div>
 
       <div className={styles.options_container}>
-        <section className={defaultClassNames.left_nav_btn_box}>
+        {leftTabOptions.map((item, index) => {
+          return (
+            <section
+              className={`${styles.left_nav_btn_box} ${
+                index === currentTab ? styles.isSlected : ''
+              }`}
+              key={item.name}
+              onClick={() => onSwitchTab(index)}
+            >
+              {/* <IconMessage style={{ width: '30px', strokeWidth: 3 }} /> */}
+              {item.icon}
+              <p>{item.name}</p>
+            </section>
+          );
+        })}
+
+        {/* <section className={defaultClassNames.left_nav_btn_box}>
           <IconMessage style={{ width: '30px', strokeWidth: 3 }} />
           <p>消息</p>
-        </section>
+        </section> */}
 
-        <section className={styles.left_nav_btn_box}>
+        {/* <section className={styles.left_nav_btn_box}>
           <IconUserGroup style={{ width: '30px', strokeWidth: 3 }} />
           <p>通讯录</p>
         </section>
@@ -55,7 +63,7 @@ export function ChatPageLeftBar(): JSX.Element {
         <section className={styles.left_nav_btn_box}>
           <IconStar style={{ width: '30px', strokeWidth: 3 }} />
           <p>收藏</p>
-        </section>
+        </section> */}
       </div>
     </div>
   );
