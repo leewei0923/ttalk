@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [currentTab, setCurrentTab] = useState(0);
+  const navigateTo = useNavigate();
 
-  const onSwitchTab = function (index: number): void {
+  const onSwitchTab = function (index: number, path: string): void {
     setCurrentTab(index);
+    navigateTo(path);
   };
 
   return (
@@ -28,7 +31,7 @@ export function ChatPageLeftBar(): JSX.Element {
                 index === currentTab ? styles.isSlected : ''
               }`}
               key={item.name}
-              onClick={() => onSwitchTab(index)}
+              onClick={() => onSwitchTab(index, item.path)}
             >
               {/* <IconMessage style={{ width: '30px', strokeWidth: 3 }} /> */}
               {item.icon}
@@ -36,34 +39,6 @@ export function ChatPageLeftBar(): JSX.Element {
             </section>
           );
         })}
-
-        {/* <section className={defaultClassNames.left_nav_btn_box}>
-          <IconMessage style={{ width: '30px', strokeWidth: 3 }} />
-          <p>消息</p>
-        </section> */}
-
-        {/* <section className={styles.left_nav_btn_box}>
-          <IconUserGroup style={{ width: '30px', strokeWidth: 3 }} />
-          <p>通讯录</p>
-        </section>
-
-        <section className={styles.left_nav_btn_box}>
-          <IconCommon
-            className="arco-icon"
-            style={{ width: '30px', strokeWidth: 3 }}
-          />
-          <p>应用</p>
-        </section>
-
-        <section className={styles.left_nav_btn_box}>
-          <IconUser style={{ width: '30px', strokeWidth: 3 }} />
-          <p>我的</p>
-        </section>
-
-        <section className={styles.left_nav_btn_box}>
-          <IconStar style={{ width: '30px', strokeWidth: 3 }} />
-          <p>收藏</p>
-        </section> */}
       </div>
     </div>
   );

@@ -11,26 +11,26 @@ export const leftTabOptions = [
   {
     name: '消息',
     icon: <IconMessage style={{ width: '30px', strokeWidth: 3 }} />,
-    route: ''
+    path: 'message'
   },
   {
     name: '通讯录',
     icon: <IconUserGroup style={{ width: '30px', strokeWidth: 3 }} />,
-    route: ''
+    path: 'addressBook'
   },
   {
     name: '应用',
     icon: <IconCommon style={{ width: '30px', strokeWidth: 3 }} />,
-    route: ''
+    path: 'app'
   },
   {
     name: '我的',
     icon: <IconUser style={{ width: '30px', strokeWidth: 3 }} />,
-    route: ''
+    path: 'mine'
   },
   {
     name: '收藏',
     icon: <IconStar style={{ width: '30px', strokeWidth: 3 }} />,
-    route: ''
+    path: 'collect'
   }
 ];
