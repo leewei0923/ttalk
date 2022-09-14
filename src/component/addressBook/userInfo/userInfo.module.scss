@@ -1,5 +1,145 @@
 .container {
-    width: calc(100% - 315px);
-    height: 100%;
-    background-color: rgba(189, 193, 209,0.1);
+  width: calc(100% - 315px);
+  height: 100%;
+  background-color: rgba(189, 193, 209, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 20px;
+
+
+  .user_info_container {
+    display: flex;
+    column-gap: 50px;
+
+
+    .ser_info_talk {
+      width: 258px;
+      height: 253px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .hometown_photo_container {
+    display: flex;
+    column-gap: 35px;
+  }
+}
+
+.user_info_card {
+  display: flex;
+  width: 434px;
+  height: 253px;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  background-color: white;
+
+  .avatar_nickname_box {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 0 25px 25px;
+    width: 50%;
+    align-items: center;
+
+    .nickname {
+      font-size: 1.2rem;
+      margin: 20px 0;
+      font-weight: 600;
+      letter-spacing: 3px;
+      white-space: noWrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 150px;
+      text-align: center;
+    }
+
+    .avatar_img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+
+    .send_btn {
+      width: 127px;
+      height: 37px;
+      background-color: #568bfc;
+      border-radius: 20px;
+      border: none;
+      color: white;
+    }
+  }
+
+  .account_birthday_year {
+    margin: 25px 25px 25px 0;
+    width: 50%;
+    font-weight: 600;
+    letter-spacing: 2px;
+
+    .info_list_box {
+      display: flex;
+      height: 45px;
+
+      .info_list_title {
+        display: inline-block;
+        white-space: noWrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 130px;
+        text-align: start;
+        font-size: 0.8rem;
+        line-height: 25px;
+      }
+    }
+
+    .social_icon_container {
+      display: flex;
+      column-gap: 20px;
+    }
+  }
+}
+
+.ser_info_talk {
+  .ser_info_talk_title {
+    margin: 25px 0 0 25px;
+    font-size: 1rem;
+    height: 25px;
+    font-weight: 500;
+  }
+
+  .ser_info_talk_text {
+    margin: 0 25px;
+    height: 122px;
+  }
+
+  .user_account_text {
+    text-align: center;
+    margin-top: 30px;
+    letter-spacing: 2px;
+    font-weight: 600;
+  }
+}
+
+
+// 展示IP所地址图片
+.hometown {
+  width: 408px;
+  height: 230px;
+  background-color: aquamarine;
+  border-radius: 20px;
+
+  .hometown_img {
+    width: inherit;
+    height: inherit;
+    border-radius: 20px;
+  }
+}
+
+// 展示用户个人的图片
+.photo_box {
+  width: 303px;
+  height: 230px;
+  border-radius: 20px;
 }

@@ -1,0 +1,56 @@
+.container {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-tart;
+  align-items: center;
+  position: relative;
+  column-gap: 10px;
+
+  &:hover {
+    background-color: rgba(255,255,255, 0.4);
+  }
+
+  .name {
+    white-space: noWrap;
+    max-width: 180px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .avatar_img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 20px;
+  }
+
+  .status_box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 20px;
+    column-gap: 5px;
+
+    .sign_circel {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #28c76f;
+    }
+
+    .sign_text {
+      color: #28c76f;
+    }
+
+    .offline {
+      color: rgba(78, 89, 105, 0.5);
+    }
+
+    .offline_span {
+      background-color: rgba(78, 89, 105, 0.5);
+    }
+  }
+}

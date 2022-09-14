@@ -5,6 +5,8 @@ import { ChatPageMain } from '@src/component/chatRoomPage/chatPageMain/chatPageM
 import styles from './chatPageFragment.module.scss';
 import { Route, Routes } from 'react-router-dom';
 import AddressBook from '../addressBook/addressBook';
+import Application from '../application/application';
+import Mine from './mine/mine';
 
 function ChatPageFragment(): JSX.Element {
   return (
@@ -16,6 +18,8 @@ function ChatPageFragment(): JSX.Element {
         <Routes>
           <Route path="message" element={<ChatPageMain />} />
           <Route path="addressBook" element={<AddressBook />} />
+          <Route path="app" element={<Application />} />
+          <Route path="mine" element={<Mine />} />
         </Routes>
       </div>
     </div>

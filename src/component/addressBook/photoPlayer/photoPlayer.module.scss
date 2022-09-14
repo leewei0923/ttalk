@@ -1,0 +1,60 @@
+.container {
+  width: inherit;
+  height: inherit;
+  position: relative;
+
+  .photo_main {
+    width: inherit;
+    height: inherit;
+    border-radius: 20px;
+    overflow: hidden;
+
+    .photo_img {
+      width: 303px;
+      height: inherit;
+      object-fit: cover;
+      object-position: 50% 50%;
+      z-index: 20;
+      border-radius: 20px;
+      visibility: hidden;
+      position: absolute;
+      top: 0;
+      
+    }
+
+    .img_selected {
+      visibility: visible;
+    }
+  }
+}
+
+.circel_container {
+  width: 130px;
+  height: 15px;
+  background-color: rgba(63, 63, 63, 0.3);
+  position: absolute;
+  bottom: 0;
+  z-index: 20;
+  left: 50%;
+  transform: translate(-50%, 0);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .circel {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    margin: 0 10px;
+    cursor: pointer;
+  }
+
+  .dot_selected {
+    background-color: #8ac6d1;
+  }
+}
+
+
