@@ -7,6 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 import AddressBook from '../addressBook/addressBook';
 import Application from '../application/application';
 import Mine from './mine/mine';
+import Collect from '../collect/collect';
 
 function ChatPageFragment(): JSX.Element {
   return (
@@ -20,6 +21,7 @@ function ChatPageFragment(): JSX.Element {
           <Route path="addressBook" element={<AddressBook />} />
           <Route path="app" element={<Application />} />
           <Route path="mine" element={<Mine />} />
+          <Route path="collect" element={<Collect />} />
         </Routes>
       </div>
     </div>

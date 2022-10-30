@@ -1,22 +1,31 @@
 import { IconArrowLeft } from '@arco-design/web-react/icon';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import paper_plane from '@pic/pic/paper_plane.png';
 import { LoginLeftContainer } from './loginLeftContainer/loginLeftContainer';
 import styles from './loginBox.module.scss';
 import classnames from 'classnames';
 import { RegisterLeftContainer } from './registerLeftContainer/registerLeftContainer';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function LoginBox(): JSX.Element {
+  /**
+   * 公共区域
+   */
+  const { nav } = useParams();
+  const navigate = useNavigate();
+
   /**
    * 点击注册的事件
    */
   const [registerFlag, setRegisterFlag] = useState(false);
   const onSwitchRegisterPage = function (): void {
     setRegisterFlag(true);
+    navigate("/login/up")
   };
 
   const onSwitchLoginPage = function (): void {
     setRegisterFlag(false);
+    navigate("/login/in")
   };
   /**
    * 合并class名称
@@ -33,10 +42,18 @@ export function LoginBox(): JSX.Element {
     })
   };
 
+  useEffect(() => {
+    if (nav === 'in') {
+      onSwitchLoginPage();
+    } else {
+      onSwitchRegisterPage();
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <section className={styles.back_btn_box}>
-        <IconArrowLeft  />
+        <IconArrowLeft />
       </section>
 
       <section className={styles.login_container}>

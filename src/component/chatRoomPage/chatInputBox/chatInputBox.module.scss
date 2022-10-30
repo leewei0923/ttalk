@@ -38,3 +38,19 @@
     }
   }
 }
+
+.send_btn,
+.emoji {
+  &:hover {
+    color: black;
+    cursor: pointer;
+    stroke-width: 2px;
+    scale: 1.2;
+  }
+}
+
+.emojiPicker {
+  position: absolute;
+  top: -217px;
+  right: 100px;
+}

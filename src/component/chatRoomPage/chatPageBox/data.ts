@@ -60,5 +60,47 @@ export const chatData = [
         ]
       }
     ]
+  },
+  {
+    id: '2',
+    date: '2022-09-12',
+    children: [
+      {
+        id: '1',
+        openid: 'weiwei',
+        nickname: '伟伟酱',
+        time: '2022-09-12 16:04',
+        avatar_url:
+          'https://p3-passport.byteimg.com/img/user-avatar/002843adf8bd09f43aa84011b4a93238~100x100.awebp',
+        content: [
+          {
+            type: 'text',
+            value: '貌似成功?'
+          },
+          {
+            type: 'text',
+            value: '对吧?'
+          }
+        ]
+      },
+      {
+        id: '2',
+        openid: 'cun',
+        nickname: '小存',
+        time: '2022-09-12 16:04',
+        avatar_url:
+          'https://p3-passport.byteimg.com/img/user-avatar/002843adf8bd09f43aa84011b4a93238~100x100.awebp',
+        content: [
+          {
+            type: 'text',
+            value: '测试?'
+          },
+          {
+            type: 'text',
+            value: '对吧?'
+          }
+        ]
+      }
+    ]
   }
 ];

@@ -32,6 +32,14 @@
     text-indent: 10px;
     transform: translate(-50%, 0);
 
+    
+
+    &:invalid {
+      color: #a262ad;
+      outline: none;
+      border-bottom: 1px solid red;
+    }
+
     &:focus {
       color: #a262ad;
       outline: none;

@@ -24,6 +24,7 @@ export function ChatPageBox(): JSX.Element {
           </div>
         );
       })}
+      <div style={{display:'block', width: '100%', height:'80px', }}></div>
     </div>
   );
 }

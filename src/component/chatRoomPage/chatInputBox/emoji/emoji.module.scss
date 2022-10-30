@@ -1,0 +1,29 @@
+.container {
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f1f3f3;
+  .wrap {
+    width: 180px;
+    font-size: 1.5rem;
+    display: grid;
+    justify-items: center;
+    row-gap: 2px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  span {
+    cursor: pointer;
+
+    &:hover {
+      background-color:aqua;
+      scale: 1.1;
+    }
+  }
+  &:hover {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+  }
+}

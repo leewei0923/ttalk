@@ -7,7 +7,7 @@
 /* arco的元素配置 */
 
 .arco-icon {
-  font-size: 32;
+  font-size: 32px;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1;
@@ -16,8 +16,8 @@
 /* 滚动条 */
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 3px;
+  height: 3px;
 }
 *::-webkit-scrollbar-track {
   border-radius: 3px;

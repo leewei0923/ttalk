@@ -1,6 +1,22 @@
 @import '../../styles/color.scss';
 
 .container {
-    background: linear-gradient(200deg, #f3e7e9, #e3eeff);
+  background: linear-gradient(200deg, #f3e7e9, #e3eeff);
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .pc_container {
+    display: none;
     height: 100vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile_container {
+    display: none;
+  }
+  .pc_container {
+    height: 100vh;
+  }
 }
