@@ -8,34 +8,62 @@ import React, { useRef, useState } from 'react';
 import face from '@pic/icon/face.svg';
 import styles from './chatInputBox.module.scss';
 import Emoji from './emoji/emoji';
+import { getCursorPosition, insertText } from '@src/util/cursorPosition';
 
-export function ChatInputBox(): JSX.Element {
+interface ChatInputBoxProps {
+  expandSwitch: () => void;
+  onSubmit: (content: string) => void;
+}
+
+export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
   /**
    * 公共区域
    */
 
   // ======================
   const editorRef = useRef<HTMLPreElement>(null);
+  const { expandSwitch, onSubmit } = props;
 
   /**
    * 发送按钮
    */
   const onSendBtn = (): void => {
     const htmlNodes = editorRef.current?.innerHTML;
-    console.log(htmlNodes);
+    if (typeof onSubmit !== 'function') return;
+    onSubmit(htmlNodes ?? '');
   };
 
   /**
    * 拿到emoji
    */
-  const [emojiFlag, setEmojiFlag] = useState(false);
-  const onGetEmoji = (emoji: string): void => {
-    console.log(emoji);
+  const cursorPosition = useRef(0);
+
+  const onInput = (): void => {
+    const editorNode = document.querySelector('.' + styles.editor);
+    const position = getCursorPosition(editorNode);
+
+    cursorPosition.current = position;
   };
 
-  const onInput = (e: any):void => {
-    console.log(e);
-  }
+  const [emojiFlag, setEmojiFlag] = useState(false);
+  const onGetEmoji = (emoji: string): void => {
+    const editorNode = document.querySelector('.' + styles.editor);
+
+    insertText(editorNode, emoji, cursorPosition.current);
+    const position = getCursorPosition(editorNode);
+    cursorPosition.current = position;
+  };
+
+  const onEnterDown = (e: React.KeyboardEvent<HTMLPreElement>): boolean => {
+    if (e.shiftKey && e.code === 'Enter') {
+      console.log(2);
+    } else if (e.code === 'Enter') {
+      console.log('发送');
+      onSendBtn();
+    }
+
+    return true;
+  };
 
   return (
     <div className={styles.container}>
@@ -51,23 +79,22 @@ export function ChatInputBox(): JSX.Element {
           className={styles.editor}
           suppressContentEditableWarning={true}
           contentEditable
-          onInput={onInput}
+          onInput={() => onInput()}
           ref={editorRef}
-        >
-          <p>你好</p>
-          <p>
-            <br />
-          </p>
-        </pre>
+          onKeyDown={onEnterDown}
+        ></pre>
 
         <div className={styles.chat_editer_wrap}>
-          <div className={styles.emoji} onClick={() => setEmojiFlag(!emojiFlag)}>
+          <div
+            className={styles.emoji}
+            onClick={() => setEmojiFlag(!emojiFlag)}
+          >
             <img src={face} style={{ width: '20px', strokeWidth: 2 }} />
           </div>
           <div className={styles.iconUp_circle}>
             <IconUpCircle style={{ width: '20px', strokeWidth: 2 }} />
           </div>
-          <div className={styles.expand}>
+          <div className={styles.expand} onClick={expandSwitch}>
             <IconExpand style={{ width: '20px', strokeWidth: 2 }} />
           </div>
           <div className={styles.send_btn} onClick={() => onSendBtn()}>

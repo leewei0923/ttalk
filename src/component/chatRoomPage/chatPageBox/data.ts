@@ -24,6 +24,10 @@ export const chatData = [
           {
             type: 'text',
             value: '这个测试还行吧'
+          },
+          {
+            type: 'text',
+            value: ''
           }
         ]
       },
@@ -38,6 +42,13 @@ export const chatData = [
           {
             type: 'text',
             value: '发个消息试试'
+          },
+          {
+            type: 'text',
+            value: '\n'
+          },{
+            type: 'text',
+            value: '哈哈'
           }
         ]
       },
