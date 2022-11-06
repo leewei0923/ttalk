@@ -1,0 +1,20 @@
+.add_user_container {
+  position: fixed;
+  right: 120px;
+  top: 50px;
+  width: 250px;
+  height: 400px;
+  background-color: #8ecdf8;
+  z-index: 110;
+  border-radius: 10px;
+  box-shadow: 2px 2px 3px rgba(0,0,0,.08);
+  color: white;
+
+  .title {
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 10px 0;
+    border-bottom: 1px solid #e6e6e6;
+  }
+}

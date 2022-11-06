@@ -5,6 +5,11 @@
     align-items: center;
     position: relative;
 
+    &:hover {
+        background-color: white;
+        cursor: pointer;
+    }
+
     .avatar_box {
         margin: 0 10px;
     }
@@ -26,12 +31,23 @@
         }
     }
 
-    .time {
+    .tag {
         font-size: 0.7em;
         position: absolute;
         top: 20px;
         right: 10px;
         color: rgba(78, 89, 105,0.6);
+
+        .message_count {
+            background-color: #FF6539;
+            text-align: center;
+            color: white;
+            border-radius: 50%;
+            height: 15px;
+            width: 15px;
+            font-size: 0.6rem;
+            margin: auto;
+        }
     }
 }
 

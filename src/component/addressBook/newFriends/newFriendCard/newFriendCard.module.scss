@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  width: 80%;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+  column-gap: 20px;
+  border-bottom: 1px solid #e6e6e6;
+  position: relative;
+
+  .avatar_box {
+    .avatar {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  .name_box {
+    .nickname {
+      font-size: 0.8rem;
+
+    }
+    .message {
+      font-size: 0.6rem;
+      color: #8a919f;
+    }
+  }
+
+  .options {
+    position: absolute;
+    right: 0;
+
+    .time {
+      display: block;
+      font-size: 0.5rem;
+      color: #8a919f;
+    }
+    .accept_btn {
+      border: 1px solid #38cf5e;
+      color: #38cf5e;
+      padding: 2px 5px;
+     float: right;
+      background-color: white;
+      border-radius: 5px;
+
+      cursor: pointer;
+
+      &:active {
+        border: 1px solid #299444;
+        color: #299444;
+      }
+    }
+
+    .accept_text {
+        float: right;
+        color: #8a919f;
+    }
+  }
+}

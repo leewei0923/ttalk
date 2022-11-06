@@ -1,6 +1,6 @@
 // index.ts
 import axios from 'axios';
-import { Message } from '@arco-design/web-react';
+import Storage from '../util/localStorage';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 interface Result<T> {
@@ -8,6 +8,8 @@ interface Result<T> {
   message: string;
   result: T;
 }
+
+const localStorage = new Storage();
 
 // 导出Request类，可以用来自定义传递配置来创建实例
 export class Request {
@@ -23,7 +25,7 @@ export class Request {
     this.instance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         // 一般会请求拦截里面加token，用于后端的验证
-        const token = localStorage.getItem('token') as string;
+        const token = localStorage.getStorage('chat-user-token', true);
         if (typeof token === 'string' && token.length > 0) {
           config.headers = { token };
         }
@@ -92,7 +94,7 @@ export class Request {
         //   type: "error",
         // });
         // 这里是AxiosError类型，所以一般我们只reject我们需要的响应即可
-        Message.info(message);
+        console.log(message);
         return await Promise.reject(err.response);
       }
     );

@@ -5,6 +5,27 @@
     background-color: rgba(232, 232, 235,0.8);
     position: relative;
 
+    .add_user_box {
+        // height: 30px;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        column-gap: 10px;
+        background-color: #92bffb;
+        color: white;
+        cursor: pointer;
+
+        &:active {
+            background-color: #6282ac;
+        }
+        
+
+        span {
+            font-size: 0.8rem;
+        }
+    }
+
 
     .address_title {
         text-align: center;
