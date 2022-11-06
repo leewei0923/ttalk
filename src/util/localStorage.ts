@@ -13,7 +13,7 @@ class Storage {
   }
 
   getStorage(key: string, isbase64 = false): string {
-    const k = isbase64 ? this.base64.decode(key) : key;
+    const k = isbase64 ? this.base64.encode(key) : key;
     const value = isbase64
       ? this.base64.decode(this.localStorage.getItem(k) ?? '')
       : this.localStorage.getItem(k);
