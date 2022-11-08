@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import React, { useRef, useState } from 'react';
 import { AddUser } from './addUser/addUser';
 import styles from './chatPage.module.scss';
+import { UserCard } from './userCard/userCard';
 
 export function ChatPageTopBar(): JSX.Element {
   const [addBoxFlag, setAddBoxFlag] = useState(false);
@@ -18,23 +19,36 @@ export function ChatPageTopBar(): JSX.Element {
   /**
    * 搜索用户
    */
+  interface searchRes {
+    account: string;
+    motto: string;
+    nickname: string;
+    avatar: string;
+  }
   const searchRef = useRef<HTMLInputElement>(null);
-  // const [searchUser, setSearchUser] = useState({});
+  const [searchUser, setSearchUser] = useState<searchRes | 'null'>();
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSearchUser = async () => {
     const searchVal = searchRef.current?.value;
-    const searchRes: any = await apiSearchUser({ account: searchVal ?? '' });
-    if (searchRes.data.data.code === 200) {
-      // const {} = searchRes.data.data.info[0];
+    const searchRes = await apiSearchUser({ account: searchVal ?? '' });
+    if (searchRes.code === 200) {
+      if (typeof searchRes.user === 'object') {
+        setSearchUser(searchRes.user[0]);
+      } else {
+        setSearchUser('null');
+      }
     }
-
-    console.log(searchRes);
   };
-
   // ================
 
   // 点击添加
   const [showApplyHide, setShowApplyHide] = useState(true);
+
+  const onAddUser = (): void => {
+    setShowApplyHide(false);
+  };
+
+  const onSendMessage = (): void => {};
 
   /**
    * 获取申请信息
@@ -65,11 +79,20 @@ export function ChatPageTopBar(): JSX.Element {
           </button>
         </div>
 
-        <div className={styles.add_concat_box}>
-          <img src="" />
-          <p>这个名字有点怪</p>
-          <button onClick={() => setShowApplyHide(false)}>添加</button>
-        </div>
+        {searchUser === 'null' ? (
+          <div>无效的用户名</div>
+        ) : (
+          <UserCard
+            motto={searchUser?.motto}
+            nickname={searchUser?.nickname}
+            avatar={searchUser?.avatar}
+            account={searchUser?.account}
+            onAddUser={onAddUser}
+            onSendMessage={onSendMessage}
+            hide={searchUser === undefined}
+            buttonState="new"
+          />
+        )}
       </div>
 
       <AddUser hide={showApplyHide} onSubmit={onSubmitApply} />

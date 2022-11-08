@@ -1,46 +1,46 @@
-# Getting Started with Create React App
+任务列表:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**基础功能：（60分）**
 
-## Available Scripts
+- [x] 用户可以通过Web端注册/登录；
 
-In the project directory, you can run:
+- [ ] 用户可以设置昵称/头像/签名；
 
-### `npm start`
+- [ ] 用户可以通过用户ID添加好友；
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [ ] 用户可以快速检索自己已经添加过的好友；
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [x] 用户可以进行文字聊天；
 
-### `npm test`
+- [x] 用户可以使用系统提供的默认表情进行聊天；
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [ ] 用户可以看到对方是否已经查看了消息；
 
-### `npm run build`
+- [ ] 用户可以看到历史聊天记录；
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**进阶功能：（40分）**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- [ ] 用户可以查看到历史聊天记录生成的词云；
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [ ] 用户希望文字颜色可以根据用户情绪变化；
 
-### `npm run eject`
+- [ ] 用户希望可以过滤掉黄暴信息，但是不希望被误伤，如：请不要屏蔽“黑夜总会过去”；
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- [ ] 用户希望可以自行上传表情包；
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [ ] 用户可以编辑文字格式，包括字体、字号、加粗、下划线、斜体、颜色等；
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- [ ] 用户希望可以删除/屏蔽联系人；
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- [ ] 用户希望可以有联系人亲密度排行；
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+## 表设计
+
+
+
+### 用户关系表
+

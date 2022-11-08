@@ -52,7 +52,7 @@ export function LoginLeftContainer(
 
     void apiLogin({ account, password: pwd, origin: 'ttalk' }).then(
       (res: any) => {
-        const { msg, status, userInfo, token } = res.data.data;
+        const { msg, status, userInfo, token } = res;
 
         if (status === 'ok') {
           Message.success(msg);

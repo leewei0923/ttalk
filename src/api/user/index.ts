@@ -1,10 +1,16 @@
-import request from '@src/request/index';
-import { host, RequestType } from '../index';
+import { request } from '@src/request/index';
+// import { RequestType } from '../index';
 
-interface searchUserType extends RequestType {
-  info: { account: string; motto: string; nickname: string };
+interface searchUserType {
+  status: 'ok' | 'fail';
+  code: number;
+  msg: string;
+  user: Array<{ account: string; motto: string; nickname: string; avatar: string }>;
 }
 
 export const apiSearchUser = async (data: {
   account: string;
-}): Promise<Object> => await request.post<searchUserType>(`${host}/ttalk/searchUser`, data);
+}): Promise<searchUserType> =>
+  await request.post<searchUserType>(`/ttalk/searchUser`, data, {
+    timeout: 15000
+  });

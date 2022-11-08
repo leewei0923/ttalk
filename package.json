@@ -28,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.5.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -67,5 +68,6 @@
     "eslint-plugin-react": "^7.31.7",
     "react-app-rewired": "^2.2.1",
     "typescript": "^4.8.2"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

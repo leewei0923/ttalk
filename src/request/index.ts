@@ -1,140 +1,129 @@
-// index.ts
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import Storage from '../util/localStorage';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Message } from '@arco-design/web-react';
+import { baseURL } from './url';
 
-interface Result<T> {
-  code: number;
-  message: string;
-  result: T;
-}
+// 基础URL，axios将会自动拼接在url前
+// process.env.NODE_ENV 判断是否为开发环境 根据不同环境使用不同的baseURL 方便调试
+
+
+
 
 const localStorage = new Storage();
+const token = localStorage.getStorage('chat-user-token', true);
 
-// 导出Request类，可以用来自定义传递配置来创建实例
-export class Request {
-  // axios 实例
-  instance: AxiosInstance;
-  // 基础配置，url和超时时间
-  baseConfig: AxiosRequestConfig = { baseURL: '/server', timeout: 60000 };
+// 默认请求超时时间
+const timeout = 30000;
 
-  constructor(config: AxiosRequestConfig) {
-    // 使用axios.create创建axios实例
-    this.instance = axios.create(Object.assign(this.baseConfig, config));
+// 创建axios实例
+const service = axios.create({
+  timeout,
+  baseURL,
+  // 如需要携带cookie 该值需设为true
+  withCredentials: true
+});
 
-    this.instance.interceptors.request.use(
-      (config: AxiosRequestConfig) => {
-        // 一般会请求拦截里面加token，用于后端的验证
-        const token = localStorage.getStorage('chat-user-token', true);
-        if (typeof token === 'string' && token.length > 0) {
-          config.headers = { token };
-        }
-
-        return config;
-      },
-      async (err: any) => {
-        // 请求错误，这里可以用全局提示框进行提示
-        return await Promise.reject(err);
-      }
-    );
-
-    this.instance.interceptors.response.use(
-      (res: AxiosResponse) => {
-        // 直接返回res，当然你也可以只返回res.data
-        // 系统如果有自定义code也可以在这里处理
-        return res;
-      },
-      async (err: any) => {
-        // 这里用来处理http常见错误，进行全局提示
-        let message = '';
-        console.info('err', err);
-        switch (err.response.status) {
-          case 400:
-            message = '请求错误(400)';
-            break;
-          case 401:
-            message = '未授权，请重新登录(401)';
-            // 这里可以做清空storage并跳转到登录页的操作
-            break;
-          case 403:
-            message = '拒绝访问(403)';
-            break;
-          case 404:
-            message = '请求出错(404)';
-            break;
-          case 408:
-            message = '请求超时(408)';
-            break;
-          case 500:
-            message = '服务器错误(500)';
-            break;
-          case 501:
-            message = '服务未实现(501)';
-            break;
-          case 502:
-            message = '网络错误(502)';
-            break;
-          case 503:
-            message = '服务不可用(503)';
-            break;
-          case 504:
-            message = '网络超时(504)';
-            break;
-          case 505:
-            message = 'HTTP版本不受支持(505)';
-            break;
-          default:
-            message = `连接出错!`;
-        }
-        // 这里错误消息可以使用全局弹框展示出来
-        // 比如element plus 可以使用 ElMessage
-        // ElMessage({
-        //   showClose: true,
-        //   message: `${message}，请检查网络或联系管理员！`,
-        //   type: "error",
-        // });
-        // 这里是AxiosError类型，所以一般我们只reject我们需要的响应即可
-        console.log(message);
-        return await Promise.reject(err.response);
-      }
-    );
+// 统一请求拦截 可配置自定义headers 例如 language、token等
+service.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
+    // 配置自定义请求头
+    config.headers = {
+      token
+    };
+    return config;
+  },
+  (error) => {
+    console.log(error);
+    void Promise.reject(error);
   }
+);
 
-  // 定义请求方法
-  public async request(config: AxiosRequestConfig): Promise<AxiosResponse> {
-    return await this.instance.request(config);
-  }
-
-  public async get<T = any>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<Result<T>>> {
-    return await this.instance.get(url, config);
-  }
-
-  public async post<T = any>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<Result<T>>> {
-    return await this.instance.post(url, data, config);
-  }
-
-  public async put<T = any>(
-    url: string,
-    data?: any,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<Result<T>>> {
-    return await this.instance.put(url, data, config);
-  }
-
-  public async delete<T = any>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<AxiosResponse<Result<T>>> {
-    return await this.instance.delete(url, config);
-  }
+// axios返回格式
+interface axiosTypes<T> {
+  data: T;
+  status: number;
+  statusText: string;
+  code: number;
+  message: string;
 }
 
-// 默认导出Request实例
-export default new Request({});
+// 后台响应数据格式
+// ###该接口用于规定后台返回的数据格式，意为必须携带code、msg以及result
+// ###而result的数据格式 由外部提供。如此即可根据不同需求，定制不同的数据格式
+interface responseTypes<T> {
+  code: number;
+  msg: string;
+  data: T;
+}
+
+// 核心处理代码 将返回一个promise 调用then将可获取响应的业务数据
+const requestHandler = async <T>(
+  method: 'get' | 'post' | 'put' | 'delete',
+  url: string,
+  params: object = {},
+  config: AxiosRequestConfig = {}
+): Promise<T> => {
+  let response: Promise<axiosTypes<responseTypes<T>>>;
+  switch (method) {
+    case 'get':
+      response = service.get(url, { params: { ...params }, ...config });
+      break;
+    case 'post':
+      response = service.post(url, { ...params }, { ...config });
+      break;
+    case 'put':
+      response = service.put(url, { ...params }, { ...config });
+      break;
+    case 'delete':
+      response = service.delete(url, { params: { ...params }, ...config });
+      break;
+  }
+
+  return await new Promise<T>((resolve, reject) => {
+    response
+      .then((res) => {
+        // 业务代码 可根据需求自行处理
+
+        const data = res.data;
+        if (data.code !== 200) {
+          // 特定状态码 处理特定的需求
+          if (data.code === 401) {
+            Message.warning('您的账号已登出或超时，即将登出...');
+          }
+
+          const e = JSON.stringify(data);
+          Message.warning(`请求错误`);
+          console.log(`请求错误：${e}`);
+          // 数据请求错误 使用reject将错误返回
+          reject(data);
+        } else {
+          // 数据请求正确 使用resolve将结果返回
+          resolve(data.data);
+        }
+      })
+      .catch((error) => {
+        const e = JSON.stringify(error);
+        Message.warning(`网络错误`);
+        console.log(`网络错误：${e}`);
+        reject(error);
+      });
+  });
+};
+
+// 使用 request 统一调用，包括封装的get、post、put、delete等方法
+const request = {
+  get: async <T>(url: string, params?: object, config?: AxiosRequestConfig) =>
+    await requestHandler<T>('get', url, params, config),
+  post: async <T>(url: string, params?: object, config?: AxiosRequestConfig) =>
+    await requestHandler<T>('post', url, params, config),
+  put: async <T>(url: string, params?: object, config?: AxiosRequestConfig) =>
+    await requestHandler<T>('put', url, params, config),
+  delete: async <T>(
+    url: string,
+    params?: object,
+    config?: AxiosRequestConfig
+  ) => await requestHandler<T>('delete', url, params, config)
+};
+
+// 导出至外层，方便统一使用
+export { request };

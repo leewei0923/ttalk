@@ -1,5 +1,5 @@
-import request from '@src/request/index';
-import { host, RequestType } from '../index';
+import { request } from '@src/request/index';
+import { RequestType } from '../index';
 
 interface ReqestOKType extends RequestType {
   start_time: number;
@@ -9,9 +9,8 @@ interface ReqestOKType extends RequestType {
   token: string;
 }
 
+export const apiRegister = async (data: Object): Promise<Object> =>
+  await request.post(`/ttalk/register`, data);
 
-export const apiRegister = async (data:Object): Promise<Object> =>
-  await request.post(`${host}/ttalk/register`, data);
-
-export const apiLogin = async (data:Object): Promise<ReqestOKType | any> =>
-  await request.post(`${host}/ttalk/login`, data);
+export const apiLogin = async (data: Object): Promise<ReqestOKType | any> =>
+  await request.post(`/ttalk/login`, data);

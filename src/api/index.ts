@@ -1,12 +1,7 @@
-const env = process.env.NODE_ENV;
-
 export interface RequestType {
-  status: 'ok' | 'fail';
   code: number;
-  msg: string;
+  extra: Object;
+  message: string;
+  status: number;
+  success: boolean;
 }
-
-export const host =
-  env === 'development'
-    ? 'http://localhost:3001/server'
-    : 'https://api.7maioyu.com/server';

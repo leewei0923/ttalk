@@ -26,11 +26,11 @@ export function ContcatSumaryCard(props: ContcatSumaryCardProps): JSX.Element {
         <p className={styles.contact_summay}>{message}</p>
       </div>
 
-      <p className={styles.tag}>
+      <div className={styles.tag}>
         <div className={styles.time}>{time}</div>
 
         <div className={styles.message_count}>4</div>
-      </p>
+      </div>
     </div>
   );
 }
