@@ -1,13 +1,29 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { IconPlus, IconSearch } from '@arco-design/web-react/icon';
-import { apiSearchUser } from '@src/api/user';
+import { apiAddFriend, apiSearchUser } from '@src/api/user';
+import { useSocket } from '@src/contexts/socket';
+import { db } from '@src/database/db';
 import classnames from 'classnames';
-import React, { useRef, useState } from 'react';
+import Storage from '@src/util/localStorage';
+import React, { useEffect, useRef, useState } from 'react';
 import { AddUser } from './addUser/addUser';
 import styles from './chatPage.module.scss';
 import { UserCard } from './userCard/userCard';
+import { userInfoType } from '@src/types';
+import { ChatNotification } from '@src/component/message/notification';
 
 export function ChatPageTopBar(): JSX.Element {
-  const [addBoxFlag, setAddBoxFlag] = useState(false);
+  /**
+   * 公共区域
+   */
+  const localStorage = new Storage();
+  const socket = useSocket();
+  const userInfo: userInfoType[] = JSON.parse(
+    localStorage.getStorage('chat-user-info')
+  );
+
+  // ==================
+  const [addBoxFlag, setAddBoxFlag] = useState(false); // 隐藏申请框
 
   const ClassNames = {
     concat_search: classnames({
@@ -27,12 +43,24 @@ export function ChatPageTopBar(): JSX.Element {
   }
   const searchRef = useRef<HTMLInputElement>(null);
   const [searchUser, setSearchUser] = useState<searchRes | 'null'>();
+  const [buttonState, setButtonState] = useState<'new' | 'friend'>('new');
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSearchUser = async () => {
     const searchVal = searchRef.current?.value;
     const searchRes = await apiSearchUser({ account: searchVal ?? '' });
+
     if (searchRes.code === 200) {
       if (typeof searchRes.user === 'object') {
+        const tables = await db.friends
+          .where({
+            friend_account: searchVal
+          })
+          .toArray();
+        if (tables.length <= 0) {
+          setButtonState('new');
+        } else {
+          setButtonState('friend');
+        }
         setSearchUser(searchRes.user[0]);
       } else {
         setSearchUser('null');
@@ -53,13 +81,51 @@ export function ChatPageTopBar(): JSX.Element {
   /**
    * 获取申请信息
    */
-  const onSubmitApply = (value: {
+  const onSubmitApply = async (value: {
     remark: string;
     verifyInformation: string;
-  }): void => {
+  }): Promise<void> => {
     setShowApplyHide(true);
-    console.log(value);
+    const userAccount = userInfo[0].account;
+    const friendAccount = searchRef.current?.value ?? '';
+
+    const res = await apiAddFriend({
+      user_account: userAccount,
+      friend_account: friendAccount,
+      friend_flag: true,
+      verifyInformation: value.verifyInformation,
+      remark: value.remark,
+      blacklist: false,
+      tags: '',
+      type: 'apply'
+    });
+
+    socket.emit('addFriend', {
+      type: 'apply',
+      user_account: userAccount,
+      friend_account: friendAccount
+    });
+    console.log(res);
   };
+
+  useEffect(() => {
+    socket.on('addFriend', function (res: any) {
+      console.log(res);
+      if (res.type === 'apply') {
+        ChatNotification({
+          control: {
+            title: '添加好友消息',
+            content: `${res.friend_account}添加你为好友`
+          }
+        });
+      }
+    });
+
+    return () => {
+      // 页面卸载后移除socket监听
+      socket.off();
+    };
+  }, [socket]);
 
   return (
     <div className={styles.container}>
@@ -90,12 +156,19 @@ export function ChatPageTopBar(): JSX.Element {
             onAddUser={onAddUser}
             onSendMessage={onSendMessage}
             hide={searchUser === undefined}
-            buttonState="new"
+            buttonState={buttonState}
           />
         )}
       </div>
 
-      <AddUser hide={showApplyHide} onSubmit={onSubmitApply} />
+      <AddUser
+        hide={showApplyHide}
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={onSubmitApply}
+        onHideMode={() => {
+          setShowApplyHide(true);
+        }}
+      />
 
       {/* 搜索框 */}
       <div className={styles.search_box}>

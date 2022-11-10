@@ -7,14 +7,15 @@ const FormItem = Form.Item;
 interface AddUserProps {
   hide?: boolean;
   onSubmit?: (value: { remark: string; verifyInformation: string }) => void;
+  onHideMode: () => void;
 }
 
 export function AddUser(props: AddUserProps): JSX.Element {
   /**
    * 公共区域
    */
-  const { hide, onSubmit } = props;
-  
+  const { hide, onSubmit, onHideMode } = props;
+
   // ===============
 
   const onSubmitBtn = (value: {
@@ -44,7 +45,7 @@ export function AddUser(props: AddUserProps): JSX.Element {
           rules={[
             {
               type: 'string',
-              minLength: 30
+              maxLength: 30
             }
           ]}
         >
@@ -63,6 +64,19 @@ export function AddUser(props: AddUserProps): JSX.Element {
             htmlType="submit"
           >
             申请
+          </Button>
+        </FormItem>
+
+        <FormItem wrapperCol={{ offset: 7 }}>
+          <Button
+            style={{ width: '100px' }}
+            shape="round"
+            type="outline"
+            onClick={() =>
+              typeof onHideMode === 'function' ? onHideMode() : ''
+            }
+          >
+            取消
           </Button>
         </FormItem>
       </Form>

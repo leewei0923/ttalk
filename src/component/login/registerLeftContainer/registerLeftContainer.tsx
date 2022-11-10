@@ -61,7 +61,7 @@ export function RegisterLeftContainer(
 
     void apiRegister({ account, password: pwd, origin: 'ttalk' }).then(
       (res: any) => {
-        const { msg, status } = res.data.data;
+        const { msg, status } = res;
 
         if (status === 'ok') {
           Message.success(msg);

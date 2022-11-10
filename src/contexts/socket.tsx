@@ -2,9 +2,25 @@
 import { createContext, useContext } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { SOCKET_URL } from '@src/request/url';
+import Storage from '@src/util/localStorage';
+import { userInfoType } from '@src/types';
+
+
+
+const localStorage = new Storage();
+const token = localStorage.getStorage('chat-user-token', true);
+const userInfo: userInfoType[] = JSON.parse(
+  localStorage.getStorage('chat-user-info')
+);
 
 export const socket = io(SOCKET_URL, {
-  transports: ['websocket']
+  transports: ['websocket'],
+  auth: {
+    token
+  },
+  query: {
+    account: userInfo[0].account
+  }
 });
 
 const SocketContext = createContext<Socket>(socket);

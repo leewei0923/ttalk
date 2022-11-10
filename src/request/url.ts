@@ -3,4 +3,4 @@ export const baseURL =
     ? 'http://localhost:3000/server/'
     : 'https://api.7miaoyu.com/server/note/';
 
-export const SOCKET_URL = 'ws://localhost:8080';
+export const SOCKET_URL = 'ws://localhost:3102';
