@@ -22,8 +22,6 @@ export function NewFriendsCard(props: NewFriendsProps): JSX.Element {
   return (
     <div className={styles.container}>
       <section className={styles.avatar_box}>
-        {avatar}
-
         {typeof avatar === 'string' && avatar !== '' ? (
           <img src={avatar} className={styles.avatar} />
         ) : (
@@ -33,12 +31,14 @@ export function NewFriendsCard(props: NewFriendsProps): JSX.Element {
             size={35}
             shape="square"
           >
-            {nickname ?? account?.charAt(0)}
+            {nickname.length > 0 ? nickname : account?.charAt(0)}
           </Avatar>
         )}
       </section>
       <section className={styles.name_box}>
-        <p className={styles.nickname}>{nickname ?? account}</p>
+        <p className={styles.nickname}>
+          {nickname.length > 0 ? nickname : account}
+        </p>
         <p className={styles.message}>{validText}</p>
       </section>
       <section className={styles.options}>

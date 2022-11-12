@@ -11,6 +11,7 @@ import styles from './chatPage.module.scss';
 import { UserCard } from './userCard/userCard';
 import { userInfoType } from '@src/types';
 import { ChatNotification } from '@src/component/message/notification';
+import { Message } from '@arco-design/web-react';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
@@ -81,15 +82,15 @@ export function ChatPageTopBar(): JSX.Element {
   /**
    * 获取申请信息
    */
-  const onSubmitApply = async (value: {
+  const onSubmitApply = (value: {
     remark: string;
     verifyInformation: string;
-  }): Promise<void> => {
+  }): void => {
     setShowApplyHide(true);
     const userAccount = userInfo[0].account;
     const friendAccount = searchRef.current?.value ?? '';
 
-    const res = await apiAddFriend({
+    apiAddFriend({
       user_account: userAccount,
       friend_account: friendAccount,
       friend_flag: true,
@@ -98,28 +99,144 @@ export function ChatPageTopBar(): JSX.Element {
       blacklist: false,
       tags: '',
       type: 'apply'
-    });
+    })
+      .then((res) => {
+        if (res.code === 200) {
+          socket.emit('addFriend', {
+            type: 'apply',
+            user_account: userAccount,
+            friend_account: friendAccount
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        Message.error('添加出错');
+      });
+  };
 
-    socket.emit('addFriend', {
-      type: 'apply',
-      user_account: userAccount,
-      friend_account: friendAccount
+  /**
+   * 处理监听事件
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const onListenAddFriend = () => {
+    socket.on('addFriend', async function (res: any) {
+      if (res.type === 'apply') {
+        const {
+          id,
+          user_account: userAccount,
+          friend_account: friendAccount,
+          add_time: addTime,
+          update_time: updateTime,
+          friend_flag: friendFlag,
+          verifyInformation,
+          remark,
+          blacklist,
+          tags,
+          ip
+        } = res.friends;
+
+        const {
+          id: userId,
+          social,
+          nickname,
+          motto,
+          account,
+          avatar,
+          bird_date: birdDate
+        } = res.user;
+
+        console.log(res);
+
+        // return;
+
+        try {
+          // 获取数据
+          // 用户的基本信息
+
+          const friendsInfoData = await db.userInfoData
+            .where({
+              account: userAccount
+            })
+            .toArray();
+
+          // 用户的请求信息
+          const friendSData = await db.userInfoData
+            .where({
+              account: userAccount
+            })
+            .toArray();
+          // 判断是否存在，存在就更新，否则添加
+          if (friendSData.length <= 0) {
+            await db.friends.add({
+              id,
+              user_account: userAccount,
+              friend_account: friendAccount,
+              add_time: addTime,
+              update_time: updateTime,
+              friend_flag: friendFlag,
+              verifyInformation,
+              remark,
+              blacklist,
+              tags,
+              ip
+            });
+          } else {
+            console.log(1);
+            await db.friends.put({
+              id,
+              user_account: userAccount,
+              friend_account: friendAccount,
+              add_time: addTime,
+              update_time: updateTime,
+              friend_flag: friendFlag,
+              verifyInformation,
+              remark,
+              blacklist,
+              tags,
+              ip
+            });
+          }
+
+          if (friendsInfoData.length <= 0) {
+            await db.userInfoData.add({
+              id: userId,
+              social: social ?? '',
+              nickname: nickname ?? '',
+              motto: motto ?? '',
+              account: account ?? '',
+              avatar: avatar ?? '',
+              bird_date: birdDate ?? ''
+            });
+          } else {
+            console.log(2);
+            await db.userInfoData.put({
+              id: userId,
+              social: social ?? '',
+              nickname: nickname ?? '',
+              motto: motto ?? '',
+              account: account ?? '',
+              avatar: avatar ?? '',
+              bird_date: birdDate ?? ''
+            });
+          }
+
+          ChatNotification({
+            control: {
+              title: '添加好友消息',
+              content: `${userAccount}添加你为好友`
+            }
+          });
+        } catch (error) {
+          console.log('error: ', error);
+        }
+      }
     });
-    console.log(res);
   };
 
   useEffect(() => {
-    socket.on('addFriend', function (res: any) {
-      console.log(res);
-      if (res.type === 'apply') {
-        ChatNotification({
-          control: {
-            title: '添加好友消息',
-            content: `${res.friend_account}添加你为好友`
-          }
-        });
-      }
-    });
+    // 监听添加好友
+    onListenAddFriend();
 
     return () => {
       // 页面卸载后移除socket监听
