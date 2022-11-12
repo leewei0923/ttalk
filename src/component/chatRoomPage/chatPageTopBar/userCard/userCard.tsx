@@ -36,12 +36,23 @@ export function UserCard(props: UserCardType): JSX.Element {
       {typeof avatar === 'string' && avatar !== '' ? (
         <img src={avatar} />
       ) : (
-        <Avatar style={{ backgroundColor: '#14a9f8' }} autoFixFontSize={false} size={35} shape='square'>
-          {nickname ?? account?.charAt(0)}
+        <Avatar
+          style={{ backgroundColor: '#14a9f8' }}
+          autoFixFontSize={false}
+          size={35}
+          shape="square"
+        >
+          {typeof nickname === 'string' && nickname.length > 0
+            ? nickname
+            : account?.charAt(0)}
         </Avatar>
       )}
 
-      <p>{nickname ?? account}</p>
+      <p>
+        {typeof nickname === 'string' && nickname.length > 0
+          ? nickname
+          : account}
+      </p>
 
       {buttonState === 'new' ? (
         <button onClick={() => onAddUser()}>添加</button>

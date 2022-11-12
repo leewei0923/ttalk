@@ -23,7 +23,6 @@ export const apiSearchUser = async (data: {
 interface AddFriendRequest {
   user_account: string;
   friend_account: string;
-  friend_flag: boolean; // 是否是朋友,申请时为false
   verifyInformation: string; // 验证信息
   remark: string;
   blacklist: boolean;

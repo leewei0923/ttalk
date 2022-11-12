@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './newFriendCard.module.scss';
 
 interface NewFriendsProps {
-  onChangePageMode?: (str: string) => void;
+  onClickAdd?: (account: string) => void;
   avatar: string;
   account: string;
   nickname: string;
@@ -16,7 +16,15 @@ export function NewFriendsCard(props: NewFriendsProps): JSX.Element {
   /**
    * 公共区域
    */
-  const { account, avatar, active, nickname, date, validText } = props;
+  const {
+    account,
+    avatar,
+    active,
+    nickname,
+    date,
+    validText,
+    onClickAdd
+  } = props;
 
   // =========================
   return (
@@ -46,7 +54,16 @@ export function NewFriendsCard(props: NewFriendsProps): JSX.Element {
         {active ? (
           <div className={styles.accept_text}>已接受</div>
         ) : (
-          <button className={styles.accept_btn}>接受</button>
+          <button
+            className={styles.accept_btn}
+            onClick={() =>
+              typeof onClickAdd === 'function'
+                ? onClickAdd(account)
+                : ''
+            }
+          >
+            接受
+          </button>
         )}
       </section>
     </div>

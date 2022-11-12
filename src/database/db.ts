@@ -1,7 +1,16 @@
 import Dexie from 'dexie';
+import Storage from '@src/util/localStorage';
+import { userInfoType } from '@src/types/index';
 
+const localStorage = new Storage();
+const userInfo: userInfoType[] = JSON.parse(
+  localStorage.getStorage('chat-user-info')
+);
+
+// 存放验证信息
 export interface chat_user_concat_entry {
-  id: string;
+  id?: string;
+  remote_id: string;
   user_account: string;
   friend_account: string;
   add_time: string;
@@ -11,11 +20,14 @@ export interface chat_user_concat_entry {
   remark: string;
   blacklist: boolean;
   tags: string;
+  type: "apply" | "accept"; // apply 用于申请列表, accept 用于联系人列表
   ip: string;
 }
 
+// 所有联系人的个人信息
 export interface chat_user_info_entry {
-  id: string;
+  id?: string;
+  remote_id: string;
   nickname: string;
   motto: string;
   account: string;
@@ -38,10 +50,11 @@ class ChatDataBase extends Dexie {
 
   constructor(DBName: string) {
     super(DBName);
+    
     this.version(1).stores({
       friends:
-        'id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
-      userInfoData: `id, nickname, motto, account, avatar, bird_date, social`
+        '++id, remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
+      userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social`
     });
 
     this.friends = this.table('friends');
@@ -49,7 +62,7 @@ class ChatDataBase extends Dexie {
   }
 }
 
-export const db = new ChatDataBase('chatDatabase');
+export const db = new ChatDataBase(`chatDatabase_${userInfo[0].account}`);
 
 // export const db = new Dexie('myDatabase');
 // db.version(1).stores({
