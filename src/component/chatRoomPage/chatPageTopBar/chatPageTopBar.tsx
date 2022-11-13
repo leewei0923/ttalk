@@ -187,7 +187,6 @@ export function ChatPageTopBar(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onListenAddFriend = () => {
     socket.on('addFriend', async function (res: any) {
-      console.log(res);
       // apply 下 user_account是对方账号, friend_account 与登录的账号相同
       if (res.type === 'apply') {
         const {

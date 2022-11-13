@@ -2,7 +2,7 @@ interface userTyep {
   sign: string;
   children: Array<{
     name: string;
-    openid: string;
+    account: string;
     avatar_url: any;
     status: 'online' | 'offline';
   }>;
@@ -14,37 +14,37 @@ export const user: userTyep[] = [
     children: [
       {
         name: '伟伟酱',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'online'
       },
       {
         name: '小存',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       },
       {
         name: '伟伟酱',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'online'
       },
       {
         name: '小里',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       },
       {
         name: 'xxx先生',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'online'
       },
       {
         name: '超级无敌长的为昵称,大约有多少个字就你好',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       }
@@ -55,31 +55,31 @@ export const user: userTyep[] = [
     children: [
       {
         name: '小黑',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'online'
       },
       {
         name: '小红',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       },
       {
         name: '小里',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       },
       {
         name: 'xxx先生',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'online'
       },
       {
         name: '超级无敌长的为昵称,大约有多少个字就你好',
-        openid: '',
+        account: '',
         avatar_url: require('@pic/pic/logo.png'),
         status: 'offline'
       }

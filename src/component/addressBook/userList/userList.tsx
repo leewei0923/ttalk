@@ -1,6 +1,14 @@
+/* eslint-disable indent */
 import { IconUserAdd } from '@arco-design/web-react/icon';
-import React from 'react';
-import { user } from './stateData';
+import { apiCheckOnline } from '@src/api/user';
+import {
+  friendsRes,
+  genUserList,
+  mergeList,
+  userListTyep
+} from '@src/util/genUserList';
+import React, { useEffect, useState } from 'react';
+// import { user } from './stateData';
 import styles from './userList.module.scss';
 import { UserListCard } from './userListCard/userListCard';
 
@@ -12,7 +20,44 @@ export function UserList(props: UserListProps): JSX.Element {
   /**
    * 公共区域
    */
-  const {onChangePageMode} = props;
+  const { onChangePageMode } = props;
+
+  // ========================
+
+  // const userData = genUserList();
+  const [concats, setConcats] = useState<userListTyep[]>();
+
+  // 获取在线状态
+  const onGetOnlineStatus = async (): Promise<
+    Array<{
+      account: string;
+      status: 'online' | 'offline';
+    }>
+  > => {
+    const accounts = await friendsRes();
+    const onlineStatus = await apiCheckOnline({
+      type: 'get',
+      to_account: accounts
+    });
+
+    if (onlineStatus.code !== 200) {
+      return [];
+    }
+
+    return onlineStatus.account_status;
+  };
+
+  useEffect(() => {
+    void onGetOnlineStatus().then((res) => {
+      genUserList((list) => {
+        setConcats(() => {
+          return mergeList(list, res);
+        });
+      });
+    });
+  }, []);
+
+  // console.log(userData);
 
   return (
     <div className={styles.container}>
@@ -34,25 +79,28 @@ export function UserList(props: UserListProps): JSX.Element {
           />
           <span>新的朋友</span>
         </div>
-        {user.map((user, i) => {
-          return (
-            <div key={`user${i}`} className={styles.user_part_box}>
-              <p className={styles.user_part_text}>{user.sign}</p>
-              <div className={styles.user_list_box}>
-                {user.children.map((u, i) => {
-                  return (
-                    <UserListCard
-                      key={`userInfo${i}`}
-                      avatarUrl={u.avatar_url}
-                      name={u.name}
-                      status={u.status}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+        {Array.isArray(concats)
+          ? concats.map((user, i) => {
+              return (
+                <div key={`user${i}`} className={styles.user_part_box}>
+                  <p className={styles.user_part_text}>{user.sign}</p>
+                  <div className={styles.user_list_box}>
+                    {user.children.map((u, i) => {
+                      return (
+                        <UserListCard
+                          account={u.account}
+                          key={`userInfo${i}`}
+                          avatarUrl={u.avatar_url}
+                          name={u.name}
+                          status={u.status}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })
+          : ''}
       </section>
     </div>
   );

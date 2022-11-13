@@ -5,3 +5,10 @@ export interface RequestType {
   status: number;
   success: boolean;
 }
+
+
+export interface CommonRes {
+  status: 'ok' | 'fail';
+  code: number;
+  msg: string;
+}

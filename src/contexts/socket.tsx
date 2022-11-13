@@ -5,8 +5,6 @@ import { SOCKET_URL } from '@src/request/url';
 import Storage from '@src/util/localStorage';
 import { userInfoType } from '@src/types';
 
-
-
 const localStorage = new Storage();
 const token = localStorage.getStorage('chat-user-token', true);
 const userInfo: userInfoType[] = JSON.parse(

@@ -20,7 +20,7 @@ export interface chat_user_concat_entry {
   remark: string;
   blacklist: boolean;
   tags: string;
-  type: "apply" | "accept"; // apply 用于申请列表, accept 用于联系人列表
+  type: 'apply' | 'accept'; // apply 用于申请列表, accept 用于联系人列表
   ip: string;
 }
 
@@ -50,10 +50,10 @@ class ChatDataBase extends Dexie {
 
   constructor(DBName: string) {
     super(DBName);
-    
+
     this.version(1).stores({
       friends:
-        '++id, remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
+        '++id,[user_account+friend_flag+blacklist], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social`
     });
 

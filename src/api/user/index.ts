@@ -1,4 +1,5 @@
 import { request } from '@src/request/index';
+import { CommonRes } from '..';
 // import { RequestType } from '../index';
 
 interface searchUserType {
@@ -40,5 +41,27 @@ export const apiAddFriend = async (
   data: AddFriendRequest
 ): Promise<AddFriendRes> =>
   await request.post<AddFriendRes>(`/ttalk/addFriend`, data, {
+    timeout: 15000
+  });
+
+/**
+ * 用于登录状态查询
+ */
+interface checkOnlineType {
+  type: 'get';
+  to_account: string[];
+}
+
+export interface checkOnlineRes extends CommonRes {
+  account_status: Array<{
+    account: string;
+    status: 'online' | 'offline';
+  }>;
+}
+
+export const apiCheckOnline = async (
+  data: checkOnlineType
+): Promise<checkOnlineRes> =>
+  await request.post<checkOnlineRes>(`/ttalk/checkOnline`, data, {
     timeout: 15000
   });
