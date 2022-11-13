@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 import { IconUserAdd } from '@arco-design/web-react/icon';
 import { apiCheckOnline } from '@src/api/user';
+import { pageStateType } from '@src/types';
 import {
   friendsRes,
   genUserList,
@@ -13,7 +14,7 @@ import styles from './userList.module.scss';
 import { UserListCard } from './userListCard/userListCard';
 
 interface UserListProps {
-  onChangePageMode: (str: string) => void;
+  onChangePageMode: (data: pageStateType) => void;
 }
 
 export function UserList(props: UserListProps): JSX.Element {
@@ -47,6 +48,8 @@ export function UserList(props: UserListProps): JSX.Element {
     return onlineStatus.account_status;
   };
 
+  // 点击人物卡片获取account
+
   useEffect(() => {
     void onGetOnlineStatus().then((res) => {
       genUserList((list) => {
@@ -67,7 +70,9 @@ export function UserList(props: UserListProps): JSX.Element {
       <section className={styles.user_container}>
         <div
           className={styles.add_user_box}
-          onClick={() => onChangePageMode('newFriends')}
+          onClick={() =>
+            onChangePageMode({ type: 'friend', content: 'newFriends' })
+          }
         >
           <IconUserAdd
             style={{
@@ -93,6 +98,12 @@ export function UserList(props: UserListProps): JSX.Element {
                           avatarUrl={u.avatar_url}
                           name={u.name}
                           status={u.status}
+                          onClick={(account: string) => {
+                            onChangePageMode({
+                              type: 'account',
+                              content: account
+                            });
+                          }}
                         />
                       );
                     })}

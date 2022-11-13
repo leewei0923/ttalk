@@ -65,3 +65,22 @@ export const apiCheckOnline = async (
   await request.post<checkOnlineRes>(`/ttalk/checkOnline`, data, {
     timeout: 15000
   });
+
+/**
+ * 更新信息
+ */
+interface UpdateUserInfoReq {
+  account: string;
+  nickname: string;
+  bird_date: string;
+  social: string;
+  motto: string;
+  avatar: string;
+}
+
+export const apiUpdateUserInfo = async (
+  data: UpdateUserInfoReq
+): Promise<CommonRes> =>
+  await request.post<CommonRes>(`/ttalk/updateInfo`, data, {
+    timeout: 15000
+  });

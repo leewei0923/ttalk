@@ -9,3 +9,11 @@ export interface userInfoType {
   add_time: string;
   ip: string;
 }
+
+
+
+// src\pages\addressBook\addressBook.tsx
+export interface pageStateType {
+  type: '' | 'friend' | 'account';
+  content: string
+}

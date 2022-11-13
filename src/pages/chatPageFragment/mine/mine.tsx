@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useRef } from 'react';
 import {
   Form,
@@ -6,7 +7,8 @@ import {
   DatePicker,
   Upload,
   Modal,
-  Avatar
+  Avatar,
+  Message
 } from '@arco-design/web-react';
 import {
   IconEdit,
@@ -18,6 +20,7 @@ import {
 } from '@arco-design/web-react/icon';
 import styles from './mine.module.scss';
 import Storage from '@src/util/localStorage';
+import { apiUpdateUserInfo } from '@src/api/user';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -29,6 +32,7 @@ interface UserInfoType {
   motto: string;
   bird_date: string;
   add_time: string;
+  nickname: string;
 }
 
 function Mine(): JSX.Element {
@@ -39,7 +43,7 @@ function Mine(): JSX.Element {
    */
 
   const localstorage = new Storage();
-  const { form } = Form.useFormContext();
+  // const { form } = Form.useFormContext();
 
   // ===============
 
@@ -59,18 +63,80 @@ function Mine(): JSX.Element {
    * @param forms
    */
   const onSubmit = (forms: any): void => {
-    console.log(forms);
-    form.submit();
+    const {
+      avatar,
+      bird_date,
+      githubAccount,
+      motto,
+      nickname,
+      qqAccount,
+      twitterAccount,
+      weChatAccount,
+      weiboAccount
+    } = forms;
+    const social = JSON.stringify({
+      social_account: {
+        github: githubAccount,
+        qq: qqAccount,
+        twitter: twitterAccount,
+        wechat: weChatAccount,
+        weibo: weiboAccount
+      }
+    });
+    apiUpdateUserInfo({
+      account: userInfoRef.current?.account ?? '',
+      avatar: avatar ?? '',
+      bird_date: bird_date ?? '',
+      motto: motto ?? '',
+      nickname: nickname ?? '',
+      social: social ?? ''
+    })
+      .then((res) => {
+        if (res.code === 200) {
+          Message.success('保存成功');
+
+          localstorage.setStorage(
+            'chat-user-info',
+            JSON.stringify([
+              {
+                account: userInfoRef.current?.account ?? '',
+                avatar: avatar ?? '',
+                bird_date: bird_date ?? '',
+                motto: motto ?? '',
+                nickname: nickname ?? '',
+                social: social ?? '',
+                add_time: userInfoRef.current?.add_time
+              }
+            ])
+          );
+        }
+      })
+      .catch((err) => {
+        Message.error('遇到了一些小问题');
+        console.log('出错了', err);
+      });
+
+    // form.submit();
   };
 
   // upload
 
-  useEffect(() => {});
+  console.log(userInfoRef.current)
+
+  useEffect(() => {}, []);
 
   return (
     <div className={styles.container}>
       <section className={styles.base_info_contaienr}>
-        <Form autoComplete="off" onSubmit={onSubmit}>
+        <Form
+          autoComplete="off"
+          onSubmit={onSubmit}
+          initialValues={{
+            nickname: userInfoRef.current?.nickname,
+            bird_date: userInfoRef.current?.bird_date,
+            motto: userInfoRef.current?.motto
+          }}
+        >
           <div className={styles.wrapper_container}>
             <section className={styles.left_container}>
               <FormItem wrapperCol={{ offset: 10 }} field="avatar">
@@ -151,7 +217,6 @@ function Mine(): JSX.Element {
               <FormItem
                 label="个性签名"
                 wrapperCol={{ span: 15 }}
-                initialValue=""
                 field="motto"
               >
                 <TextArea

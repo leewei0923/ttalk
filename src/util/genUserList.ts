@@ -122,17 +122,12 @@ export function mergeList(
   for (const x of onlineList) {
     const firstWord = x.account.charAt(0);
 
-    console.log(x);
-
     if (x.status === 'online') {
       for (let i = 0; i < newUserList.length; ++i) {
-        console.log(newUserList[i].sign, firstWord);
         if (newUserList[i].sign === firstWord) {
-          console.log(1);
           for (let j = 0; j < newUserList[i].children.length; ++j) {
             if (newUserList[i].children[j].account === x.account) {
               newUserList[i].children[j].status = 'online';
-              console.log(newUserList[i].children[j].status);
               break;
             }
           }

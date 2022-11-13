@@ -6,14 +6,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './newFriend.module.scss';
 import { NewFriendsCard } from './newFriendCard/newFriendCard';
 import Storage from '@src/util/localStorage';
-import { userInfoType } from '@src/types';
+import { userInfoType, pageStateType } from '@src/types';
 import { apiAddFriend } from '@src/api/user';
 import { useSocket } from '@src/contexts/socket';
+
 import { Input, Modal } from '@arco-design/web-react';
 import { RefInputType } from '@arco-design/web-react/es/Input/interface';
 
 interface NewFriendsProps {
-  onChangePageMode?: (str: string) => void;
+  onChangePageMode?: (data: pageStateType) => void;
 }
 
 interface FriendType {
