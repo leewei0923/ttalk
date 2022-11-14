@@ -28,7 +28,7 @@ export function UserListCard(props: UserListCardPropsType): JSX.Element {
           shape="square"
         >
           {typeof name === 'string' && name.length > 0
-            ? name
+            ? name?.charAt(0)
             : account?.charAt(0)}
         </Avatar>
       )}

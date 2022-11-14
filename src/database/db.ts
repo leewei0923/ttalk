@@ -1,11 +1,8 @@
 import Dexie from 'dexie';
-import Storage from '@src/util/localStorage';
+import { GetTtakLoginUser } from '@src/common/personInfo';
 import { userInfoType } from '@src/types/index';
 
-const localStorage = new Storage();
-const userInfo: userInfoType[] = JSON.parse(
-  localStorage.getStorage('chat-user-info')
-);
+const userInfo: userInfoType[] | '' = GetTtakLoginUser();
 
 // 存放验证信息
 export interface chat_user_concat_entry {
@@ -34,6 +31,9 @@ export interface chat_user_info_entry {
   avatar: string;
   bird_date: string;
   social: string;
+  create_time: string; // 账号创建时间
+  add_time: string; // 第一次添加到本地的时间
+  update_time: string; // 本地更新时间
 }
 
 type chat_user_concat_table<
@@ -53,8 +53,8 @@ class ChatDataBase extends Dexie {
 
     this.version(1).stores({
       friends:
-        '++id,[user_account+friend_flag+blacklist], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
-      userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social`
+        '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
+      userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`
     });
 
     this.friends = this.table('friends');
@@ -62,7 +62,9 @@ class ChatDataBase extends Dexie {
   }
 }
 
-export const db = new ChatDataBase(`chatDatabase_${userInfo[0].account}`);
+export const db = new ChatDataBase(
+  `chatDatabase_${userInfo === '' ? '' : userInfo[0].account}`
+);
 
 // export const db = new Dexie('myDatabase');
 // db.version(1).stores({

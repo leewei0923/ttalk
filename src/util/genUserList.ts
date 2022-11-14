@@ -1,13 +1,9 @@
+import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
-import { userInfoType } from '@src/types';
-import Storage from '@src/util/localStorage';
 
 // 公共区域
 
-const localStorage = new Storage();
-const userInfo: userInfoType[] = JSON.parse(
-  localStorage.getStorage('chat-user-info')
-);
+const userInfo = GetTtakLoginUser();
 
 export interface userListTyep {
   sign: string;
@@ -24,6 +20,8 @@ interface userListChildrenType {
 // 拿到所有的好友
 
 export const friendsRes = async (): Promise<string[]> => {
+  if (userInfo === '') return [];
+
   const res = await db.friends
     .where({
       user_account: userInfo[0].account
@@ -47,8 +45,9 @@ export const friendsRes = async (): Promise<string[]> => {
 //
 
 export const genUserList = (getList: (list: userListTyep[]) => void): void => {
-  const map = new Map<string, userListChildrenType[]>();
+  if (userInfo === '') return;
 
+  const map = new Map<string, userListChildrenType[]>();
   db.friends
     .where({
       user_account: userInfo[0].account

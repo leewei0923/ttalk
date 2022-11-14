@@ -39,7 +39,7 @@ export function NewFriendsCard(props: NewFriendsProps): JSX.Element {
             size={35}
             shape="square"
           >
-            {nickname.length > 0 ? nickname : account?.charAt(0)}
+            {nickname.length > 0 ? nickname?.charAt(0) : account?.charAt(0)}
           </Avatar>
         )}
       </section>

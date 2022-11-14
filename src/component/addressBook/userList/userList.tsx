@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 import { IconUserAdd } from '@arco-design/web-react/icon';
 import { apiCheckOnline } from '@src/api/user';
+import { GetTtakLoginUser } from '@src/common/personInfo';
 import { pageStateType } from '@src/types';
 import {
   friendsRes,
@@ -51,13 +52,15 @@ export function UserList(props: UserListProps): JSX.Element {
   // 点击人物卡片获取account
 
   useEffect(() => {
-    void onGetOnlineStatus().then((res) => {
-      genUserList((list) => {
-        setConcats(() => {
-          return mergeList(list, res);
+    if (GetTtakLoginUser() !== '') {
+      void onGetOnlineStatus().then((res) => {
+        genUserList((list) => {
+          setConcats(() => {
+            return mergeList(list, res);
+          });
         });
       });
-    });
+    }
   }, []);
 
   // console.log(userData);

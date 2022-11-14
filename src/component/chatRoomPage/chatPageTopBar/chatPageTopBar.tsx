@@ -4,25 +4,26 @@ import { apiAddFriend, apiSearchUser } from '@src/api/user';
 import { useSocket } from '@src/contexts/socket';
 import { db } from '@src/database/db';
 import classnames from 'classnames';
-import Storage from '@src/util/localStorage';
 import React, { useEffect, useRef, useState } from 'react';
 import { AddUser } from './addUser/addUser';
 import styles from './chatPage.module.scss';
 import { UserCard } from './userCard/userCard';
-import { userInfoType } from '@src/types';
 import { ChatNotification } from '@src/component/message/notification';
 import { Message } from '@arco-design/web-react';
 import dayjs from 'dayjs';
+import { GetTtakLoginUser } from '@src/common/personInfo';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
    * 公共区域
    */
-  const localStorage = new Storage();
+
   const socket = useSocket();
-  const userInfo: userInfoType[] = JSON.parse(
-    localStorage.getStorage('chat-user-info')
-  );
+  const userInfo = GetTtakLoginUser();
+
+  if (userInfo === '') {
+    return <></>;
+  }
 
   // ==================
   const [addBoxFlag, setAddBoxFlag] = useState(false); // 隐藏申请框
@@ -68,11 +69,12 @@ export function ChatPageTopBar(): JSX.Element {
 
     db.friends
       .where({
-        friend_account: searchVal
+        friend_account: searchVal,
+        friend_flag: false
       })
       .toArray()
       .then(async (res) => {
-        if(res.length === 0) {
+        if (res.length === 0) {
           setButtonState('new');
           return;
         }
@@ -100,6 +102,7 @@ export function ChatPageTopBar(): JSX.Element {
         setButtonState('friend');
       })
       .catch((err) => {
+        setButtonState('new');
         console.log('查找用户信息出错', err);
       });
 
@@ -155,6 +158,16 @@ export function ChatPageTopBar(): JSX.Element {
             friend_account: friendAccount
           });
 
+          // 遇到相同的先删除
+          db.friends
+            .where({
+              friend_account: friendAccount
+            })
+            .delete()
+            .catch((err) => console.log('删除失败', err));
+
+          // 本地先添加
+
           db.friends
             .add({
               remote_id: '',
@@ -186,6 +199,7 @@ export function ChatPageTopBar(): JSX.Element {
    */
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onListenAddFriend = () => {
+    const curDate = dayjs().format('YYYY-MM-DD HH:mm');
     socket.on('addFriend', async function (res: any) {
       // apply 下 user_account是对方账号, friend_account 与登录的账号相同
       if (res.type === 'apply') {
@@ -210,7 +224,9 @@ export function ChatPageTopBar(): JSX.Element {
           motto,
           account,
           avatar,
-          bird_date: birdDate
+          add_time: createTime,
+          bird_date: birdDate,
+          update_time: updateDate
         } = res.user;
 
         // return;
@@ -284,7 +300,10 @@ export function ChatPageTopBar(): JSX.Element {
               motto: motto ?? '',
               account: account ?? '',
               avatar: avatar ?? '',
-              bird_date: birdDate ?? ''
+              bird_date: birdDate ?? '',
+              create_time: createTime,
+              add_time: curDate,
+              update_time: updateDate
             })
             .catch((err) => {
               console.log('用户信息添加失败', err);
@@ -299,7 +318,10 @@ export function ChatPageTopBar(): JSX.Element {
               motto: motto ?? '',
               account: account ?? '',
               avatar: avatar ?? '',
-              bird_date: birdDate ?? ''
+              bird_date: birdDate ?? '',
+              create_time: createTime,
+              add_time: curDate,
+              update_time: updateDate
             })
             .catch((err) => {
               console.log('用户信息更新失败', err);
@@ -332,7 +354,9 @@ export function ChatPageTopBar(): JSX.Element {
       motto,
       account,
       avatar,
-      bird_date: birdDate
+      bird_date: birdDate,
+      add_time: createTime,
+      update_time: updateDate
     } = res.user;
 
     const curDate = dayjs().format('YYYY-MM-DD HH:mm');
@@ -366,7 +390,10 @@ export function ChatPageTopBar(): JSX.Element {
           motto: motto ?? '',
           account: account ?? '',
           avatar: avatar ?? '',
-          bird_date: birdDate ?? ''
+          bird_date: birdDate ?? '',
+          create_time: createTime,
+          add_time: curDate,
+          update_time: updateDate
         })
         .catch((err) => {
           console.log('添加好友信息失败', err);
@@ -381,7 +408,10 @@ export function ChatPageTopBar(): JSX.Element {
           motto: motto ?? '',
           account: account ?? '',
           avatar: avatar ?? '',
-          bird_date: birdDate ?? ''
+          bird_date: birdDate ?? '',
+          create_time: createTime,
+          add_time: curDate,
+          update_time: updateDate
         })
         .catch((err) => {
           console.log('更新好友信息失败', err);

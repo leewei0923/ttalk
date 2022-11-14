@@ -43,7 +43,7 @@ export function UserCard(props: UserCardType): JSX.Element {
           shape="square"
         >
           {typeof nickname === 'string' && nickname.length > 0
-            ? nickname
+            ? nickname?.charAt(0)
             : account?.charAt(0)}
         </Avatar>
       )}

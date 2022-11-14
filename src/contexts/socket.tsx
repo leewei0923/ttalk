@@ -7,9 +7,10 @@ import { userInfoType } from '@src/types';
 
 const localStorage = new Storage();
 const token = localStorage.getStorage('chat-user-token', true);
-const userInfo: userInfoType[] = JSON.parse(
-  localStorage.getStorage('chat-user-info')
-);
+const userInfoStr = localStorage.getStorage('chat-user-info');
+
+const userInfo: userInfoType[] =
+  userInfoStr === '' ? '' : JSON.parse(userInfoStr);
 
 export const socket = io(SOCKET_URL, {
   transports: ['websocket'],
@@ -17,9 +18,11 @@ export const socket = io(SOCKET_URL, {
     token
   },
   query: {
-    account: userInfo[0].account
+    account: userInfoStr === '' ? '' : userInfo[0].account
   }
 });
+
+if (userInfoStr === '') socket.close();
 
 const SocketContext = createContext<Socket>(socket);
 SocketContext.displayName = 'SocketContext';

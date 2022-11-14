@@ -1,16 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import Storage from '../util/localStorage';
 import { Message } from '@arco-design/web-react';
 import { baseURL } from './url';
+import { GetTtalkToken } from '@src/common/personInfo';
 
 // 基础URL，axios将会自动拼接在url前
 // process.env.NODE_ENV 判断是否为开发环境 根据不同环境使用不同的baseURL 方便调试
 
-
-
-
-const localStorage = new Storage();
-const token = localStorage.getStorage('chat-user-token', true);
 
 // 默认请求超时时间
 const timeout = 30000;
@@ -28,7 +23,7 @@ service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // 配置自定义请求头
     config.headers = {
-      token
+      token: GetTtalkToken()
     };
     return config;
   },

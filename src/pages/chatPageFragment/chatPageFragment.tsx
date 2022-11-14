@@ -8,6 +8,7 @@ import AddressBook from '../addressBook/addressBook';
 import Application from '../application/application';
 import Mine from './mine/mine';
 import Collect from '../collect/collect';
+import { AuthRoute } from '@src/routes/authRoutes';
 
 function ChatPageFragment(): JSX.Element {
   return (
@@ -17,11 +18,17 @@ function ChatPageFragment(): JSX.Element {
 
       <div className={styles.inner_container}>
         <Routes>
-          <Route path="message" element={<ChatPageMain />} />
-          <Route path="addressBook" element={<AddressBook />} />
-          <Route path="app" element={<Application />} />
-          <Route path="mine" element={<Mine />} />
-          <Route path="collect" element={<Collect />} />
+          <Route
+            path="message"
+            element={<AuthRoute element={<ChatPageMain />} />}
+          />
+          <Route
+            path="addressBook"
+            element={<AuthRoute element={<AddressBook />} />}
+          />
+          <Route path="app" element={<AuthRoute element={<Application />} />} />
+          <Route path="mine" element={<AuthRoute element={<Mine />} />} />
+          <Route path="collect" element={<AuthRoute element={<Collect />} />} />
         </Routes>
       </div>
     </div>

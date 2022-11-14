@@ -21,6 +21,7 @@ import {
 import styles from './mine.module.scss';
 import Storage from '@src/util/localStorage';
 import { apiUpdateUserInfo } from '@src/api/user';
+import { GetTtakLoginUser } from '@src/common/personInfo';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -37,6 +38,7 @@ interface UserInfoType {
 
 function Mine(): JSX.Element {
   const userInfoRef = useRef<UserInfoType>();
+  if (GetTtakLoginUser() === '') return <></>;
 
   /**
    * 公共区域
@@ -51,10 +53,11 @@ function Mine(): JSX.Element {
    * 初始渲染页面元素
    */
   const getInitData = (): void => {
-    const userInfo = JSON.parse(
-      localstorage.getStorage('chat-user-info') ?? '{}'
-    );
-    userInfoRef.current = userInfo[0];
+    const userInfo = GetTtakLoginUser();
+
+    if (userInfo !== '') {
+      userInfoRef.current = userInfo[0];
+    }
   };
   getInitData();
 
@@ -120,8 +123,6 @@ function Mine(): JSX.Element {
   };
 
   // upload
-
-  console.log(userInfoRef.current)
 
   useEffect(() => {}, []);
 
