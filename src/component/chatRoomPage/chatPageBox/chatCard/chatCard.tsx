@@ -65,7 +65,10 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
           })}
         </div>
 
-        <div className={styles.time}>{timeFormat}</div>
+        <div className={styles.time}>
+          <p>{timeFormat}</p>
+          <p>已读</p>
+        </div>
       </div>
     </div>
   );

@@ -36,6 +36,16 @@ export interface chat_user_info_entry {
   update_time: string; // 本地更新时间
 }
 
+
+// 消息栏好友列表
+
+export interface chat_concat_list_entry {
+  friend_account: string;
+  create_time: string;
+  update_time: string;
+  message_count: number;
+}
+
 type chat_user_concat_table<
   T extends chat_user_concat_entry = chat_user_concat_entry
 > = Dexie.Table<T, chat_user_concat_entry>;
@@ -44,21 +54,28 @@ type chat_user_info_table<
   T extends chat_user_info_entry = chat_user_info_entry
 > = Dexie.Table<T, chat_user_info_entry>;
 
+type chat_concat_list_table<
+  T extends chat_concat_list_entry = chat_concat_list_entry
+> = Dexie.Table<T, chat_concat_list_entry>;
+
 class ChatDataBase extends Dexie {
   friends: chat_user_concat_table;
   userInfoData: chat_user_info_table;
+  concatList: chat_concat_list_table;
 
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(1).stores({
+    this.version(2).stores({
       friends:
         '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
-      userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`
+      userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
+      concatList: `++id, friend_account, create_time, update_time, message_count`
     });
 
     this.friends = this.table('friends');
     this.userInfoData = this.table('userInfoData');
+    this.concatList = this.table('concatList');
   }
 }
 

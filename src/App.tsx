@@ -15,7 +15,7 @@ function App(): JSX.Element {
         <Route path="login/:nav" element={<LoginPage />} />
         {/* <AuthRoute path="chat/*" element={<ChatPageFragment />} /> */}
         <Route
-          path="chat/*"
+          path="chat/:chatId/*"
           element={<AuthRoute element={<ChatPageFragment />} />}
         />
         <Route path="note" element={<NotePage />} />
