@@ -12,6 +12,10 @@ import { ChatNotification } from '@src/component/message/notification';
 import { Message } from '@arco-design/web-react';
 import dayjs from 'dayjs';
 import { GetTtakLoginUser } from '@src/common/personInfo';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setGlobalAccount } from '@src/redux/account';
+import { SetConcatList } from '@src/database/setConcatList';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
@@ -20,6 +24,8 @@ export function ChatPageTopBar(): JSX.Element {
 
   const socket = useSocket();
   const userInfo = GetTtakLoginUser();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (userInfo === '') {
     return <></>;
@@ -127,7 +133,14 @@ export function ChatPageTopBar(): JSX.Element {
     setShowApplyHide(false);
   };
 
-  const onSendMessage = (): void => {};
+  const onSendMessage = (account: string): void => {
+    // const curDate = dayjs().format('YYYY-MM-DD HH:mm');
+
+    SetConcatList(account);
+
+    navigate('/chat/message');
+    dispatch(setGlobalAccount(account));
+  };
 
   /**
    * 获取申请信息

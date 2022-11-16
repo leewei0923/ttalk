@@ -10,7 +10,7 @@ interface UserCardType {
   account: string | undefined;
   buttonState: 'new' | 'friend';
   onAddUser: () => void;
-  onSendMessage: () => void;
+  onSendMessage: (account: string) => void;
 }
 
 export function UserCard(props: UserCardType): JSX.Element {
@@ -57,7 +57,7 @@ export function UserCard(props: UserCardType): JSX.Element {
       {buttonState === 'new' ? (
         <button onClick={() => onAddUser()}>添加</button>
       ) : (
-        <button onClick={() => onSendMessage()}>发消息</button>
+        <button onClick={() => onSendMessage(account ?? '')}>发消息</button>
       )}
     </div>
   );

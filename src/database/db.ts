@@ -36,7 +36,6 @@ export interface chat_user_info_entry {
   update_time: string; // 本地更新时间
 }
 
-
 // 消息栏好友列表
 
 export interface chat_concat_list_entry {
@@ -82,6 +81,10 @@ class ChatDataBase extends Dexie {
 export const db = new ChatDataBase(
   `chatDatabase_${userInfo === '' ? '' : userInfo[0].account}`
 );
+
+db.concatList.hook('updating', function () {
+  console.log('更新了');
+});
 
 // export const db = new Dexie('myDatabase');
 // db.version(1).stores({

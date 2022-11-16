@@ -1,19 +1,92 @@
-import React from 'react';
+import { GetTtakLoginUser } from '@src/common/personInfo';
+import { db } from '@src/database/db';
+import { trimmedDate } from '@src/util/handleTime';
+import React, { useEffect, useState } from 'react';
 import { ContcatSumaryCard } from '../contactSumaryCard/contactSummaryCard';
 import styles from './chatConcatList.module.scss';
 
 export function ChatConcatList(): JSX.Element {
-  const data = new Array(10).fill(0);
+  // const data = new Array(10).fill(0);
+
+  /**
+   * 公共区域
+   */
+  const loginUser = GetTtakLoginUser();
+
+  // ===============
+
+  interface ConcatListType {
+    account: string;
+    avatar: string;
+    nickname: string;
+    count: number;
+    update_time: string;
+    message: string;
+  }
+
+  const [concatList, setConcatList] = useState<ConcatListType[]>([]);
+
+  async function getDataBaseConcatList(): Promise<void> {
+    const friendsRes = await db.concatList.orderBy('update_time').reverse().toArray();
+    const list: ConcatListType[] = [];
+
+    for (let i = 0; i < friendsRes.length; ++i) {
+      const friendInfo = await db.userInfoData
+        .where({
+          account: friendsRes[i].friend_account
+        })
+        .first();
+
+      if (friendInfo !== undefined) {
+        list.push({
+          account: friendInfo.account,
+          avatar: friendInfo.avatar,
+          nickname: friendInfo.nickname,
+          count: friendsRes[i].message_count,
+          update_time: friendsRes[i].update_time,
+          message: ''
+        });
+      } else if (
+        loginUser !== '' &&
+        friendsRes[i].friend_account === loginUser[0].account
+      ) {
+        list.push({
+          account: loginUser[0].account,
+          avatar: loginUser[0].avatar,
+          nickname: loginUser[0].nickname,
+          count: friendsRes[i].message_count,
+          update_time: friendsRes[i].update_time,
+          message: ''
+        });
+      }
+    }
+
+    setConcatList(list);
+  }
+
+  /**
+   * 获取account
+   */
+  const onGetAccount = (account: string): void => {
+    console.log(account);
+  };
+
+  useEffect(() => {
+    void getDataBaseConcatList();
+  }, []);
+
   return (
     <div className={styles.container}>
-      {data.map((item, index) => {
+      {concatList.map((item, index) => {
         return (
           <ContcatSumaryCard
-            avatarUrl="https://p3-passport.byteimg.com/img/user-avatar/b3db425b897f2bd8f531a49d53dba24b~100x100.awebp"
-            nickname="小明"
-            message="小明: 你好"
-            time="12:06"
+            account={item.account}
+            avatarUrl={item.avatar}
+            nickname={item.nickname}
+            message=""
+            time={trimmedDate(item.update_time)}
             key={`card${index}`}
+            onClick={onGetAccount}
           />
         );
       })}

@@ -24,3 +24,23 @@ export function getDiffTime(
       return Math.floor((newDate1 - newDate2) / 86400000);
   }
 }
+
+/**
+ * 时间显示当日显示具体时间,按照远近分为昨天，日期
+ */
+
+export function trimmedDate(target: string): string {
+  const targetTime = new Date(target).getTime();
+  const curTime = Date.now();
+  const dateList = target.split(' ');
+
+  if (targetTime - curTime < 86400000) {
+    return `${dateList[1]}`;
+  }
+
+  if (targetTime - curTime > 86400000 && targetTime - curTime < 172800000) {
+    return `昨天 ${dateList[1]}`;
+  } else {
+    return `${dateList[0]}`;
+  }
+}
