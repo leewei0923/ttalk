@@ -1,7 +1,7 @@
 {
   "name": "yuchat",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@arco-design/web-react": "^2.39.3",
     "@emoji-mart/data": "^1.0.6",
