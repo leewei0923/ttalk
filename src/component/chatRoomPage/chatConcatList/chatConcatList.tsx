@@ -1,7 +1,11 @@
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
+import { SetConcatList } from '@src/database/setConcatList';
+import { selectGlobalAccount, setGlobalAccount } from '@src/redux/account';
+import { useAppSelector } from '@src/redux/hook';
 import { trimmedDate } from '@src/util/handleTime';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { ContcatSumaryCard } from '../contactSumaryCard/contactSummaryCard';
 import styles from './chatConcatList.module.scss';
 
@@ -12,6 +16,9 @@ export function ChatConcatList(): JSX.Element {
    * 公共区域
    */
   const loginUser = GetTtakLoginUser();
+  const globalAccount = useAppSelector(selectGlobalAccount);
+  const dispatch = useDispatch();
+  const [refresh, setRefresh] = useState(1); // 用于页面更新
 
   // ===============
 
@@ -27,7 +34,10 @@ export function ChatConcatList(): JSX.Element {
   const [concatList, setConcatList] = useState<ConcatListType[]>([]);
 
   async function getDataBaseConcatList(): Promise<void> {
-    const friendsRes = await db.concatList.orderBy('update_time').reverse().toArray();
+    const friendsRes = await db.concatList
+      .orderBy('update_time')
+      .reverse()
+      .toArray();
     const list: ConcatListType[] = [];
 
     for (let i = 0; i < friendsRes.length; ++i) {
@@ -68,12 +78,14 @@ export function ChatConcatList(): JSX.Element {
    * 获取account
    */
   const onGetAccount = (account: string): void => {
-    console.log(account);
+    SetConcatList(account);
+    setRefresh(refresh + 1);
+    dispatch(setGlobalAccount(account));
   };
 
   useEffect(() => {
     void getDataBaseConcatList();
-  }, []);
+  }, [globalAccount, refresh]);
 
   return (
     <div className={styles.container}>

@@ -56,3 +56,26 @@
   top: -217px;
   right: 100px;
 }
+
+.icon {
+  margin: auto 0;
+  position: relative;
+  cursor: pointer;
+  &::after {
+    content: '';
+    display: block;
+    width: 25px;
+    height: 25px;
+    background-color: #babfc36e;
+    position: absolute;
+    border-radius: 5px;
+    left: -2px;
+    top: 2px;
+    visibility: hidden;
+    z-index: 0;
+  }
+
+  &:hover::after {
+    visibility: visible;
+  }
+}

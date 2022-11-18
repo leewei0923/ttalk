@@ -7,7 +7,6 @@
   align-items: center;
   position: relative;
 
-
   .nickaname {
     font-size: 1.1em;
     font-weight: 600;
@@ -17,8 +16,8 @@
     transition: all 0.6s;
 
     &:hover {
-        border-bottom: 2px dashed rgba(0,0,0,0.7);
-        transition: all 0.6s;
+      border-bottom: 2px dashed rgba(0, 0, 0, 0.7);
+      transition: all 0.6s;
     }
   }
 
@@ -30,4 +29,24 @@
   }
 }
 
+.icon {
+  position: relative;
+  cursor: pointer;
+  &::after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    background-color: #babfc36e;
+    position: absolute;
+    border-radius: 5px;
+    left: -5px;
+    top: -2px;
+    visibility: hidden;
+    z-index: 0;
+  }
 
+  &:hover::after {
+    visibility: visible;
+  }
+}

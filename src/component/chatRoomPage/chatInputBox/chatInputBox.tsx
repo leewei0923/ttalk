@@ -91,13 +91,13 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
           >
             <img src={face} style={{ width: '20px', strokeWidth: 2 }} />
           </div>
-          <div className={styles.iconUp_circle}>
+          <div className={`${styles.iconUp_circle} ${styles.icon}`}>
             <IconUpCircle style={{ width: '20px', strokeWidth: 2 }} />
           </div>
-          <div className={styles.expand} onClick={expandSwitch}>
+          <div className={`${styles.expand} ${styles.icon}`} onClick={expandSwitch}>
             <IconExpand style={{ width: '20px', strokeWidth: 2 }} />
           </div>
-          <div className={styles.send_btn} onClick={() => onSendBtn()}>
+          <div className={`${styles.send_btn} ${styles.icon}`} onClick={() => onSendBtn()}>
             <IconSend style={{ width: '20px', strokeWidth: 2 }} />
           </div>
         </div>

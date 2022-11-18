@@ -83,7 +83,7 @@ export const db = new ChatDataBase(
 );
 
 db.concatList.hook('updating', function () {
-  console.log('更新了');
+  
 });
 
 // export const db = new Dexie('myDatabase');

@@ -18,7 +18,6 @@ export function ChatPageLeftBar(): JSX.Element {
     navigateTo(path);
   };
 
-  console.log(useParams());
 
   return (
     <div className={styles.container}>

@@ -1,6 +1,11 @@
 import { db } from './db';
 import dayjs from 'dayjs';
 
+
+/**
+ * 用于更新聊天页面用户列表
+ * @param account 
+ */
 export function SetConcatList(account: string):void {
   const curDate = dayjs().format('YYYY-MM-DD HH:mm');
   db.concatList
