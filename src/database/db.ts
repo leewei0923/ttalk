@@ -45,6 +45,21 @@ export interface chat_concat_list_entry {
   message_count: number;
 }
 
+/**
+ * 存储聊天内容
+ */
+export interface chat_message_data_entry {
+  user_account: string;
+  friend_account: string;
+  mood_status: string;
+  type: 'send' | 'receive';
+  message_style: 'normal' | 'rich' // 聊天的风格
+  message: string; // 聊天的内容
+  read_flag: boolean; // 阅读标记
+  create_time: string;
+  update_time: string;
+}
+
 type chat_user_concat_table<
   T extends chat_user_concat_entry = chat_user_concat_entry
 > = Dexie.Table<T, chat_user_concat_entry>;
@@ -57,24 +72,31 @@ type chat_concat_list_table<
   T extends chat_concat_list_entry = chat_concat_list_entry
 > = Dexie.Table<T, chat_concat_list_entry>;
 
+type chat_message_data_table<
+  T extends chat_message_data_entry = chat_message_data_entry
+> = Dexie.Table<T, chat_message_data_entry>;
+
 class ChatDataBase extends Dexie {
   friends: chat_user_concat_table;
   userInfoData: chat_user_info_table;
   concatList: chat_concat_list_table;
+  messageData: chat_message_data_table;
 
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(2).stores({
+    this.version(3).stores({
       friends:
         '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
-      concatList: `++id, friend_account, create_time, update_time, message_count`
+      concatList: `++id, friend_account, create_time, update_time, message_count`,
+      messageData: `++id,[user_account+friend_account], user_account, friend_account, mood_status, type, message_style, message, read_flag, create_time, update_time`,
     });
 
     this.friends = this.table('friends');
     this.userInfoData = this.table('userInfoData');
     this.concatList = this.table('concatList');
+    this.messageData = this.table('messageData');
   }
 }
 
@@ -82,9 +104,7 @@ export const db = new ChatDataBase(
   `chatDatabase_${userInfo === '' ? '' : userInfo[0].account}`
 );
 
-db.concatList.hook('updating', function () {
-  
-});
+db.concatList.hook('updating', function () {});
 
 // export const db = new Dexie('myDatabase');
 // db.version(1).stores({

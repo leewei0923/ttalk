@@ -8,6 +8,7 @@ import { selectGlobalAccount } from '@src/redux/account/index';
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { Avatar } from '@arco-design/web-react';
 import { firstValidNumber } from '@src/util/util';
+import { LeftUserCard } from './leftUserCard/leftUserCard';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
@@ -68,6 +69,8 @@ export function ChatPageLeftBar(): JSX.Element {
           );
         })}
       </div>
+        
+      <LeftUserCard />
     </div>
   );
 }
