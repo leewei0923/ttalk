@@ -1,15 +1,20 @@
+/* eslint-disable indent */
 import React, { useState } from 'react';
 import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '@src/redux/hook';
 import { selectGlobalAccount } from '@src/redux/account/index';
+import { GetTtakLoginUser } from '@src/common/personInfo';
+import { Avatar } from '@arco-design/web-react';
+import { firstValidNumber } from '@src/util/util';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
   const navigateTo = useNavigate();
   const globalAccount = useAppSelector(selectGlobalAccount);
   const { chatId } = useParams();
+  const userInfoData = GetTtakLoginUser();
 
   console.log(globalAccount);
 
@@ -18,16 +23,35 @@ export function ChatPageLeftBar(): JSX.Element {
     navigateTo(path);
   };
 
-
   return (
     <div className={styles.container}>
       {/* 头像 */}
       <div className={styles.avatar_box}>
-        <img
+        {/* <img
           src={require('@pic/pic/logo.png')}
           alt="头像"
           className={styles.avatar_img}
-        />
+        /> */}
+
+        {typeof userInfoData[0] === 'object' &&
+        userInfoData[0]?.avatar !== '' ? (
+          <img src={userInfoData[0]?.avatar} className={styles.avatar_img} />
+        ) : (
+          <Avatar
+            style={{ backgroundColor: '#165DFF' }}
+            autoFixFontSize={false}
+            size={55}
+            shape="circle"
+          >
+            {typeof userInfoData[0] === 'object' &&
+            (userInfoData[0]?.nickname ?? '').length > 0
+              ? firstValidNumber([
+                  userInfoData[0].nickname.charAt(0),
+                  userInfoData[0].account.charAt(0)
+                ])
+              : ''}
+          </Avatar>
+        )}
       </div>
 
       <div className={styles.options_container}>
