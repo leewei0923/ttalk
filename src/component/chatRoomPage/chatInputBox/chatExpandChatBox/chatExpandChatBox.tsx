@@ -1,13 +1,18 @@
-import React, { useRef, useState } from 'react';
-import styles from './chatExpandChatBox.module.scss';
+import React, { useEffect, useState } from 'react';
 import face from '@pic/icon/face.svg';
 import { IconFileImage, IconShrink } from '@arco-design/web-react/icon';
 import Emoji from '../emoji/emoji';
-import { getCursorPosition, insertText } from '@src/util/cursorPosition';
+import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { ExpandBoxMenuItem } from './menuItems/menuItem';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
+import CharacterCount from '@tiptap/extension-character-count';
+import styles from './chatExpandChatBox.module.scss';
 
 interface ExpandChatBoxProps {
   expandSwitch: () => void;
-  onSubmit: (content: string) => void;
+  onSubmit: (content: JSONContent) => void;
 }
 
 export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
@@ -19,37 +24,43 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
   //   ======================
 
   /**
+   * tiptap编辑器配置
+   */
+  const limit = 2000;
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      TextStyle,
+      Color,
+      CharacterCount.configure({
+        limit
+      })
+    ]
+  });
+
+  /**
    * 拿到emoji
    */
-  const cursorPosition = useRef(0);
-
-  const onInput = (): void => {
-    const editorNode = document.querySelector('.' + styles.editor);
-    const position = getCursorPosition(editorNode);
-
-    cursorPosition.current = position;
-  };
 
   const [emojiFlag, setEmojiFlag] = useState(false);
   const onGetEmoji = (emoji: string): void => {
-    const editorNode = document.querySelector('.' + styles.editor);
-
-    insertText(editorNode, emoji, cursorPosition.current);
-    const position = getCursorPosition(editorNode);
-    cursorPosition.current = position;
-    setEmojiFlag(false);
+    if (editor !== null) {
+      editor.commands.insertContent(emoji);
+    }
   };
 
   /**
    * 发送按钮
    */
-  const editorRef = useRef<HTMLPreElement>(null);
 
   const onSendBtn = (): void => {
-    const htmlNodes = editorRef.current?.innerHTML;
-    if (typeof onSubmit !== 'function') return;
-    onSubmit(htmlNodes ?? '');
+    const jsonContent = editor?.getJSON();
+
+    if (typeof onSubmit !== 'function' || jsonContent === undefined) return;
+    onSubmit(editor?.getJSON() ?? {});
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className={styles.container}>
@@ -69,20 +80,26 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
             <IconFileImage style={{ width: '20px', strokeWidth: 5 }} />
           </span>
         </div>
+        {/* -------------- */}
+        <ExpandBoxMenuItem editor={editor} />
+
+        {/* -------------- */}
         <div className={styles.change_switch} onClick={expandSwitch}>
           <IconShrink style={{ width: '20px', strokeWidth: 5 }} />
         </div>
       </section>
 
       <section className={styles.edit_container}>
-        <pre
-          contentEditable={true}
-          //   data-tootip={}
-          ref={editorRef}
-          suppressHydrationWarning={true}
+        <EditorContent
           className={styles.editor}
-          onInput={() => onInput()}
-        ></pre>
+          style={{
+            padding: '10px 20px',
+            minHeight: '350px',
+            minWidth: '100%',
+            background: '#F2F3F5'
+          }}
+          editor={editor}
+        />
       </section>
 
       <section className={styles.send_btn_container}>
@@ -91,7 +108,10 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
         </button>
       </section>
 
-      <div className={styles.emoji_picker} style={{ visibility: emojiFlag ? 'visible' : 'hidden' }}>
+      <div
+        className={styles.emoji_picker}
+        style={{ visibility: emojiFlag ? 'visible' : 'hidden' }}
+      >
         <Emoji onClick={onGetEmoji} />
       </div>
     </div>

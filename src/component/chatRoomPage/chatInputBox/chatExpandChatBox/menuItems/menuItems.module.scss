@@ -6,7 +6,6 @@
   justify-content: space-evenly;
   align-items: center;
   column-gap: 10px;
-  border-bottom: 3px solid black;
 
   .btn {
     width: 30px !important;
@@ -16,7 +15,7 @@
   }
 
   .selected_btn {
-    background-color: #c4c4c4 !important;
+    background-color: #babfc36e !important;
     color: white !important;
   }
 
@@ -26,6 +25,6 @@
   .icon {
     font-size: 20px;
     stroke-width: 4px;
-    color: black;
+    color: #adb3b8;
   }
 }

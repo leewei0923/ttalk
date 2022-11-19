@@ -2,7 +2,6 @@ import { db } from '@src/database/db';
 import { getUserInfo } from '@src/database/getUserInfo';
 import { selectGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
-import { ContentParser } from '@src/util/inputParser';
 import { firstValidNumber } from '@src/util/util';
 import React, { useEffect, useState } from 'react';
 import { ChatConcatList } from '../chatConcatList/chatConcatList';
@@ -11,14 +10,17 @@ import { ChatInputBox } from '../chatInputBox/chatInputBox';
 import { ChatPageBox } from '../chatPageBox/chatPageBox';
 import { ContactPageTopBar } from '../contactPageTopBar/contactPageTopBar';
 import logoTransparent from '@pic/pic/logo_transparent.png';
+import StarterKit from '@tiptap/starter-kit';
 
 import styles from './chatPageMain.module.scss';
+import { generateHTML, JSONContent } from '@tiptap/react';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
 
 export function ChatPageMain(): JSX.Element {
   /**
    * 公共区域
    */
-  const contentParser = new ContentParser();
   const globalAccount = useAppSelector(selectGlobalAccount);
 
   /**
@@ -34,10 +36,26 @@ export function ChatPageMain(): JSX.Element {
   /**
    * 提交按钮
    */
-  const onSubmit = (content: string): void => {
-    // console.log('content: ', content);
-    console.log(contentParser.parser(content));
-    // console.log('content: ', content.split('\n'));
+
+  //  const output = useMemo(() => {
+  //   return generateHTML(json, [
+  //     Document,
+  //     Paragraph,
+  //     Text,
+  //     Bold,
+  //     // other extensions …
+  //   ])
+  // }, [json])
+
+  const onSubmit = (content: JSONContent): void => {
+    const output = generateHTML(content, [
+      StarterKit,
+      TextStyle,
+      Color
+      // other extensions …
+    ]);
+
+    console.log(output);
   };
 
   /**
@@ -98,7 +116,10 @@ export function ChatPageMain(): JSX.Element {
           )}
         </section>
 
-        <div className={styles.blank_page_container} style={{ display: globalAccount === '' ? 'flex' : 'none' }}>
+        <div
+          className={styles.blank_page_container}
+          style={{ display: globalAccount === '' ? 'flex' : 'none' }}
+        >
           <img src={logoTransparent} className={styles.logo} />
           <p>TTalk 想聊就聊</p>
         </div>

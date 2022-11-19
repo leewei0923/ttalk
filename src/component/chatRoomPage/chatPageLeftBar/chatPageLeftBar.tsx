@@ -27,11 +27,6 @@ export function ChatPageLeftBar(): JSX.Element {
     <div className={styles.container}>
       {/* 头像 */}
       <div className={styles.avatar_box}>
-        {/* <img
-          src={require('@pic/pic/logo.png')}
-          alt="头像"
-          className={styles.avatar_img}
-        /> */}
 
         {typeof userInfoData[0] === 'object' &&
         userInfoData[0]?.avatar !== '' ? (

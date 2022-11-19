@@ -1,3 +1,4 @@
+
 /**
  * 先传入的最优先
  */
@@ -13,3 +14,7 @@ export function firstValidNumber<T>(args: T[]): T | '' {
 
   return ans === null ? '' : ans;
 }
+
+/**
+ * 防抖
+ */

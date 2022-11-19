@@ -11,16 +11,17 @@
     overflow: auto;
 
     .editor {
-      width: 90%;
-      max-height: 4em;
-      min-height: 3em;
+      width: 95%;
+      max-height: 3.8em;
+      min-height: 50px;
+      background: '#F2F3F5';
       overflow-y: scroll;
       border-radius: 10px;
       border: 2px solid #e8e8eb;
       position: relative;
       left: 50%;
       transform: translate(-50%, 0);
-      font-size: 1.2em;
+      font-size: 0.8em;
       padding: 5px;
       outline: #e8e8eb;
       letter-spacing: 2px;
@@ -61,6 +62,7 @@
   margin: auto 0;
   position: relative;
   cursor: pointer;
+  color: #adb3b8;
   &::after {
     content: '';
     display: block;

@@ -24,7 +24,10 @@ function MyEditor(): JSX.Element {
         <MenuBar editor={editor} />
 
         <div className={styles.input_box}>
-          <EditorContent className="input" editor={editor} />
+          <EditorContent
+            className="input"
+            editor={editor}
+          />
         </div>
       </section>
     </div>
