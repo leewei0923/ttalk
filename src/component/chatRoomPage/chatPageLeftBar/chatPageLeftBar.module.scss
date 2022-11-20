@@ -6,6 +6,16 @@
   .avatar_box {
     width: 40px;
     margin: 15px;
+    cursor: pointer;
+    position: relative;
+
+    .current_mood {
+      position: absolute;
+      bottom: -18px;
+      right: -25px;
+    }
+
+
   }
 
   .options_container {
@@ -24,8 +34,6 @@
   }
 }
 
-
-
 .options_container {
   .left_nav_btn_box {
     width: 100%;
@@ -33,24 +41,23 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: #F1EFE9;
+    color: #f1efe9;
     row-gap: 5px;
     cursor: pointer;
 
-      p {
-        text-align: center;
-        font-size: 0.8em;
-      }
+    p {
+      text-align: center;
+      font-size: 0.8em;
+    }
   }
 
   .isSlected {
-    position: relative; 
-    color: #4E5969;
+    position: relative;
+    color: #4e5969;
     z-index: 10;
 
-
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
@@ -63,4 +70,14 @@
       border-radius: 10px;
     }
   }
+}
+
+.mask_user_card {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.02);
+  z-index: 30;
 }

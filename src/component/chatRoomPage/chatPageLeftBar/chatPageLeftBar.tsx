@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { GetTtakLoginUser } from '@src/common/personInfo';
 import { Avatar } from '@arco-design/web-react';
 import { firstValidNumber } from '@src/util/util';
 import { LeftUserCard } from './leftUserCard/leftUserCard';
+import { MoodDataType } from '@src/common/data';
+import { GetMood, getMoodType, SetMood } from '@src/common/handleMood';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
@@ -24,11 +26,34 @@ export function ChatPageLeftBar(): JSX.Element {
     navigateTo(path);
   };
 
+  /**
+   * 关闭leftuserCard
+   */
+  const [leftUserFlag, setLeftUserFlag] = useState(true);
+
+  /**
+   * 改变心情
+   */
+  const [leftBarMood, setLetfBarMood] = useState<getMoodType | ''>('');
+  const onChangeMood = (mood: MoodDataType | undefined | ''): void => {
+    if (typeof userInfoData !== 'object') return;
+
+    if (mood !== undefined && mood !== '') {
+      SetMood({ account: userInfoData[0].account, type: mood.type });
+      setLetfBarMood(GetMood());
+    }
+  };
+
+  useEffect(() => {
+    if (leftBarMood === '') {
+      setLetfBarMood(GetMood());
+    }
+  }, [leftBarMood]);
+
   return (
     <div className={styles.container}>
       {/* 头像 */}
-      <div className={styles.avatar_box}>
-
+      <div className={styles.avatar_box} onClick={() => setLeftUserFlag(false)}>
         {typeof userInfoData[0] === 'object' &&
         userInfoData[0]?.avatar !== '' ? (
           <img src={userInfoData[0]?.avatar} className={styles.avatar_img} />
@@ -36,8 +61,8 @@ export function ChatPageLeftBar(): JSX.Element {
           <Avatar
             style={{ backgroundColor: '#165DFF' }}
             autoFixFontSize={false}
-            size={55}
-            shape="circle"
+            size={50}
+            shape="square"
           >
             {typeof userInfoData[0] === 'object' &&
             (userInfoData[0]?.nickname ?? '').length > 0
@@ -48,6 +73,14 @@ export function ChatPageLeftBar(): JSX.Element {
               : ''}
           </Avatar>
         )}
+
+        <div className={styles.current_mood}>
+          {typeof leftBarMood === 'object' ? (
+            <img src={leftBarMood.element} />
+          ) : (
+            ''
+          )}
+        </div>
       </div>
 
       <div className={styles.options_container}>
@@ -69,8 +102,14 @@ export function ChatPageLeftBar(): JSX.Element {
           );
         })}
       </div>
-        
-      <LeftUserCard />
+
+      <div style={{ visibility: leftUserFlag ? 'hidden' : 'visible' }}>
+        <div
+          className={styles.mask_user_card}
+          onClick={() => setLeftUserFlag(true)}
+        ></div>
+        <LeftUserCard onclick={onChangeMood} />
+      </div>
     </div>
   );
 }
