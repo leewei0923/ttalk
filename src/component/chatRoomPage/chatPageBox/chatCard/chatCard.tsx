@@ -1,69 +1,55 @@
 import React from 'react';
 import classnames from 'classnames';
 import styles from './chatCard.module.scss';
+import { Avatar } from '@arco-design/web-react';
+import { firstValidNumber } from '@src/util/util';
 
 interface ChatCardPropsType {
-  src: string;
   content: string;
   time: string;
-  isReverse?: boolean;
-}
-
-interface ContentType {
-  type: 'text' | 'img';
-  value: string;
+  type: 'send' | 'receive' | string;
+  avatar: string;
+  account?: string;
+  remark?: string;
+  nickname?: string;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { src, content, time, isReverse } = props;
-  const dataList = JSON.parse(content);
+  const { content, time, type, remark, nickname, account, avatar } = props;
   const timeFormat = time.split(' ')[1];
+  const mainAvatar = firstValidNumber([remark, nickname, account]);
 
   const defaultClass = {
     container: classnames({
       [styles.container]: true,
-      [styles.recontainer]: isReverse === true
+      [styles.recontainer]: type === 'send'
     }),
     innerContainer: classnames({
       [styles.innerContainer]: true,
-      [styles.reverse]: isReverse === true
+      [styles.reverse]: type === 'send'
     })
   };
 
   return (
     <div className={defaultClass.container}>
       <div className={defaultClass.innerContainer}>
-        <img src={src} className={styles.chat_avatar_img} />
-        <div className={styles.chat_content_box}>
-          {dataList.map((item: ContentType, index: number): JSX.Element => {
-            switch (item.type) {
-              case 'text':
-                return (
-                  <p
-                    key={`cardtext${index}`}
-                    className={styles.chat_content_text}
-                  >
-                    {item.value}
-                  </p>
-                );
-              case 'img':
-                return (
-                  <img
-                    key={`cardimg${index}`}
-                    src={item.value}
-                    className={styles.chat_img}
-                  />
-                );
-              default:
-                return (
-                  <p
-                    key={`no${index}`}
-                    className={styles.chat_content_text}
-                  ></p>
-                );
-            }
-          })}
-        </div>
+        {avatar !== '' ? (
+          <img src={avatar} className={styles.chat_avatar_img} />
+        ) : (
+          <Avatar
+            style={{ backgroundColor: '#165DFF' }}
+            autoFixFontSize={false}
+            size={20}
+            shape="square"
+          >
+            {(mainAvatar ?? '').length > 0 ? (mainAvatar ?? '').charAt(0) : ''}
+          </Avatar>
+        )}
+
+        <div
+          className={styles.chat_content_box}
+          dangerouslySetInnerHTML={{ __html: content }}
+        ></div>
 
         <div className={styles.time}>
           <p>{timeFormat}</p>

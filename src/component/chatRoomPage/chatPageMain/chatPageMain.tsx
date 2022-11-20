@@ -48,13 +48,17 @@ export function ChatPageMain(): JSX.Element {
   // }, [json])
 
   const onSubmit = (content: JSONContent): void => {
+    console.log(JSON.stringify(content));
+    console.log(JSON.stringify(content).length);
+
+    return;
+
     const output = generateHTML(content, [
       StarterKit,
       TextStyle,
       Color
       // other extensions …
     ]);
-
     console.log(output);
   };
 

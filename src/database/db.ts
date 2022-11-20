@@ -49,9 +49,10 @@ export interface chat_concat_list_entry {
  * 存储聊天内容
  */
 export interface chat_message_data_entry {
+  remote_id: string;
   user_account: string;
   friend_account: string;
-  mood_status: string;
+  mood_state: string;
   type: 'send' | 'receive';
   message_style: 'normal' | 'rich' // 聊天的风格
   message: string; // 聊天的内容
@@ -85,12 +86,12 @@ class ChatDataBase extends Dexie {
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(3).stores({
+    this.version(5).stores({
       friends:
         '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
       concatList: `++id, friend_account, create_time, update_time, message_count`,
-      messageData: `++id,[user_account+friend_account], user_account, friend_account, mood_status, type, message_style, message, read_flag, create_time, update_time`,
+      messageData: `++id,remote_id, [user_account+friend_account], user_account, friend_account, mood_state, type, message_style, message, read_flag, create_time, update_time`,
     });
 
     this.friends = this.table('friends');
