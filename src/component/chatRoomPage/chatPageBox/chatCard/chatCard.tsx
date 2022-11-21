@@ -2,22 +2,18 @@ import React from 'react';
 import classnames from 'classnames';
 import styles from './chatCard.module.scss';
 import { Avatar } from '@arco-design/web-react';
-import { firstValidNumber } from '@src/util/util';
 
 interface ChatCardPropsType {
   content: string;
   time: string;
   type: 'send' | 'receive' | string;
+  avatarString: string;
   avatar: string;
-  account?: string;
-  remark?: string;
-  nickname?: string;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { content, time, type, remark, nickname, account, avatar } = props;
+  const { content, time, type, avatar, avatarString } = props;
   const timeFormat = time.split(' ')[1];
-  const mainAvatar = firstValidNumber([remark, nickname, account]);
 
   const defaultClass = {
     container: classnames({
@@ -39,10 +35,12 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
           <Avatar
             style={{ backgroundColor: '#165DFF' }}
             autoFixFontSize={false}
-            size={20}
-            shape="square"
+            size={40}
+            shape="circle"
           >
-            {(mainAvatar ?? '').length > 0 ? (mainAvatar ?? '').charAt(0) : ''}
+            {(avatarString ?? '').length > 0
+              ? (avatarString ?? '').charAt(0)
+              : ''}
           </Avatar>
         )}
 

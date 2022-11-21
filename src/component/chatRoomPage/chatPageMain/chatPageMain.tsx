@@ -10,18 +10,41 @@ import { ChatInputBox } from '../chatInputBox/chatInputBox';
 import { ChatPageBox } from '../chatPageBox/chatPageBox';
 import { ContactPageTopBar } from '../contactPageTopBar/contactPageTopBar';
 import logoTransparent from '@pic/pic/logo_transparent.png';
-import StarterKit from '@tiptap/starter-kit';
-
+import dayjs from 'dayjs';
 import styles from './chatPageMain.module.scss';
-import { generateHTML, JSONContent } from '@tiptap/react';
-import TextStyle from '@tiptap/extension-text-style';
-import Color from '@tiptap/extension-color';
+import { JSONContent } from '@tiptap/react';
+import { GetTtakLoginUser } from '@src/common/personInfo';
+import {
+  HandleChat,
+  MessageData,
+  MessageDetailData
+} from '@src/util/handleChat';
+import { chatData } from '../chatPageBox/data';
 
 export function ChatPageMain(): JSX.Element {
   /**
    * 公共区域
    */
   const globalAccount = useAppSelector(selectGlobalAccount);
+  const loginUserInfo = GetTtakLoginUser();
+  const handleChat = new HandleChat();
+
+  /**
+   * 初始渲染
+   */
+  const [chatDatas, setChatDatas] = useState<MessageData[] | ''>();
+  function init(account: string): void {
+    handleChat
+      .create(account)
+      .then((res) => {
+        if (res !== '') {
+          setChatDatas(res);
+        }
+      })
+      .catch((err) => {
+        console.log('加载出错', err);
+      });
+  }
 
   /**
    * 扩充面板
@@ -34,40 +57,49 @@ export function ChatPageMain(): JSX.Element {
   // ===========================
 
   /**
-   * 提交按钮
+   * 提交聊天框里的信息
    */
 
-  //  const output = useMemo(() => {
-  //   return generateHTML(json, [
-  //     Document,
-  //     Paragraph,
-  //     Text,
-  //     Bold,
-  //     // other extensions …
-  //   ])
-  // }, [json])
-
+  const [refresh, setRefresh] = useState(1);
   const onSubmit = (content: JSONContent): void => {
-    console.log(JSON.stringify(content));
-    console.log(JSON.stringify(content).length);
+    const curDate = dayjs().format('YYYY-MM-DD HH:mm');
 
-    return;
+    const message: MessageDetailData = {
+      remote_id: '4',
+      user_account: loginUserInfo !== '' ? loginUserInfo[0].account : '',
+      friend_account: globalAccount,
+      mood_state: '开心',
+      type: 'send',
+      message_style: 'normal',
+      message: JSON.stringify(content),
+      read_flag: false,
+      create_time: curDate,
+      update_time: curDate
+    };
 
-    const output = generateHTML(content, [
-      StarterKit,
-      TextStyle,
-      Color
-      // other extensions …
-    ]);
-    console.log(output);
+    const insertRes = handleChat.insert(
+      Array.isArray(chatDatas) ? chatDatas : '',
+      message,
+      'push'
+    );
+
+    setRefresh(refresh + 1);
+    setChatDatas(insertRes);
   };
 
   /**
    * 获取聊天对象的信息
    */
-  const [friendInfo, setFriendInfo] = useState('');
+  const [friendName, setFriendName] = useState('');
   const getFriendInfo = async (): Promise<void> => {
-    if (globalAccount !== '') {
+    if (loginUserInfo !== '' && globalAccount === loginUserInfo[0].account) {
+      setFriendName(
+        firstValidNumber<string>([
+          loginUserInfo[0].nickname,
+          loginUserInfo[0].account
+        ])
+      );
+    } else if (globalAccount !== '') {
       const userInfo = await getUserInfo(globalAccount);
       const friendsRes = await db.friends
         .where({
@@ -78,7 +110,7 @@ export function ChatPageMain(): JSX.Element {
       if (friendsRes === undefined && userInfo === undefined) {
         return;
       }
-      setFriendInfo(
+      setFriendName(
         firstValidNumber<string>([
           friendsRes?.remark ?? '',
           userInfo?.nickname ?? '',
@@ -88,9 +120,30 @@ export function ChatPageMain(): JSX.Element {
     }
   };
 
+  const [friendvatar, setFriendAvatar] = useState('');
+  function loadUserIndo(): void {
+    if (loginUserInfo !== '' && loginUserInfo[0].account === globalAccount) {
+      setFriendAvatar(loginUserInfo[0].avatar);
+    } else if (globalAccount !== '') {
+      getUserInfo(globalAccount)
+        .then((res) => {
+          setFriendAvatar(res?.avatar ?? '');
+        })
+        .catch((res) => console.log('出错'));
+    }
+  }
+
   useEffect(() => {
     void getFriendInfo();
-  }, [globalAccount]);
+
+    if (friendvatar === '') {
+      loadUserIndo();
+    }
+
+    if (globalAccount !== '' && chatDatas === '') {
+      init(globalAccount);
+    }
+  }, [globalAccount, friendvatar, refresh]);
 
   return (
     <div className={styles.container}>
@@ -105,8 +158,14 @@ export function ChatPageMain(): JSX.Element {
           className={styles.chat_page_container}
           style={{ display: globalAccount === '' ? 'none' : '' }}
         >
-          <ContactPageTopBar nickname={friendInfo} />
-          <ChatPageBox />
+          <ContactPageTopBar nickname={friendName} />
+          <ChatPageBox
+            // messageData={chatDatas ?? []}
+            messageData={chatData ?? []}
+            
+            avatar={friendvatar}
+            avatarString={friendName}
+          />
           {expandChatBox ? (
             <ExpandChatBox
               expandSwitch={changeExpandInput}
