@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 export interface MessageData {
   date: string;
   children: MessageDetailData[];
+  [key: string]: unknown;
 }
 
 export interface MessageDetailData {
@@ -26,7 +27,6 @@ export class HandleChat {
    */
 
   async create(friendAccount: string): Promise<MessageData[] | ''> {
-    const map = new Map<string, MessageDetailData[]>();
     const meesageRes = await db.messageData
       .where({
         friend_account: friendAccount
@@ -37,17 +37,36 @@ export class HandleChat {
       return '';
     }
 
-    for (let i = 0; i < meesageRes.length; i++) {
-      const dateKey = meesageRes[i].create_time.split(' ')[0];
+    const chatData = this.outFormatMessageData(meesageRes);
+
+    return chatData;
+  }
+
+  outFormatMessageData(
+    messages: MessageDetailData[],
+    formatMessages?: MessageData[]
+  ): MessageData[] {
+    if (Array.isArray(formatMessages)) {
+      return this.addMessageData(messages, formatMessages);
+    } else {
+      return this.createMessageData(messages);
+    }
+  }
+
+  private createMessageData(messages: MessageDetailData[]): MessageData[] {
+    const map = new Map<string, MessageDetailData[]>();
+
+    for (let i = 0; i < messages.length; i++) {
+      const dateKey = messages[i].create_time.split(' ')[0];
 
       if (map.has(dateKey)) {
         const messageList = map.get(dateKey);
-        messageList?.push(meesageRes[i]);
+        messageList?.push(messages[i]);
         if (messageList !== undefined) {
           map.set(dateKey, messageList);
         }
       } else {
-        map.set(dateKey, [meesageRes[i]]);
+        map.set(dateKey, [messages[i]]);
       }
     }
 
@@ -62,6 +81,71 @@ export class HandleChat {
     return chatData;
   }
 
+  /**
+   * 从原始的数组中添加数据
+   * @param messages
+   * @param formatMessages
+   * @returns
+   */
+  private addMessageData(
+    messages: MessageDetailData[],
+    formatMessages: MessageData[]
+  ): MessageData[] {
+    for (let i = 0; i < messages.length; i++) {
+      const dayDate = messages[i].create_time.split(' ')[0];
+      const idx = this.binarySearch(formatMessages, dayDate);
+      if (idx === null) {
+        formatMessages.push({
+          date: dayDate,
+          children: [messages[i]]
+        });
+      } else {
+        formatMessages[idx].children.push(messages[i]);
+      }
+    }
+
+    return formatMessages;
+  }
+
+  /**
+   *  查找时间相同的
+   * @param list 格式化的聊天信息列表
+   * @param target 查找的目标值
+   * @returns number
+   */
+  private binarySearch(list: MessageData[], target: string): number | null {
+    const len = list.length;
+    list.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+    let l = 0;
+    let r = len - 1;
+    let ans: number | null = null;
+
+    while (l <= r) {
+      const mid = Math.floor((r - l) / 2) + l;
+
+      if (list[mid].date === target) {
+        ans = mid;
+        break;
+      } else if (
+        new Date(list[mid].date).getTime() < new Date(target).getTime()
+      ) {
+        l = mid + 1;
+      } else {
+        r = mid - 1;
+      }
+    }
+    return ans;
+  }
+
+  /**
+   *
+   * @param messageData
+   * @param message
+   * @param type
+   * @returns
+   */
   insert(
     messageData: MessageData[] | '',
     message: MessageDetailData,

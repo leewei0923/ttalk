@@ -19,7 +19,7 @@ import {
   MessageData,
   MessageDetailData
 } from '@src/util/handleChat';
-import { chatData } from '../chatPageBox/data';
+// import { chatData } from '../chatPageBox/data';
 
 export function ChatPageMain(): JSX.Element {
   /**
@@ -159,13 +159,19 @@ export function ChatPageMain(): JSX.Element {
           style={{ display: globalAccount === '' ? 'none' : '' }}
         >
           <ContactPageTopBar nickname={friendName} />
-          <ChatPageBox
-            // messageData={chatDatas ?? []}
-            messageData={chatData ?? []}
-            
-            avatar={friendvatar}
-            avatarString={friendName}
-          />
+
+          {globalAccount === '' ? (
+            ''
+          ) : (
+            <ChatPageBox
+              messageData={chatDatas ?? []}
+              // messageData={chatData ?? []}
+
+              avatar={friendvatar}
+              avatarString={friendName}
+            />
+          )}
+
           {expandChatBox ? (
             <ExpandChatBox
               expandSwitch={changeExpandInput}

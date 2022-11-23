@@ -1,20 +1,29 @@
 .container {
-    width: 100%;
+  width: 100%;
+  height: calc(100% - 50px);
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  position: relative;
+
+  .wraper_chat {
     height: calc(100% - 50px);
     overflow-y: scroll;
     scroll-behavior: smooth;
+    position: relative;
+    width: 100%;
 
     .chat_content_container {
-        position: relative;
-        width: 100%;
+      position: relative;
+      width: 100%;
 
-        .date_text {
-            width: 9em;
-            position: relative;
-            left: 50%;
-            transform: translate(-50%, 0);
-            margin: 10px 0 0 0;
-            letter-spacing: 2px;
-        }
+      .date_text {
+        width: 9em;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%, 0);
+        margin: 10px 0 0 0;
+        letter-spacing: 2px;
+      }
     }
+  }
 }

@@ -3,8 +3,6 @@
     display: flex;
 }
 
-
-
 .innerContainer {
   max-width: calc(70% - 20px);
   display: flex;
@@ -19,13 +17,16 @@
   }
 
   .chat_content_box {
-    max-width: calc(100% - 140px);
+    max-width: calc(100% - 120px);
     margin: 0 10px;
     border-radius: 10px;
     font-size: 0.9em;
     padding: 10px;
-    height: 100%;
     background-color: #d2d2d2cf;
+
+    p {
+      display: block;
+    }
 
     .chat_img {
       width: 100%;
@@ -44,6 +45,7 @@
     color: rgba(0, 0, 0, 0.7);
     opacity: 0;
     transition: all 0.5s;
+
   }
 }
 
@@ -57,5 +59,24 @@
 
   .chat_content_box {
     background-color: #8ac6d1;
+  }
+}
+
+
+.menus {
+  display: flex;
+  flex-direction: column;
+
+  .menuItem {
+    width: 60px;
+    height: 25px;
+    background-color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+      background-color: #F2F3F5;
+    }
   }
 }

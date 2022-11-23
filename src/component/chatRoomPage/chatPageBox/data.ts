@@ -1,4 +1,4 @@
-import { MessageData } from '@src/util/handleChat';
+import { MessageData, MessageDetailData } from '@src/util/handleChat';
 
 /* eslint-disable no-irregular-whitespace */
 export const chatData: MessageData[] = [
@@ -379,4 +379,153 @@ export const chatData: MessageData[] = [
       }
     ]
   }
+];
+
+export const mess: MessageDetailData[] = [
+  {
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-01 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"1"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },
+  {
+    remote_id: '2',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-01 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"2"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'send',
+    read_flag: true,
+    update_time: ''
+  },
+  {
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"3"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"4"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"5"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"6"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"7"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"8"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"9"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-02 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"10"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-04 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"11"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-05 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"12"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },{
+    remote_id: '1',
+    user_account: 'leewei',
+    friend_account: 'jia',
+    mood_state: '',
+    message_style: 'normal',
+    create_time: '2022-09-06 16:04',
+    message: `{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"13"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"bold"}],"text":"这是一个一个列表"}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"h"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"j"}]}]}]}]}`,
+    type: 'receive',
+    read_flag: true,
+    update_time: ''
+  },
 ];
