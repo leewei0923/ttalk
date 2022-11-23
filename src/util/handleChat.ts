@@ -42,6 +42,24 @@ export class HandleChat {
     return chatData;
   }
 
+  async loadMessage(friendAccount: string): Promise<MessageData[] | ''> {
+    const mesageRes = await db.messageData
+      .where({
+        friend_account: friendAccount
+      })
+      .toArray();
+
+    
+
+    if (mesageRes.length <= 0) {
+      return '';
+    }
+
+    const chatData = this.outFormatMessageData(mesageRes);
+
+    return chatData;
+  }
+
   outFormatMessageData(
     messages: MessageDetailData[],
     formatMessages?: MessageData[]

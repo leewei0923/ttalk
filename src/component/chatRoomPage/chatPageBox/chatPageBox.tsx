@@ -13,15 +13,11 @@ interface ChatPageBoxProps {
   messageData: MessageData[] | '';
   avatar: string;
   avatarString: string;
+  correspond?: string;
 }
 
 export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
-  const { messageData, avatar, avatarString } = props;
-
-  if (messageData === '') {
-    return <>暂时没有数据</>;
-  }
-
+  const { messageData, avatar, avatarString, correspond } = props;
   // ======================
 
   const chatBoxRef = useRef<HTMLDivElement>(null);
@@ -30,21 +26,28 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
     if (chatBoxRef.current === null) return;
 
     const currentHeight = chatBoxRef.current.scrollHeight;
-    console.log(historyHeightRef);
 
     chatBoxRef.current.scrollTo({
       left: 0,
-      top: historyHeightRef.current ?? 1000,
+      top: historyHeightRef.current ?? 10000,
       behavior: 'smooth'
     });
-    historyHeightRef.current = currentHeight + 1000;
+    historyHeightRef.current = currentHeight + 200;
   }
 
-  scrollToBottom();
+  if (correspond === undefined || correspond === '') {
+    scrollToBottom();
+  } else if (correspond === 'send') {
+    scrollToBottom();
+  }
 
   useEffect(() => {
     return () => {};
   }, []);
+
+  if (messageData === '') {
+    return <>暂时没有数据</>;
+  }
 
   return (
     <div className={styles.container}>

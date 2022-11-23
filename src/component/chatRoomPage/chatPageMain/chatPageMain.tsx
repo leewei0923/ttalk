@@ -13,7 +13,7 @@ import logoTransparent from '@pic/pic/logo_transparent.png';
 import dayjs from 'dayjs';
 import styles from './chatPageMain.module.scss';
 import { JSONContent } from '@tiptap/react';
-import { GetTtakLoginUser } from '@src/common/personInfo';
+import { GetTtakLoginUser, GetTtakMood } from '@src/common/personInfo';
 import {
   HandleChat,
   MessageData,
@@ -32,7 +32,7 @@ export function ChatPageMain(): JSX.Element {
   /**
    * 初始渲染
    */
-  const [chatDatas, setChatDatas] = useState<MessageData[] | ''>();
+  const [chatDatas, setChatDatas] = useState<MessageData[] | ''>('');
   function init(account: string): void {
     handleChat
       .create(account)
@@ -60,15 +60,28 @@ export function ChatPageMain(): JSX.Element {
    * 提交聊天框里的信息
    */
 
-  const [refresh, setRefresh] = useState(1);
+  const [refresh, setRefresh] = useState(1); // 供刷新使用
+  const [pageBoxCorr, setPageBoxCorr] = useState('');
   const onSubmit = (content: JSONContent): void => {
+    const moodOptions = GetTtakMood();
+    let moodState: string = '';
+    const curTime = Date.now();
+
+    if (typeof moodOptions === 'object') {
+      if (curTime > parseInt(moodOptions.expireTime)) {
+        moodState = 'normal';
+      } else {
+        moodState = moodOptions.type;
+      }
+    }
+
     const curDate = dayjs().format('YYYY-MM-DD HH:mm');
 
     const message: MessageDetailData = {
-      remote_id: '4',
+      remote_id: 'local',
       user_account: loginUserInfo !== '' ? loginUserInfo[0].account : '',
       friend_account: globalAccount,
-      mood_state: '开心',
+      mood_state: moodState,
       type: 'send',
       message_style: 'normal',
       message: JSON.stringify(content),
@@ -83,8 +96,11 @@ export function ChatPageMain(): JSX.Element {
       'push'
     );
 
+    handleChat.addDb(message);
+
     setRefresh(refresh + 1);
     setChatDatas(insertRes);
+    setPageBoxCorr('send');
   };
 
   /**
@@ -120,7 +136,7 @@ export function ChatPageMain(): JSX.Element {
     }
   };
 
-  const [friendvatar, setFriendAvatar] = useState('');
+  const [friendavatar, setFriendAvatar] = useState('');
   function loadUserIndo(): void {
     if (loginUserInfo !== '' && loginUserInfo[0].account === globalAccount) {
       setFriendAvatar(loginUserInfo[0].avatar);
@@ -133,17 +149,29 @@ export function ChatPageMain(): JSX.Element {
     }
   }
 
+  const onAccountChange = (account: string): void => {
+    handleChat
+      .loadMessage(account)
+      .then((res) => {
+        setChatDatas(res);
+      })
+      .catch((err) => {
+        console.log('加载出错', err);
+      });
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
-    if (friendvatar === '') {
+    if (friendavatar === '') {
       loadUserIndo();
     }
+    onAccountChange(globalAccount);
 
     if (globalAccount !== '' && chatDatas === '') {
       init(globalAccount);
     }
-  }, [globalAccount, friendvatar, refresh]);
+  }, [globalAccount, friendavatar, refresh]);
 
   return (
     <div className={styles.container}>
@@ -164,11 +192,12 @@ export function ChatPageMain(): JSX.Element {
             ''
           ) : (
             <ChatPageBox
-              messageData={chatDatas ?? []}
+              messageData={chatDatas}
               // messageData={chatData ?? []}
 
-              avatar={friendvatar}
+              avatar={friendavatar}
               avatarString={friendName}
+              correspond={pageBoxCorr}
             />
           )}
 

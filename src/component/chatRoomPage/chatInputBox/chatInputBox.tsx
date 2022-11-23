@@ -12,6 +12,8 @@ import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import CharacterCount from '@tiptap/extension-character-count';
+import useDebounce from '@src/hooks/debounce';
+import Paragraph from '@tiptap/extension-paragraph';
 
 interface ChatInputBoxProps {
   expandSwitch: () => void;
@@ -34,6 +36,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     extensions: [
       StarterKit,
       TextStyle,
+      Paragraph,
       CharacterCount.configure({
         limit
       })
@@ -48,6 +51,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
 
     if (typeof onSubmit !== 'function' || jsonContent === undefined) return;
     onSubmit(editor?.getJSON() ?? {});
+    editor?.chain().deleteNode('paragraph');
   };
 
   /**
@@ -61,13 +65,17 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     }
   };
 
-  const onEnterDown = (e: { shiftKey: any; code: string }): boolean => {
-    if (Boolean(e.shiftKey) && e.code === 'Enter') {
-      onSendBtn();
-    }
+  const [onEnterDown] = useDebounce(
+    (e): boolean => {
+      if (Boolean(e.ctrlKey) && e.code === 'Enter') {
+        onSendBtn();
+      }
 
-    return true;
-  };
+      return true;
+    },
+    500,
+    []
+  );
 
   return (
     <div className={styles.container}>
@@ -82,7 +90,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
         <EditorContent
           className={styles.editor}
           editor={editor}
-          onKeyDown={onEnterDown}
+          onKeyDown={(e) => onEnterDown(e)}
         />
 
         <div className={styles.chat_editer_wrap}>
