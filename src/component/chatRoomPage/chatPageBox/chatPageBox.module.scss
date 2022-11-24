@@ -5,6 +5,11 @@
   scroll-behavior: smooth;
   position: relative;
 
+
+  .loding {
+    background-color: aquamarine;
+  }
+
   .wraper_chat {
     height: calc(100% - 50px);
     overflow-y: scroll;

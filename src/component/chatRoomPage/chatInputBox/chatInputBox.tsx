@@ -4,7 +4,7 @@ import {
   IconSend,
   IconUpCircle
 } from '@arco-design/web-react/icon';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import face from '@pic/icon/face.svg';
 import styles from './chatInputBox.module.scss';
 import Emoji from './emoji/emoji';
@@ -13,7 +13,6 @@ import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import CharacterCount from '@tiptap/extension-character-count';
 import useDebounce from '@src/hooks/debounce';
-import Paragraph from '@tiptap/extension-paragraph';
 
 interface ChatInputBoxProps {
   expandSwitch: () => void;
@@ -36,7 +35,6 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     extensions: [
       StarterKit,
       TextStyle,
-      Paragraph,
       CharacterCount.configure({
         limit
       })
@@ -46,12 +44,12 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
   /**
    * 发送按钮
    */
+  const inputRef = useRef<HTMLDivElement>(null);
   const onSendBtn = (): void => {
     const jsonContent = editor?.getJSON();
 
     if (typeof onSubmit !== 'function' || jsonContent === undefined) return;
     onSubmit(editor?.getJSON() ?? {});
-    editor?.chain().deleteNode('paragraph');
   };
 
   /**
@@ -86,7 +84,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
         <Emoji onClick={onGetEmoji} />
       </div>
 
-      <div className={styles.input_box}>
+      <div className={styles.input_box} ref={inputRef}>
         <EditorContent
           className={styles.editor}
           editor={editor}

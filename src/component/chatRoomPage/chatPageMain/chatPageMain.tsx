@@ -3,7 +3,7 @@ import { getUserInfo } from '@src/database/getUserInfo';
 import { selectGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
 import { firstValidNumber } from '@src/util/util';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ChatConcatList } from '../chatConcatList/chatConcatList';
 import { ExpandChatBox } from '../chatInputBox/chatExpandChatBox/chatExpandChatBox';
 import { ChatInputBox } from '../chatInputBox/chatInputBox';
@@ -137,7 +137,7 @@ export function ChatPageMain(): JSX.Element {
   };
 
   const [friendavatar, setFriendAvatar] = useState('');
-  function loadUserIndo(): void {
+  function loadUserInfo(): void {
     if (loginUserInfo !== '' && loginUserInfo[0].account === globalAccount) {
       setFriendAvatar(loginUserInfo[0].avatar);
     } else if (globalAccount !== '') {
@@ -149,7 +149,9 @@ export function ChatPageMain(): JSX.Element {
     }
   }
 
+  const saveAccountRef = useRef('');
   const onAccountChange = (account: string): void => {
+    saveAccountRef.current = account;
     handleChat
       .loadMessage(account)
       .then((res) => {
@@ -160,13 +162,44 @@ export function ChatPageMain(): JSX.Element {
       });
   };
 
+  /**
+   * correspond
+   */
+  const onChangeCorrespond = (sign: string): void => {
+    setPageBoxCorr(sign);
+  };
+
+  /**
+   * 加载历史消息
+   */
+  const onfetchHistory = (): void => {
+    if (typeof chatDatas === 'object') {
+      const chats = chatDatas;
+      handleChat
+        .loadHistoryMessages(
+          globalAccount,
+          chats[0].children[0].create_time,
+          chatDatas
+        )
+        .then((res) => {
+          setChatDatas(res);
+          setRefresh(refresh + 1);
+        })
+        .catch((err) => {
+          console.log('出错了', err);
+        });
+    }
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
     if (friendavatar === '') {
-      loadUserIndo();
+      loadUserInfo();
     }
-    onAccountChange(globalAccount);
+    if (saveAccountRef.current !== globalAccount) {
+      onAccountChange(globalAccount);
+    }
 
     if (globalAccount !== '' && chatDatas === '') {
       init(globalAccount);
@@ -198,6 +231,8 @@ export function ChatPageMain(): JSX.Element {
               avatar={friendavatar}
               avatarString={friendName}
               correspond={pageBoxCorr}
+              setCorrespond={onChangeCorrespond}
+              fetchHistory={onfetchHistory}
             />
           )}
 

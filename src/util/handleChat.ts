@@ -31,7 +31,21 @@ export class HandleChat {
       .where({
         friend_account: friendAccount
       })
-      .toArray();
+      .reverse()
+      .limit(10)
+      .sortBy('create_time', (res) => {
+        res.sort((a, b) => {
+          if (a.create_time === b.create_time) {
+            return parseInt(a.id ?? '') - parseInt(b.id ?? '');
+          } else {
+            return (
+              new Date(a.create_time).getTime() -
+              new Date(b.create_time).getTime()
+            );
+          }
+        });
+        return res;
+      });
 
     if (meesageRes.length <= 0) {
       return '';
@@ -47,9 +61,21 @@ export class HandleChat {
       .where({
         friend_account: friendAccount
       })
-      .toArray();
-
-    
+      .reverse()
+      .limit(10)
+      .sortBy('create_time', (res) => {
+        res.sort((a, b) => {
+          if (a.create_time === b.create_time) {
+            return parseInt(a.id ?? '') - parseInt(b.id ?? '');
+          } else {
+            return (
+              new Date(a.create_time).getTime() -
+              new Date(b.create_time).getTime()
+            );
+          }
+        });
+        return res;
+      });
 
     if (mesageRes.length <= 0) {
       return '';
@@ -60,12 +86,51 @@ export class HandleChat {
     return chatData;
   }
 
+  async loadHistoryMessages(
+    friendAccount: string,
+    createTime: string,
+    formatMessages: MessageData[]
+  ): Promise<MessageData[]> {
+    const mesageRes = await db.messageData
+      .where({
+        friend_account: friendAccount
+      })
+      .and((res) => {
+        return (
+          new Date(res.create_time).getTime() < new Date(createTime).getTime()
+        );
+      })
+      .reverse()
+      .limit(10)
+      .sortBy('create_time', (res) => {
+        res.sort((a, b) => {
+          if (a.create_time === b.create_time) {
+            return parseInt(b.id ?? '') - parseInt(a.id ?? '');
+          } else {
+            return (
+              new Date(b.create_time).getTime() -
+              new Date(a.create_time).getTime()
+            );
+          }
+        });
+        return res;
+      });
+
+    const chatData = this.outFormatMessageData(
+      mesageRes,
+      formatMessages,
+      'unshift'
+    );
+    return chatData;
+  }
+
   outFormatMessageData(
     messages: MessageDetailData[],
-    formatMessages?: MessageData[]
+    formatMessages?: MessageData[],
+    method?: 'push' | 'unshift'
   ): MessageData[] {
     if (Array.isArray(formatMessages)) {
-      return this.addMessageData(messages, formatMessages);
+      return this.addMessageData(messages, formatMessages, method);
     } else {
       return this.createMessageData(messages);
     }
@@ -107,7 +172,8 @@ export class HandleChat {
    */
   private addMessageData(
     messages: MessageDetailData[],
-    formatMessages: MessageData[]
+    formatMessages: MessageData[],
+    method?: 'push' | 'unshift'
   ): MessageData[] {
     for (let i = 0; i < messages.length; i++) {
       const dayDate = messages[i].create_time.split(' ')[0];
@@ -117,6 +183,8 @@ export class HandleChat {
           date: dayDate,
           children: [messages[i]]
         });
+      } else if (method === 'unshift') {
+        formatMessages[idx].children.unshift(messages[i]);
       } else {
         formatMessages[idx].children.push(messages[i]);
       }
