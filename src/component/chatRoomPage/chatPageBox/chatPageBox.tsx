@@ -44,33 +44,22 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
         top: currentHeight ?? 10000,
         behavior: 'smooth'
       });
-      console.log('未定义');
     } else if (correspond === 'send') {
       chatBoxRef.current.scrollTo({
         left: 0,
         top: currentHeight + 200 ?? 10000,
         behavior: 'smooth'
       });
-      console.log('发信息');
     } else if (correspond === 'history') {
-      if (currentHeight === historyHeightRef.current) return;
+      if (currentHeight === historyHeightRef.current) return; // 滑到未读消息处,两者之间的差值就是用户自己滑动的距离
+
       chatBoxRef.current.scrollTo({
         left: 0,
         top: currentHeight - historyHeightRef.current,
         behavior: 'smooth'
       });
-      console.log(
-        'historyHeightRef.current: 1',
-        historyHeightRef.current,
-        currentHeight
-      );
-      historyHeightRef.current = currentHeight;
 
-      console.log(
-        'historyHeightRef.current:2 ',
-        historyHeightRef.current,
-        currentHeight
-      );
+      historyHeightRef.current = currentHeight;
     }
   }
   scrollToBottom(correspond);
