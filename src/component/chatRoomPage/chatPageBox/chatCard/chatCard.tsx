@@ -8,13 +8,12 @@ interface ChatCardPropsType {
   content: string;
   time: string;
   type: 'send' | 'receive' | string;
-  avatarString: string;
   avatar: string;
   flag: boolean;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { content, time, type, avatar, avatarString, flag } = props;
+  const { content, time, type, avatar, flag } = props;
   const timeFormat = time.split(' ')[1];
 
   const defaultClass = {
@@ -45,7 +44,7 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
   return (
     <div className={defaultClass.container}>
       <div className={defaultClass.innerContainer}>
-        {avatar !== '' ? (
+        {avatar.length > 10 ? (
           <img src={avatar} className={styles.chat_avatar_img} />
         ) : (
           <Avatar
@@ -54,9 +53,7 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
             size={40}
             shape="circle"
           >
-            {(avatarString ?? '').length > 0
-              ? (avatarString ?? '').charAt(0)
-              : ''}
+            {(avatar ?? '').length > 0 ? (avatar ?? '').charAt(0) : ''}
           </Avatar>
         )}
 

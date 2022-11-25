@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { db } from '@src/database/db';
 import { getUserInfo } from '@src/database/getUserInfo';
 import { selectGlobalAccount } from '@src/redux/account';
@@ -22,6 +23,7 @@ import {
 import { useSocket } from '@src/contexts/socket';
 import { selectGlobalNotice, setDetailNotice } from '@src/redux/notice';
 import { useDispatch } from 'react-redux';
+import { FriendSetting } from '../chatPageBox/friendSetting/friendSetting';
 // import { chatData } from '../chatPageBox/data';
 
 export function ChatPageMain(): JSX.Element {
@@ -287,9 +289,20 @@ export function ChatPageMain(): JSX.Element {
             <ChatPageBox
               messageData={chatDatas}
               // messageData={chatData ?? []}
-
-              avatar={friendavatar}
-              avatarString={friendName}
+              loginAvatar={
+                loginUserInfo !== ''
+                  ? firstValidNumber([
+                      loginUserInfo[0].avatar,
+                      loginUserInfo[0].nickname,
+                      loginUserInfo[0].account
+                    ])
+                  : ''
+              }
+              avatar={
+                loginUserInfo !== ''
+                  ? firstValidNumber([friendavatar, friendName])
+                  : ''
+              }
               correspond={pageBoxCorr}
               setCorrespond={onChangeCorrespond}
               fetchHistory={onfetchHistory}
@@ -316,6 +329,9 @@ export function ChatPageMain(): JSX.Element {
           <img src={logoTransparent} className={styles.logo} />
           <p>TTalk 想聊就聊</p>
         </div>
+
+        {/* 好友菜单页面 */}
+        <FriendSetting />
       </section>
     </div>
   );
