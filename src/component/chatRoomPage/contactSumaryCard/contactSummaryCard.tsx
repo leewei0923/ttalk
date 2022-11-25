@@ -1,4 +1,5 @@
 import { Avatar } from '@arco-design/web-react';
+import classNames from 'classnames';
 import React from 'react';
 import styles from './contactSummaryCard.module.scss';
 
@@ -8,6 +9,7 @@ interface ContcatSumaryCardProps {
   message: string;
   time: string;
   account: string;
+  globalAccount: string;
   onClick?: (
     account: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -18,12 +20,25 @@ export function ContcatSumaryCard(props: ContcatSumaryCardProps): JSX.Element {
   /**
    * 公共区域
    */
-  const { avatarUrl, nickname, message, time, account, onClick } = props;
+  const {
+    avatarUrl,
+    nickname,
+    message,
+    time,
+    account,
+    onClick,
+    globalAccount
+  } = props;
+
+  const container = classNames({
+    [styles.container]: true,
+    [styles.selected]: globalAccount === account
+  });
 
   // ========================
   return (
     <div
-      className={styles.container}
+      className={container}
       onClick={(e) =>
         typeof onClick === 'function' ? onClick(account, e) : ''
       }

@@ -12,7 +12,7 @@ import useDebounce from '@src/hooks/debounce';
 interface ChatPageBoxProps {
   messageData: MessageData[] | '';
   avatar: string;
-  avatarString: string;
+  loginAvatar: string;
   fetchHistory: () => void;
   correspond?: string;
   setCorrespond?: (sign: string) => void;
@@ -22,15 +22,16 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
   const {
     messageData,
     avatar,
-    avatarString,
     correspond,
     setCorrespond,
-    fetchHistory
+    fetchHistory,
+    loginAvatar
   } = props;
 
   const [lodingFlag, setLodingFlag] = useState(false);
   // ======================
 
+  // 滚轮滑动事件
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const historyHeightRef = useRef<number>(0);
   function scrollToBottom(correspond: string | undefined): void {
@@ -128,14 +129,18 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
                   Color
                 ]);
 
+                let userAvatar = avatar;
+                if (item2.type === 'send') {
+                  userAvatar = loginAvatar;
+                }
+
                 return (
                   <ChatCard
                     key={item2.friend_account + index2.toString()}
                     content={htmlContent}
                     time={item2.create_time}
-                    avatar={avatar}
+                    avatar={userAvatar}
                     type={item2.type}
-                    avatarString={avatarString}
                     flag={item2.read_flag}
                   />
                 );

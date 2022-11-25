@@ -1,61 +1,64 @@
 .container {
-    width: 100%;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    position: relative;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  position: relative;
 
-    &:hover {
-        background-color: white;
-        cursor: pointer;
+  &:hover {
+    background-color: white;
+    cursor: pointer;
+  }
+
+  .avatar_box {
+    margin: 0 10px;
+  }
+
+  .content_box {
+    .contact_nickname {
+      margin-bottom: 5px;
     }
 
-    .avatar_box {
-        margin: 0 10px;
+    .contact_summay {
+      min-width: 100%;
+      max-width: 150%;
+      color: rgba(78, 89, 105, 0.6);
+      font-size: 0.8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+  }
 
-    .content_box {
+  .tag {
+    font-size: 0.7em;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    color: rgba(78, 89, 105, 0.6);
 
-        .contact_nickname {
-            margin-bottom: 5px;
-        }
-
-        .contact_summay {
-            min-width: 100%;
-            max-width: 150%;
-            color: rgba(78, 89, 105,0.6);
-            font-size: 0.8em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+    .message_count {
+      background-color: #ff6539;
+      text-align: center;
+      color: white;
+      border-radius: 50%;
+      height: 15px;
+      width: 15px;
+      font-size: 0.6rem;
+      margin: auto;
     }
-
-    .tag {
-        font-size: 0.7em;
-        position: absolute;
-        top: 20px;
-        right: 10px;
-        color: rgba(78, 89, 105,0.6);
-
-        .message_count {
-            background-color: #FF6539;
-            text-align: center;
-            color: white;
-            border-radius: 50%;
-            height: 15px;
-            width: 15px;
-            font-size: 0.6rem;
-            margin: auto;
-        }
-    }
+  }
 }
 
-
 .avatar_box {
-    .avatar_img {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-    }
+  .avatar_img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+}
+
+.selected {
+  background-color: #ffffff;
+  color: #447DFF;
 }

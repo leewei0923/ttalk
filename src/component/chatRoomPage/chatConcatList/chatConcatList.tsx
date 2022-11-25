@@ -93,6 +93,7 @@ export function ChatConcatList(): JSX.Element {
         return (
           <ContcatSumaryCard
             account={item.account}
+            globalAccount={globalAccount}
             avatarUrl={item.avatar}
             nickname={item.nickname}
             message=""
