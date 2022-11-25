@@ -136,6 +136,7 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
                     avatar={avatar}
                     type={item2.type}
                     avatarString={avatarString}
+                    flag={item2.read_flag}
                   />
                 );
               })}

@@ -10,10 +10,11 @@ interface ChatCardPropsType {
   type: 'send' | 'receive' | string;
   avatarString: string;
   avatar: string;
+  flag: boolean;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { content, time, type, avatar, avatarString } = props;
+  const { content, time, type, avatar, avatarString, flag } = props;
   const timeFormat = time.split(' ')[1];
 
   const defaultClass = {
@@ -66,7 +67,7 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
 
         <div className={styles.time}>
           <p>{timeFormat}</p>
-          <p>已读</p>
+          <p>{flag ? '已读' : '未读'}</p>
 
           <div>
             <Tooltip

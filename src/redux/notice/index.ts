@@ -2,7 +2,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { globalNotice } from '../store';
 
-type noticeType = 'addFriend' | '';
+interface newMessageType {
+  name: string;
+  remote_id: string;
+  friend_account: string;
+}
+
+type noticeType = 'addFriend' | newMessageType | '';
 
 const initialNotice: noticeType = '';
 
@@ -10,7 +16,7 @@ export const NoticeSlice = createSlice({
   name: 'note',
   initialState: initialNotice,
   reducers: {
-    setDetailNote: (
+    setDetailNotice: (
       state: noticeType,
       action: PayloadAction<noticeType>
     ): any => {
@@ -19,7 +25,7 @@ export const NoticeSlice = createSlice({
   }
 });
 
-export const { setDetailNote } = NoticeSlice.actions;
+export const { setDetailNotice } = NoticeSlice.actions;
 
 export const selectGlobalNotice = (state: globalNotice): noticeType => {
   return state.globalNotice;

@@ -51,11 +51,11 @@
 
 
 .recontainer {
-    justify-content: end;
+    justify-content: flex-end;
 }
 .reverse {
   flex-direction: row-reverse;
-  justify-content: end;
+  justify-content: flex-end;
 
   .chat_content_box {
     background-color: #8ac6d1;

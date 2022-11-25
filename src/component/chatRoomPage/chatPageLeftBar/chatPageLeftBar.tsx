@@ -11,6 +11,7 @@ import { firstValidNumber } from '@src/util/util';
 import { LeftUserCard } from './leftUserCard/leftUserCard';
 import { MoodDataType } from '@src/common/data';
 import { GetMood, getMoodType, SetMood } from '@src/common/handleMood';
+import { useSocket } from '@src/contexts/socket';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
@@ -18,6 +19,8 @@ export function ChatPageLeftBar(): JSX.Element {
   const globalAccount = useAppSelector(selectGlobalAccount);
   const { chatId } = useParams();
   const userInfoData = GetTtakLoginUser();
+  const socket = useSocket();
+
 
   console.log(globalAccount);
 
@@ -44,11 +47,20 @@ export function ChatPageLeftBar(): JSX.Element {
     }
   };
 
+  
+
+ 
   useEffect(() => {
     if (leftBarMood === '') {
       setLetfBarMood(GetMood());
     }
-  }, [leftBarMood]);
+    
+
+    return () => {
+      // 页面卸载后移除socket监听
+      
+    };
+  }, [leftBarMood, socket]);
 
   return (
     <div className={styles.container}>

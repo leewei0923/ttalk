@@ -19,6 +19,9 @@ import {
   MessageData,
   MessageDetailData
 } from '@src/util/handleChat';
+import { useSocket } from '@src/contexts/socket';
+import { selectGlobalNotice, setDetailNotice } from '@src/redux/notice';
+import { useDispatch } from 'react-redux';
 // import { chatData } from '../chatPageBox/data';
 
 export function ChatPageMain(): JSX.Element {
@@ -26,8 +29,11 @@ export function ChatPageMain(): JSX.Element {
    * 公共区域
    */
   const globalAccount = useAppSelector(selectGlobalAccount);
+  const globalNotice = useAppSelector(selectGlobalNotice);
+  const dispatch = useDispatch();
   const loginUserInfo = GetTtakLoginUser();
   const handleChat = new HandleChat();
+  const socket = useSocket();
 
   /**
    * 初始渲染
@@ -97,6 +103,18 @@ export function ChatPageMain(): JSX.Element {
     );
 
     handleChat.addDb(message);
+
+    /**
+     * 与服务器通讯
+     */
+    socket.emit('messaging', {
+      user_account: loginUserInfo !== '' ? loginUserInfo[0].account : '',
+      friend_account: globalAccount,
+      message: JSON.stringify(content),
+      mood_state: moodState,
+      message_style: 'normal',
+      read_flag: false
+    });
 
     setRefresh(refresh + 1);
     setChatDatas(insertRes);
@@ -191,6 +209,44 @@ export function ChatPageMain(): JSX.Element {
     }
   };
 
+  /**
+   * 接收新消息添加
+   */
+
+  const onReceiveMessage = (): void => {
+    if (typeof globalNotice !== 'object') return;
+
+    const {
+      name,
+      friend_account: friendAccount,
+      remote_id: remoteId
+    } = globalNotice;
+    if (globalAccount !== friendAccount || name !== 'receive') return;
+
+    db.messageData
+      .where({
+        remote_id: remoteId
+      })
+      .first()
+      .then((messRes) => {
+        if (typeof messRes === 'undefined') return;
+
+        const insertRes = handleChat.insert(
+          Array.isArray(chatDatas) ? chatDatas : '',
+          messRes,
+          'push'
+        );
+
+        setRefresh(refresh + 1);
+        setChatDatas(insertRes);
+        setPageBoxCorr('send');
+        dispatch(setDetailNotice(''));
+      })
+      .catch((err) => {
+        console.log('出现错误', err);
+      });
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -204,7 +260,11 @@ export function ChatPageMain(): JSX.Element {
     if (globalAccount !== '' && chatDatas === '') {
       init(globalAccount);
     }
-  }, [globalAccount, friendavatar, refresh]);
+
+    onReceiveMessage(); // 接收消息
+
+    return () => {};
+  }, [globalAccount, friendavatar, refresh, socket, globalNotice]);
 
   return (
     <div className={styles.container}>

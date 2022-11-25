@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setGlobalAccount } from '@src/redux/account';
 import { SetConcatList } from '@src/database/setConcatList';
+import { HandleChat, MessageDetailData } from '@src/util/handleChat';
+import { setDetailNotice } from '@src/redux/notice';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
@@ -26,6 +28,7 @@ export function ChatPageTopBar(): JSX.Element {
   const userInfo = GetTtakLoginUser();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const handleChat = new HandleChat();
 
   if (userInfo === '') {
     return <></>;
@@ -440,16 +443,63 @@ export function ChatPageTopBar(): JSX.Element {
   };
 
   // ====================
+  /**
+   * 监听收发信息
+   */
+  interface MessageRes {
+    message_id: string;
+    user_account: string;
+    friend_account: string;
+    message: string;
+    mood_state: string;
+    message_style: string;
+    read_flag: boolean;
+    create_time: string;
+    update_time: string;
+  }
+  const onListenerMessages = (res: MessageRes): void => {
+    const curDate = dayjs().format('YYYY-MM-DD HH-mm');
+
+    const message: MessageDetailData = {
+      remote_id: res.message_id,
+      user_account: res.user_account,
+      friend_account: res.friend_account,
+      mood_state: res.mood_state,
+      type: 'receive',
+      message_style: 'normal',
+      message: res.message,
+      read_flag: res.read_flag,
+      create_time: res.create_time,
+      update_time: curDate
+    };
+
+    if (typeof res === 'object') {
+      handleChat.addDb(message);
+      dispatch(
+        setDetailNotice({
+          name: 'receive',
+          remote_id: res.message_id,
+          friend_account: res.friend_account
+        })
+      );
+    }
+  };
+
+  // ====================
 
   useEffect(() => {
     // 监听添加好友
     onListenAddFriend();
 
+    socket.on('messaging', onListenerMessages);
+
     return () => {
       // 页面卸载后移除socket监听
       socket.off('addFriend');
+      socket.off('messaging');
     };
-  }, [socket]);
+
+  }, []);
 
   return (
     <div className={styles.container}>
