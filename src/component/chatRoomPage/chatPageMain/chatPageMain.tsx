@@ -24,6 +24,7 @@ import { useSocket } from '@src/contexts/socket';
 import { selectGlobalNotice, setDetailNotice } from '@src/redux/notice';
 import { useDispatch } from 'react-redux';
 import { FriendSetting } from '../chatPageBox/friendSetting/friendSetting';
+import { HistoryMessageBox } from '../chatPageBox/historyMessageBox/historyMessage';
 // import { chatData } from '../chatPageBox/data';
 
 export function ChatPageMain(): JSX.Element {
@@ -249,6 +250,12 @@ export function ChatPageMain(): JSX.Element {
       });
   };
 
+  // 控制好友设置页面的显示与隐藏
+  const [showFriendFlag, setShowFriendFlg] = useState(false);
+  function changeFriendVisible(): void {
+    setShowFriendFlg(!showFriendFlag);
+  }
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -281,7 +288,10 @@ export function ChatPageMain(): JSX.Element {
           className={styles.chat_page_container}
           style={{ display: globalAccount === '' ? 'none' : '' }}
         >
-          <ContactPageTopBar nickname={friendName} />
+          <ContactPageTopBar
+            nickname={friendName}
+            settingClick={changeFriendVisible}
+          />
 
           {globalAccount === '' ? (
             ''
@@ -331,7 +341,25 @@ export function ChatPageMain(): JSX.Element {
         </div>
 
         {/* 好友菜单页面 */}
-        <FriendSetting />
+
+        {globalAccount === '' ? (
+          ''
+        ) : (
+          <FriendSetting
+            loginAccount={(() => {
+              if (typeof loginUserInfo === 'object') {
+                return loginUserInfo[0].account;
+              } else {
+                return '';
+              }
+            })()}
+            visibleFlag={showFriendFlag}
+            setVisibleFlag={changeFriendVisible}
+          />
+        )}
+
+        {/* 历史记录页面 */}
+        <HistoryMessageBox />
       </section>
     </div>
   );

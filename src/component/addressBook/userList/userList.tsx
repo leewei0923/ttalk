@@ -50,7 +50,6 @@ export function UserList(props: UserListProps): JSX.Element {
   };
 
   // 点击人物卡片获取account
-
   useEffect(() => {
     if (GetTtakLoginUser() !== '') {
       void onGetOnlineStatus().then((res) => {
