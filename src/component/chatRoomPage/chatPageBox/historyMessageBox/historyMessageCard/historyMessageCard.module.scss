@@ -1,0 +1,53 @@
+.container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  margin-bottom: 10px;
+  justify-content: flex-start;
+  padding: 10px 0;
+
+  &:hover {
+    background-color: white;
+    cursor: pointer;
+  }
+
+  .avatar_box {
+    margin: 0 10px;
+  }
+
+  .content_box {
+    .contact_nickname {
+      margin-bottom: 5px;
+    }
+
+    .contact_summay {
+      width: 80%;
+      color: rgba(78, 89, 105, 0.6);
+      font-size: 0.8em;
+      white-space: wrap;
+    }
+  }
+
+  .tag {
+    font-size: 0.7em;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: rgba(78, 89, 105, 0.6);
+
+    .time {
+      word-spacing: normal;
+    }
+  }
+}
+
+.avatar_box {
+  .avatar_img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+}
+
+

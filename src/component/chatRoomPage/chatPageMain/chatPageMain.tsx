@@ -256,6 +256,14 @@ export function ChatPageMain(): JSX.Element {
     setShowFriendFlg(!showFriendFlag);
   }
 
+  /**
+   * 控制历史记录显示与隐藏
+   */
+  const [historyShow, setHistoryShow] = useState(false);
+  const changeHistoryVisible = (): void => {
+    setHistoryShow(!historyShow);
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -291,6 +299,7 @@ export function ChatPageMain(): JSX.Element {
           <ContactPageTopBar
             nickname={friendName}
             settingClick={changeFriendVisible}
+            setHistoryClick={changeHistoryVisible}
           />
 
           {globalAccount === '' ? (
@@ -359,7 +368,20 @@ export function ChatPageMain(): JSX.Element {
         )}
 
         {/* 历史记录页面 */}
-        <HistoryMessageBox />
+        <HistoryMessageBox
+          loginAccount={
+            loginUserInfo !== ''
+              ? firstValidNumber([
+                  loginUserInfo[0].avatar,
+                  loginUserInfo[0].nickname,
+                  loginUserInfo[0].account
+                ])
+              : ''
+          }
+          nickname={loginUserInfo !== '' ? loginUserInfo[0].nickname : ''}
+          visible={historyShow}
+          onClose={changeHistoryVisible}
+        />
       </section>
     </div>
   );
