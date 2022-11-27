@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { Input } from '@arco-design/web-react';
+import { Input, Message } from '@arco-design/web-react';
 import { IconClose, IconSearch } from '@arco-design/web-react/icon';
 import {
   chat_message_data_entry,
@@ -8,7 +8,9 @@ import {
 } from '@src/database/db';
 import { selectGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
+import { handleJSON, MakeFlase } from '@src/util/handleJSON';
 import Color from '@tiptap/extension-color';
+import Highlight from '@tiptap/extension-highlight';
 import TextStyle from '@tiptap/extension-text-style';
 import { generateHTML } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -75,17 +77,6 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
     setSearchShow(!searchShow);
   };
 
-  useEffect(() => {
-    if (globalAccount !== '') {
-      init();
-    }
-
-    return () => {
-      messagesData.current = null;
-      friendInfo.current = null;
-    };
-  }, [globalAccount]);
-
   const container = classnames({
     [styles.container]: true,
     [styles.close_container]: visible
@@ -97,22 +88,49 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
   });
 
   // 点击搜索回调
+  const [fresh, setfresh] = useState(1);
   const onGetSearch = (e: any): void => {
     const { value } = e.target;
-    console.log(value);
+    if (value.length === 0) {
+      Message.info('还没有输入什么关键字呢');
+      return;
+    }
     db.messageData
       .where({
         friend_account: globalAccount
       })
       .toArray()
       .then((res) => {
-        console.table(res[0]);
-        messagesData.current = res;
+        const newArr:chat_message_data_entry[] = [];
+        for (let i = 0; i < res.length; i++) {
+          const resJSON = JSON.parse(res[i].message);
+          const { doc, flag } = handleJSON(resJSON, value);
+          MakeFlase();
+          res[i].message = JSON.stringify(doc);
+
+          if(flag) {
+            newArr.push(res[i]);
+          }
+        }
+        messagesData.current = newArr;
+
+        setfresh(fresh + 1);
       })
       .catch((err) => {
         console.log('查找出问题了', err);
       });
   };
+
+  useEffect(() => {
+    if (globalAccount !== '') {
+      init();
+    }
+
+    return () => {
+      messagesData.current = null;
+      friendInfo.current = null;
+    };
+  }, [globalAccount]);
 
   return (
     <div className={container}>
@@ -160,7 +178,8 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
               const htmlContent = generateHTML(JSON.parse(message.message), [
                 StarterKit,
                 TextStyle,
-                Color
+                Color,
+                Highlight.configure({ multicolor: true })
               ]);
 
               let userAvatar = friendInfo.current?.avatar;

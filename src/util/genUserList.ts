@@ -93,7 +93,6 @@ export const genUserList = (getList: (list: userListTyep[]) => void): void => {
                   children: v
                 });
               });
-              console.log(getList);
               if (typeof getList === 'function') {
                 getList(newObj);
               }
