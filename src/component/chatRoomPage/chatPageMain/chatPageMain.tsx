@@ -26,6 +26,7 @@ import { useDispatch } from 'react-redux';
 import { FriendSetting } from '../chatPageBox/friendSetting/friendSetting';
 import { HistoryMessageBox } from '../chatPageBox/historyMessageBox/historyMessage';
 // import { chatData } from '../chatPageBox/data';
+import { nanoid } from '@reduxjs/toolkit';
 
 export function ChatPageMain(): JSX.Element {
   /**
@@ -37,6 +38,8 @@ export function ChatPageMain(): JSX.Element {
   const loginUserInfo = GetTtakLoginUser();
   const handleChat = new HandleChat();
   const socket = useSocket();
+
+  console.log();
 
   /**
    * 初始渲染
@@ -71,7 +74,8 @@ export function ChatPageMain(): JSX.Element {
 
   const [refresh, setRefresh] = useState(1); // 供刷新使用
   const [pageBoxCorr, setPageBoxCorr] = useState('');
-  const onSubmit = (content: JSONContent): void => {
+  const onSubmit = (content: JSONContent, type: 'normal' | 'rich'): void => {
+    const uuid = nanoid();
     const moodOptions = GetTtakMood();
     let moodState: string = '';
     const curTime = Date.now();
@@ -87,12 +91,12 @@ export function ChatPageMain(): JSX.Element {
     const curDate = dayjs().format('YYYY-MM-DD HH:mm');
 
     const message: MessageDetailData = {
-      remote_id: 'local',
+      remote_id: uuid,
       user_account: loginUserInfo !== '' ? loginUserInfo[0].account : '',
       friend_account: globalAccount,
       mood_state: moodState,
       type: 'send',
-      message_style: 'normal',
+      message_style: type,
       message: JSON.stringify(content),
       read_flag: false,
       create_time: curDate,
@@ -111,6 +115,7 @@ export function ChatPageMain(): JSX.Element {
      * 与服务器通讯
      */
     socket.emit('messaging', {
+      remote_id: uuid,
       user_account: loginUserInfo !== '' ? loginUserInfo[0].account : '',
       friend_account: globalAccount,
       message: JSON.stringify(content),

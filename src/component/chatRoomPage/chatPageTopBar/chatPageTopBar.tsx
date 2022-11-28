@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { IconPlus, IconSearch } from '@arco-design/web-react/icon';
+import {
+  IconMessage,
+  IconPlus,
+  IconSearch,
+  IconUserGroup
+} from '@arco-design/web-react/icon';
 import { apiAddFriend, apiSearchUser } from '@src/api/user';
 import { useSocket } from '@src/contexts/socket';
 import { db } from '@src/database/db';
@@ -12,12 +17,17 @@ import { ChatNotification } from '@src/component/message/notification';
 import { Message } from '@arco-design/web-react';
 import dayjs from 'dayjs';
 import { GetTtakLoginUser } from '@src/common/personInfo';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setGlobalAccount } from '@src/redux/account';
 import { UpdateConcatList } from '@src/database/setConcatList';
 import { HandleChat, MessageDetailData } from '@src/util/handleChat';
 import { setDetailNotice } from '@src/redux/notice';
+import {
+  selectMessageAlert,
+  setMessageAlert
+} from '@src/redux/topBarMessageAlert';
+import { getMessageCount } from '@src/database/getMeesageCount';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
@@ -29,6 +39,7 @@ export function ChatPageTopBar(): JSX.Element {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChat = new HandleChat();
+  const globalMessageAlert = useSelector(selectMessageAlert);
 
   if (userInfo === '') {
     return <></>;
@@ -486,18 +497,29 @@ export function ChatPageTopBar(): JSX.Element {
 
   // ====================
 
+  // 获取提醒消息的数量
+  const getMessageAlert = (): void => {
+    getMessageCount(userInfo[0].account)
+      .then((res) => {
+        dispatch(
+          setMessageAlert({ message: res.message, addFriend: res.addFriend })
+        );
+      })
+      .catch((err) => console.log('无法获取数量', err));
+  };
+
   useEffect(() => {
     // 监听添加好友
     onListenAddFriend();
 
     socket.on('messaging', onListenerMessages);
+    getMessageAlert();
 
     return () => {
       // 页面卸载后移除socket监听
       socket.off('addFriend');
       socket.off('messaging');
     };
-
   }, []);
 
   return (
@@ -565,6 +587,21 @@ export function ChatPageTopBar(): JSX.Element {
           <IconPlus
             style={{ width: '25px', strokeWidth: '3px', color: 'white' }}
           />
+        </div>
+      </div>
+
+      {/* 消息提醒框 */}
+
+      <div className={styles.message_infomation}>
+        <div>
+          <IconMessage className={styles.icon} />
+
+          <span>{globalMessageAlert.message}</span>
+        </div>
+
+        <div>
+          <IconUserGroup className={styles.icon} />
+          <span>{globalMessageAlert.addFriend}</span>
         </div>
       </div>
     </div>

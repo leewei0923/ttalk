@@ -1,4 +1,5 @@
 import { request } from '@src/request/index';
+import { CommonRes } from '..';
 
 export interface UpdateConcatReq {
   user_account: string; // 申请人账号
@@ -32,5 +33,53 @@ export const apiUpdateFriendShip = async (
   data: UpdateConcatReq
 ): Promise<UpdateConcatRes> =>
   await request.post<UpdateConcatRes>(`/ttalk/deleteFriend`, data, {
+    timeout: 15000
+  });
+
+// 加载离线事件
+
+export interface LoadLastestMessage {
+  user_account: string;
+  friend_account: string;
+  event_type: string;
+  create_time: string;
+  update_time: string;
+}
+
+export interface LoadLastestMessageRes extends CommonRes {
+  info: LoadLastestMessage[];
+}
+
+export const apiOfflineEvents = async (data: {
+  account: string;
+}): Promise<LoadLastestMessageRes> =>
+  await request.post<LoadLastestMessageRes>(`/ttalk/loadLatestEvents`, data, {
+    timeout: 15000
+  });
+
+/**
+ * 加载离线最新用户消息
+ */
+interface MessageType {
+  message_id: string;
+  user_account: string;
+  friend_account: string;
+  message: string;
+  mood_state: string;
+  message_style: 'rich' | 'normal';
+  read_flag: boolean;
+  create_time: string;
+}
+
+interface MessagesRes extends CommonRes {
+  info: MessageType[];
+}
+
+export const apiLoadLastestMessage = async (data: {
+  user_account: string;
+  friend_account: string;
+  create_time: string;
+}): Promise<MessagesRes> =>
+  await request.post<MessagesRes>(`/ttalk/loadLatestMessages`, data, {
     timeout: 15000
   });

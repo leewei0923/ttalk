@@ -16,7 +16,7 @@ import useDebounce from '@src/hooks/debounce';
 
 interface ChatInputBoxProps {
   expandSwitch: () => void;
-  onSubmit: (content: JSONContent) => void;
+  onSubmit: (content: JSONContent, type: 'normal' | 'rich') => void;
 }
 
 export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
@@ -49,7 +49,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     const jsonContent = editor?.getJSON();
 
     if (typeof onSubmit !== 'function' || jsonContent === undefined) return;
-    onSubmit(editor?.getJSON() ?? {});
+    onSubmit(editor?.getJSON() ?? {}, 'normal');
   };
 
   /**

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable indent */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +13,13 @@ import { LeftUserCard } from './leftUserCard/leftUserCard';
 import { MoodDataType } from '@src/common/data';
 import { GetMood, getMoodType, SetMood } from '@src/common/handleMood';
 import { useSocket } from '@src/contexts/socket';
+import {
+  apiLoadLastestMessage,
+  apiOfflineEvents,
+  LoadLastestMessage
+} from '@src/api/chat';
+import { HandleChat, MessageDetailData } from '@src/util/handleChat';
+import dayjs from 'dayjs';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
@@ -20,7 +28,7 @@ export function ChatPageLeftBar(): JSX.Element {
   const { chatId } = useParams();
   const userInfoData = GetTtakLoginUser();
   const socket = useSocket();
-
+  const handleChat = new HandleChat();
 
   console.log(globalAccount);
 
@@ -47,18 +55,80 @@ export function ChatPageLeftBar(): JSX.Element {
     }
   };
 
-  
+  const firstLoadRef = useRef(false);
+  const onLoadOfflineInfo = (): void => {
+    if (userInfoData === '') return;
+    apiOfflineEvents({ account: userInfoData[0].account })
+      .then((res) => {
+        if (res.code === 200) {
+          onHandleEvent(res.info);
+        }
+      })
+      .catch((err) => {
+        console.log('出现问题', err);
+      });
+  };
 
- 
+  const onHandleEvent = (data: LoadLastestMessage[]): void => {
+    console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      const { user_account, friend_account, create_time, event_type } = data[i];
+
+      if (event_type === 'messaging') {
+        onHandleMessage(user_account, friend_account, create_time);
+      }
+    }
+  };
+
+  const onHandleMessage = (
+    user_account: string,
+    friend_account: string,
+    create_time: string
+  ): void => {
+    const curDate = dayjs().format('YYYY-MM-DD HH-mm');
+    apiLoadLastestMessage({
+      user_account,
+      friend_account,
+      create_time
+    })
+      .then((res) => {
+        console.log(res);
+        if (res.code === 200) {
+          for (let i = 0; i < res.info.length; i++) {
+            const messageRes = res.info[i];
+
+            const message: MessageDetailData = {
+              remote_id: messageRes.message_id,
+              user_account: messageRes.friend_account,
+              friend_account: messageRes.user_account,
+              mood_state: messageRes.mood_state,
+              type: 'receive',
+              message_style: messageRes.message_style,
+              message: messageRes.message,
+              read_flag: messageRes.read_flag,
+              create_time: messageRes.create_time,
+              update_time: curDate
+            };
+
+            handleChat.addDb(message);
+          }
+        }
+      })
+      .catch((err) => console.log('更新出现问题', err));
+  };
+
   useEffect(() => {
     if (leftBarMood === '') {
       setLetfBarMood(GetMood());
     }
-    
+
+    if (!firstLoadRef.current) {
+      onLoadOfflineInfo();
+      firstLoadRef.current = true;
+    }
 
     return () => {
       // 页面卸载后移除socket监听
-      
     };
   }, [leftBarMood, socket]);
 

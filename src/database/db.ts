@@ -88,12 +88,12 @@ class ChatDataBase extends Dexie {
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(6).stores({
+    this.version(9).stores({
       friends:
-        '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag],[friend_account+type], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,ip',
+        '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag],[friend_account+type],[friend_account+type+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,type, ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
       concatList: `++id, friend_account, create_time, update_time, message_count`,
-      messageData: `++id,remote_id, [user_account+friend_account], user_account, friend_account, mood_state, type, message_style, message, read_flag, create_time, update_time`
+      messageData: `++id,remote_id, [user_account+type], [user_account+friend_account],[friend_account+type+read_flag], user_account, friend_account, mood_state, type, message_style, message, read_flag, create_time, update_time`
     });
 
     this.friends = this.table('friends');

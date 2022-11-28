@@ -12,7 +12,7 @@ import styles from './chatExpandChatBox.module.scss';
 
 interface ExpandChatBoxProps {
   expandSwitch: () => void;
-  onSubmit: (content: JSONContent) => void;
+  onSubmit: (content: JSONContent, type: 'normal' | 'rich') => void;
 }
 
 export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
@@ -57,7 +57,7 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
     const jsonContent = editor?.getJSON();
 
     if (typeof onSubmit !== 'function' || jsonContent === undefined) return;
-    onSubmit(editor?.getJSON() ?? {});
+    onSubmit(editor?.getJSON() ?? {}, 'rich');
   };
 
   useEffect(() => {}, []);
