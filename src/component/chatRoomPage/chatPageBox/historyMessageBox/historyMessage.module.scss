@@ -57,6 +57,9 @@
     justify-content: center;
     align-items: center;
     transition: 0.6s;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
 
     .search_input {
       width: 80%;
@@ -66,6 +69,22 @@
       font-size: 0.8rem;
       outline: none;
       border: none;
+    }
+
+    .clear_history_btn {
+      padding: 10px;
+      border: none;
+      outline: none;
+      background-color: #e00e03;
+      color: white;
+      border-radius: 15px;
+      translate: 20px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #d10a00;
+      }
+
     }
   }
 

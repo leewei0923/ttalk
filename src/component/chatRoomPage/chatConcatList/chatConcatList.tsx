@@ -1,6 +1,6 @@
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
-import { SetConcatList } from '@src/database/setConcatList';
+import { TosortTheConcat, UpdateConcatList } from '@src/database/setConcatList';
 import { selectGlobalAccount, setGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
 import { trimmedDate } from '@src/util/handleTime';
@@ -18,7 +18,6 @@ export function ChatConcatList(): JSX.Element {
   const loginUser = GetTtakLoginUser();
   const globalAccount = useAppSelector(selectGlobalAccount);
   const dispatch = useDispatch();
-  const [refresh, setRefresh] = useState(1); // 用于页面更新
 
   // ===============
 
@@ -78,14 +77,16 @@ export function ChatConcatList(): JSX.Element {
    * 获取account
    */
   const onGetAccount = (account: string): void => {
-    SetConcatList(account);
-    setRefresh(refresh + 1);
+    UpdateConcatList(account);
+    setConcatList(TosortTheConcat(account, concatList));
     dispatch(setGlobalAccount(account));
   };
 
   useEffect(() => {
-    void getDataBaseConcatList();
-  }, [globalAccount, refresh]);
+    if (concatList.length <= 0) {
+      void getDataBaseConcatList();
+    }
+  }, [globalAccount, concatList]);
 
   return (
     <div className={styles.container}>

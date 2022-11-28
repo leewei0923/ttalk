@@ -21,35 +21,36 @@ export function handleJSON(doc: JSONContent, target: string): handleJSONRes {
 
     if (compareRes !== -1) {
       if (Array.isArray(doc.marks)) {
+        const marks = doc.marks;
         for (let i = 0; i < doc.marks.length; i++) {
-          const marks = doc.marks;
-
           if (marks[i].type === 'highlight') {
             marks[i].attrs = {
               color: '#4A95DF'
             };
-          } else {
-            marks.push({
-              type: 'highlight',
-              attrs: {
-                color: '#4A95DF'
-              }
-            });
           }
 
           if (marks[i].type === 'textStyle') {
             marks[i].attrs = {
               color: 'white'
             };
-          } else {
-            marks.push({
-              type: 'textStyle',
-              attrs: {
-                color: 'white'
-              }
-            });
+
+            break;
           }
         }
+
+        marks.push({
+          type: 'highlight',
+          attrs: {
+            color: '#4A95DF'
+          }
+        });
+
+        marks.push({
+          type: 'textStyle',
+          attrs: {
+            color: 'white'
+          }
+        });
       } else {
         doc.marks = [
           {

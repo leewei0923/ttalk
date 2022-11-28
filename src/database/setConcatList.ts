@@ -1,12 +1,11 @@
 import { db } from './db';
 import dayjs from 'dayjs';
 
-
 /**
  * 用于更新聊天页面用户列表
- * @param account 
+ * @param account
  */
-export function SetConcatList(account: string):void {
+export function UpdateConcatList(account: string): void {
   const curDate = dayjs().format('YYYY-MM-DD HH:mm');
   db.concatList
     .where({ friend_account: account })
@@ -31,4 +30,45 @@ export function SetConcatList(account: string):void {
       }
     })
     .catch((err) => console.log('查找失败失败', err));
+}
+
+/**
+ *
+ */
+
+interface ConcatListType {
+  account: string;
+  avatar: string;
+  nickname: string;
+  count: number;
+  update_time: string;
+  message: string;
+}
+
+
+/**
+ * 排序用户聊天列表
+ * @param account 
+ * @param list 
+ * @returns 
+ */
+export function TosortTheConcat(
+  account: string,
+  list: ConcatListType[]
+): ConcatListType[] {
+  const curDate = dayjs().format('YYYY-MM-DD HH:mm');
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].account === account) {
+      list[i].update_time = curDate;
+      break;
+    }
+  }
+
+  list.sort((a, b) => {
+    return (
+      new Date(b.update_time).getTime() - new Date(a.update_time).getTime()
+    );
+  });
+
+  return list;
 }

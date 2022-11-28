@@ -15,7 +15,7 @@ import { GetTtakLoginUser } from '@src/common/personInfo';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setGlobalAccount } from '@src/redux/account';
-import { SetConcatList } from '@src/database/setConcatList';
+import { UpdateConcatList } from '@src/database/setConcatList';
 import { HandleChat, MessageDetailData } from '@src/util/handleChat';
 import { setDetailNotice } from '@src/redux/notice';
 
@@ -139,8 +139,7 @@ export function ChatPageTopBar(): JSX.Element {
   const onSendMessage = (account: string): void => {
     // const curDate = dayjs().format('YYYY-MM-DD HH:mm');
 
-    SetConcatList(account);
-
+    UpdateConcatList(account);
     navigate('/chat/message');
     dispatch(setGlobalAccount(account));
   };

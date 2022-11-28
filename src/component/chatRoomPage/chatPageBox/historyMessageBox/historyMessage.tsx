@@ -101,24 +101,28 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
       })
       .toArray()
       .then((res) => {
-        const newArr:chat_message_data_entry[] = [];
+        const newArr: chat_message_data_entry[] = [];
         for (let i = 0; i < res.length; i++) {
           const resJSON = JSON.parse(res[i].message);
           const { doc, flag } = handleJSON(resJSON, value);
           MakeFlase();
           res[i].message = JSON.stringify(doc);
 
-          if(flag) {
+          if (flag) {
             newArr.push(res[i]);
           }
         }
         messagesData.current = newArr;
-
         setfresh(fresh + 1);
       })
       .catch((err) => {
         console.log('查找出问题了', err);
       });
+  };
+
+  const onClearHistory = (): void => {
+    init();
+    setfresh(fresh + 1);
   };
 
   useEffect(() => {
@@ -158,6 +162,13 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
           placeholder="搜下聊天记录"
           onPressEnter={onGetSearch}
         />
+
+        <button
+          className={styles.clear_history_btn}
+          onClick={() => onClearHistory()}
+        >
+          清除搜索记录
+        </button>
       </section>
 
       {searchShow ? (
