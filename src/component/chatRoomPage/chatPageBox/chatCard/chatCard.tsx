@@ -3,9 +3,10 @@ import classnames from 'classnames';
 import styles from './chatCard.module.scss';
 import { Avatar, Tooltip } from '@arco-design/web-react';
 import { IconMore } from '@arco-design/web-react/icon';
+import { MessageDetailData } from '@src/util/handleChat';
 // import { isInViewPort } from '@src/util/util';
 
-type readFunction = (remoteId: string, flag: boolean) => void;
+type readFunction = (remoteId: string, message: MessageDetailData) => void;
 interface ChatCardPropsType {
   remoteId: string;
   content: string;
@@ -14,10 +15,12 @@ interface ChatCardPropsType {
   avatar: string;
   flag: boolean;
   onRead: readFunction | undefined;
+  message: MessageDetailData;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { remoteId, content, time, type, avatar, flag, onRead } = props;
+  const { remoteId, content, time, type, avatar, flag, onRead, message } =
+    props;
   const timeFormat = time.split(' ')[1];
 
   const defaultClass = {
@@ -33,10 +36,11 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
 
   const messageRef = useRef<HTMLDivElement>(null);
 
-  function init():void {
+  function init(): void {
     if (typeof onRead === 'function') {
-      if (!flag && messageRef.current !== null) {
-        onRead(remoteId, flag);
+      if (!flag && messageRef.current !== null && message.type === 'receive') {
+        console.log('新增加', message);
+        onRead(remoteId, message);
       }
     }
   }
@@ -82,7 +86,7 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
 
         <div className={styles.time}>
           <p>{timeFormat}</p>
-          <p>{flag ? '已读' : '未读'}</p>
+          <p>{flag && message.type === 'send' ? '已读' : ''}</p>
 
           <div>
             <Tooltip

@@ -7,7 +7,7 @@ import { MessageData } from '@src/util/handleChat';
 export interface messageFeedbackRes {
   user_account: string;
   friend_account: string;
-  message_ids: string[];
+  message_ids: string;
 }
 
 interface listProps {
@@ -21,8 +21,9 @@ export function messageFeedbackList(props: listProps): MessageData[] | '' {
 
   for (let i = 0; i < chatDatas.length; i++) {
     for (let j = 0; j < chatDatas[i].children.length; j++) {
-      if (feedback.message_ids.includes(chatDatas[i].children[j].remote_id)) {
+      if (feedback.message_ids === chatDatas[i].children[j].remote_id) {
         chatDatas[i].children[j].read_flag = true;
+        break;
       }
     }
   }
@@ -30,15 +31,14 @@ export function messageFeedbackList(props: listProps): MessageData[] | '' {
 }
 
 // 对信息的数据库处理
-export function messageFeedbackDB(res: messageFeedbackRes):void {
+export function messageFeedbackDB(res: messageFeedbackRes): void {
   const { user_account, message_ids } = res;
-  for (let i = 0; i < message_ids.length; i++) {
-    db.messageData
-      .where(['user_account', 'remote_id'])
-      .equals([user_account, message_ids[i]])
-      .modify({
-        read_flag: true
-      })
-      .catch((err) => console.log('阅读反馈更新出错,', err));
-  }
+
+  db.messageData
+    .where(['user_account', 'remote_id'])
+    .equals([user_account, message_ids])
+    .modify({
+      read_flag: true
+    })
+    .catch((err) => console.log('阅读反馈更新出错,', err));
 }

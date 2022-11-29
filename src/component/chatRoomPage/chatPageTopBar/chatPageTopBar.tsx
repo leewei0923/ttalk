@@ -462,7 +462,7 @@ export function ChatPageTopBar(): JSX.Element {
     friend_account: string;
     message: string;
     mood_state: string;
-    message_style: string;
+    message_style: "rich" | 'normal';
     read_flag: boolean;
     create_time: string;
     update_time: string;
@@ -476,7 +476,7 @@ export function ChatPageTopBar(): JSX.Element {
       friend_account: res.friend_account,
       mood_state: res.mood_state,
       type: 'receive',
-      message_style: 'normal',
+      message_style: res.message_style,
       message: res.message,
       read_flag: res.read_flag,
       create_time: res.create_time,

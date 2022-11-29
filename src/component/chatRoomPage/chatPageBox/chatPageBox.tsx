@@ -7,10 +7,11 @@ import { generateHTML } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
-import { MessageData } from '@src/util/handleChat';
+import { MessageData, MessageDetailData } from '@src/util/handleChat';
 import useDebounce from '@src/hooks/debounce';
 import { IconClose } from '@arco-design/web-react/icon';
 import { useSocket } from '@src/contexts/socket';
+import { messageFeedbackDB } from '../chatPageMain/handleScoket';
 
 interface ChatPageBoxProps {
   messageData: MessageData[] | '';
@@ -90,17 +91,21 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
     []
   );
 
-  const cardReadStates = useRef<string[]>([]);
-  const onCardRead = (messageId: string): void => {
-    cardReadStates.current.push(messageId);
+  const onCardRead = (messageId: string, message: MessageDetailData): void => {
+    // 阅读后发个信息给friend_account, 通知对方已经阅读了
 
-    socket.emit('read', {
+    if (message.friend_account !== loginAccount && message.type === 'receive') {
+      socket.emit('read', {
+        send_account: loginAccount,
+        receive_account: friendAccount,
+        remote_id: messageId
+      });
+    }
+    messageFeedbackDB({
       user_account: loginAccount,
       friend_account: friendAccount,
-      remote_id: cardReadStates.current
+      message_ids: messageId
     });
-
-    cardReadStates.current = [];
   };
 
   useEffect(() => {
@@ -167,6 +172,7 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
 
                 return (
                   <ChatCard
+                    message={item2}
                     key={item2.friend_account + index2.toString()}
                     remoteId={item2.remote_id}
                     content={htmlContent}

@@ -133,7 +133,7 @@ export function ChatPageMain(): JSX.Element {
   };
 
   /**
-   * 获取聊天对象的信息
+   * 获取好友账户的信息
    */
   const [friendName, setFriendName] = useState('');
   const getFriendInfo = async (): Promise<void> => {
@@ -275,7 +275,7 @@ export function ChatPageMain(): JSX.Element {
   /**
    * 阅读标记反馈消息处理(接收方(消息发送方))
    */
-  const onListenerMessageFeedback = (res: messageFeedbackRes): void => {
+  const onListenerMessageFeedback =  (res: messageFeedbackRes): void => {
     // 用户界面操作
     const newchatS = messageFeedbackList({ chatDatas, feedback: res });
     setChatDatas(newchatS);
@@ -304,7 +304,7 @@ export function ChatPageMain(): JSX.Element {
     socket.on('read', onListenerMessageFeedback); // 消息反馈接收
 
     return () => {
-      socket.off('read');
+      // socket.off('read');
     };
   }, [globalAccount, friendavatar, refresh, socket, globalNotice]);
 
