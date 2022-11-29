@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useRef, useState } from 'react';
 import { ChatCard } from './chatCard/chatCard';
 // import { chatData } from './data';
@@ -8,6 +9,8 @@ import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import { MessageData } from '@src/util/handleChat';
 import useDebounce from '@src/hooks/debounce';
+import { IconClose } from '@arco-design/web-react/icon';
+import { useSocket } from '@src/contexts/socket';
 
 interface ChatPageBoxProps {
   messageData: MessageData[] | '';
@@ -16,6 +19,8 @@ interface ChatPageBoxProps {
   fetchHistory: () => void;
   correspond?: string;
   setCorrespond?: (sign: string) => void;
+  loginAccount: string;
+  friendAccount: string;
 }
 
 export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
@@ -25,10 +30,13 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
     correspond,
     setCorrespond,
     fetchHistory,
-    loginAvatar
+    loginAvatar,
+    loginAccount,
+    friendAccount
   } = props;
 
   const [lodingFlag, setLodingFlag] = useState(false);
+  const socket = useSocket();
   // ======================
 
   // 滚轮滑动事件
@@ -82,6 +90,19 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
     []
   );
 
+  const cardReadStates = useRef<string[]>([]);
+  const onCardRead = (messageId: string): void => {
+    cardReadStates.current.push(messageId);
+
+    socket.emit('read', {
+      user_account: loginAccount,
+      friend_account: friendAccount,
+      remote_id: cardReadStates.current
+    });
+
+    cardReadStates.current = [];
+  };
+
   useEffect(() => {
     document.addEventListener('wheel', scrollRendHandle);
 
@@ -116,7 +137,17 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
         >
           点击加载更多
         </p>
+
+        <div
+          className={styles.loding_close}
+          onClick={() => {
+            setLodingFlag(false);
+          }}
+        >
+          <IconClose style={{ fontSize: 16 }} />
+        </div>
       </div>
+
       <div className={styles.wraper_chat} ref={chatBoxRef}>
         {messageData.map((item): any => {
           return (
@@ -137,11 +168,13 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
                 return (
                   <ChatCard
                     key={item2.friend_account + index2.toString()}
+                    remoteId={item2.remote_id}
                     content={htmlContent}
                     time={item2.create_time}
                     avatar={userAvatar}
                     type={item2.type}
                     flag={item2.read_flag}
+                    onRead={onCardRead}
                   />
                 );
               })}

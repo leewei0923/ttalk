@@ -498,7 +498,7 @@ export function ChatPageTopBar(): JSX.Element {
   // ====================
 
   // 获取提醒消息的数量
-  const getMessageAlert = (): void => {
+  const getMessageAlertCount = (): void => {
     getMessageCount(userInfo[0].account)
       .then((res) => {
         dispatch(
@@ -508,12 +508,16 @@ export function ChatPageTopBar(): JSX.Element {
       .catch((err) => console.log('无法获取数量', err));
   };
 
+  
+
+
   useEffect(() => {
     // 监听添加好友
     onListenAddFriend();
 
     socket.on('messaging', onListenerMessages);
-    getMessageAlert();
+    getMessageAlertCount ();
+    
 
     return () => {
       // 页面卸载后移除socket监听

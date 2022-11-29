@@ -15,5 +15,13 @@ export function firstValidNumber<T extends string>(args: T[]): T | '' {
 }
 
 /**
- * 防抖
+ * 判断是否在可视区域内(相对于窗口)
  */
+export function isInViewPort(element: Element): boolean {
+  const viewWidth = window.innerWidth ?? document.documentElement.clientWidth;
+  const viewHeight =
+    window.innerHeight ?? document.documentElement.clientHeight;
+  const { top, right, bottom, left } = element.getBoundingClientRect();
+
+  return top >= 0 && left >= 0 && right <= viewWidth && bottom <= viewHeight;
+}

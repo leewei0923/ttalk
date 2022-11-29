@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import styles from './chatCard.module.scss';
 import { Avatar, Tooltip } from '@arco-design/web-react';
 import { IconMore } from '@arco-design/web-react/icon';
+// import { isInViewPort } from '@src/util/util';
 
+type readFunction = (remoteId: string, flag: boolean) => void;
 interface ChatCardPropsType {
+  remoteId: string;
   content: string;
   time: string;
   type: 'send' | 'receive' | string;
   avatar: string;
   flag: boolean;
+  onRead: readFunction | undefined;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { content, time, type, avatar, flag } = props;
+  const { remoteId, content, time, type, avatar, flag, onRead } = props;
   const timeFormat = time.split(' ')[1];
 
   const defaultClass = {
@@ -26,6 +30,16 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
       [styles.reverse]: type === 'send'
     })
   };
+
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  function init():void {
+    if (typeof onRead === 'function') {
+      if (!flag && messageRef.current !== null) {
+        onRead(remoteId, flag);
+      }
+    }
+  }
 
   /**
    * 弹出的菜单
@@ -41,8 +55,12 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
     );
   };
 
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
-    <div className={defaultClass.container}>
+    <div className={defaultClass.container} ref={messageRef}>
       <div className={defaultClass.innerContainer}>
         {avatar.length > 10 ? (
           <img src={avatar} className={styles.chat_avatar_img} />

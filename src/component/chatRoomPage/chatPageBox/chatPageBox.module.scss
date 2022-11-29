@@ -5,9 +5,18 @@
   scroll-behavior: smooth;
   position: relative;
 
-
   .loding {
     background-color: aquamarine;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    z-index: 30;
+
+    .loding_close {
+      cursor: pointer;
+    }
   }
 
   .wraper_chat {

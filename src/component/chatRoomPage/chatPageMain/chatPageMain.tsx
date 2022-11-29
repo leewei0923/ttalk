@@ -27,6 +27,11 @@ import { FriendSetting } from '../chatPageBox/friendSetting/friendSetting';
 import { HistoryMessageBox } from '../chatPageBox/historyMessageBox/historyMessage';
 // import { chatData } from '../chatPageBox/data';
 import { nanoid } from '@reduxjs/toolkit';
+import {
+  messageFeedbackDB,
+  messageFeedbackList,
+  messageFeedbackRes
+} from './handleScoket';
 
 export function ChatPageMain(): JSX.Element {
   /**
@@ -38,8 +43,6 @@ export function ChatPageMain(): JSX.Element {
   const loginUserInfo = GetTtakLoginUser();
   const handleChat = new HandleChat();
   const socket = useSocket();
-
-  console.log();
 
   /**
    * 初始渲染
@@ -269,6 +272,19 @@ export function ChatPageMain(): JSX.Element {
     setHistoryShow(!historyShow);
   };
 
+  /**
+   * 阅读标记反馈消息处理(接收方(消息发送方))
+   */
+  const onListenerMessageFeedback = (res: messageFeedbackRes): void => {
+    // 用户界面操作
+    const newchatS = messageFeedbackList({ chatDatas, feedback: res });
+    setChatDatas(newchatS);
+    // 数据库操作
+    messageFeedbackDB(res);
+
+    setRefresh(refresh + 1);
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -285,7 +301,11 @@ export function ChatPageMain(): JSX.Element {
 
     onReceiveMessage(); // 接收消息
 
-    return () => {};
+    socket.on('read', onListenerMessageFeedback); // 消息反馈接收
+
+    return () => {
+      socket.off('read');
+    };
   }, [globalAccount, friendavatar, refresh, socket, globalNotice]);
 
   return (
@@ -330,6 +350,10 @@ export function ChatPageMain(): JSX.Element {
               correspond={pageBoxCorr}
               setCorrespond={onChangeCorrespond}
               fetchHistory={onfetchHistory}
+              loginAccount={
+                loginUserInfo !== '' ? loginUserInfo[0].account : ''
+              }
+              friendAccount={globalAccount}
             />
           )}
 

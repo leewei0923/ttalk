@@ -70,7 +70,6 @@ export function ChatPageLeftBar(): JSX.Element {
   };
 
   const onHandleEvent = (data: LoadLastestMessage[]): void => {
-    console.log(data);
     for (let i = 0; i < data.length; i++) {
       const { user_account, friend_account, create_time, event_type } = data[i];
 
