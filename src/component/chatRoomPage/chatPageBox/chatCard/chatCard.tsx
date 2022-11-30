@@ -31,6 +31,17 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
     innerContainer: classnames({
       [styles.innerContainer]: true,
       [styles.reverse]: type === 'send'
+    }),
+    chat_content_box: classnames({
+      [styles.chat_content_box]: true,
+      [styles.FaceWithSmilingEyes]:
+        message.mood_state === 'FaceWithSmilingEyes',
+      [styles.smilingFaceWithSmilingEyes]:
+        message.mood_state === 'smilingFaceWithSmilingEyes',
+      [styles.loudlyCryingFace]: message.mood_state === 'loudlyCryingFace',
+      [styles.pleadingFace]: message.mood_state === 'pleadingFace',
+      [styles.expressionlessFace]: message.mood_state === 'expressionlessFace',
+      [styles.worriedFace]: message.mood_state === 'worriedFace'
     })
   };
 
@@ -39,7 +50,6 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
   function init(): void {
     if (typeof onRead === 'function') {
       if (!flag && messageRef.current !== null && message.type === 'receive') {
-        console.log('新增加', message);
         onRead(remoteId, message);
       }
     }
@@ -80,7 +90,7 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
         )}
 
         <div
-          className={styles.chat_content_box}
+          className={defaultClass.chat_content_box}
           dangerouslySetInnerHTML={{ __html: content }}
         ></div>
 

@@ -1,6 +1,6 @@
 .container {
-    width: 100%;
-    display: flex;
+  width: 100%;
+  display: flex;
 }
 
 .innerContainer {
@@ -16,6 +16,7 @@
     border-radius: 50%;
   }
 
+  // 正常
   .chat_content_box {
     max-width: calc(100% - 120px);
     margin: 0 10px;
@@ -34,6 +35,46 @@
     }
   }
 
+  // =====
+
+  // 开心到飞起
+  .FaceWithSmilingEyes {
+    background-color: #d5f3f4;
+    color: #464747;
+  }
+
+  // 还算满意
+  .smilingFaceWithSmilingEyes {
+    background-color: #ddf3ff;
+    color: #343535;
+  }
+
+  // 我要哭死
+  .loudlyCryingFace {
+    background-color: #4f586b;
+    color: #dde2f1;
+  }
+
+  // 我好委屈
+  .pleadingFace {
+    background-color: #e5e1d5;
+    color: #353031;
+  }
+
+  // 真的无语
+  .expressionlessFace {
+    background-color: #c3ced4;
+    color: #63838b;
+  }
+
+  // 怎会这样
+  .worriedFace {
+    background-color: #e5e2d3;
+    color: #37aba9;
+  }
+
+  // ======
+
   &:hover .time {
     opacity: 1;
     transition: all 0.5s;
@@ -45,14 +86,14 @@
     color: rgba(0, 0, 0, 0.7);
     opacity: 0;
     transition: all 0.5s;
-
   }
 }
 
-
 .recontainer {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
+
+// 反转
 .reverse {
   flex-direction: row-reverse;
   justify-content: flex-end;
@@ -60,8 +101,43 @@
   .chat_content_box {
     background-color: #8ac6d1;
   }
-}
 
+  // 开心到飞起
+  .FaceWithSmilingEyes {
+    background-color: #d5f3f4;
+    color: #464747;
+  }
+
+  // 还算满意
+  .smilingFaceWithSmilingEyes {
+    background-color: #ddf3ff;
+    color: #343535;
+  }
+
+  // 我要哭死
+  .loudlyCryingFace {
+    background-color: #4f586b;
+    color: #dde2f1;
+  }
+
+  // 我好委屈
+  .pleadingFace {
+    background-color: #e5e1d5;
+    color: #353031;
+  }
+
+  // 真的无语
+  .expressionlessFace {
+    background-color: #c3ced4;
+    color: #63838b;
+  }
+
+  // 怎会这样
+  .worriedFace {
+    background-color: #e5e2d3;
+    color: #37aba9;
+  }
+}
 
 .menus {
   display: flex;
@@ -70,13 +146,13 @@
   .menuItem {
     width: 60px;
     height: 25px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border: none;
     cursor: pointer;
     padding: 0;
 
     &:hover {
-      background-color: #F2F3F5;
+      background-color: #f2f3f5;
     }
   }
 }

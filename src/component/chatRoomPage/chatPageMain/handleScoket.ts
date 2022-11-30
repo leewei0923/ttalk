@@ -32,11 +32,11 @@ export function messageFeedbackList(props: listProps): MessageData[] | '' {
 
 // 对信息的数据库处理
 export function messageFeedbackDB(res: messageFeedbackRes): void {
-  const { user_account, message_ids } = res;
+  const { friend_account, message_ids } = res;
 
   db.messageData
     .where(['user_account', 'remote_id'])
-    .equals([user_account, message_ids])
+    .equals([friend_account, message_ids])
     .modify({
       read_flag: true
     })
