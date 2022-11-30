@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ContcatSumaryCard } from '../contactSumaryCard/contactSummaryCard';
 import styles from './chatConcatList.module.scss';
+import { updateUserInfo } from './handleUpdateUserInfo';
 
 export function ChatConcatList(): JSX.Element {
   // const data = new Array(10).fill(0);
@@ -80,6 +81,16 @@ export function ChatConcatList(): JSX.Element {
     UpdateConcatList(account);
     setConcatList(TosortTheConcat(account, concatList));
     dispatch(setGlobalAccount(account));
+
+    /**
+     * 更新用户资料
+     */
+    if (
+      typeof loginUser === 'object' &&
+      loginUser[0].account !== globalAccount
+    ) {
+      updateUserInfo(account);
+    }
   };
 
   useEffect(() => {

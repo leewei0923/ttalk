@@ -84,3 +84,27 @@ export const apiUpdateUserInfo = async (
   await request.post<CommonRes>(`/ttalk/updateInfo`, data, {
     timeout: 15000
   });
+
+/**
+ * 更新信息
+ */
+interface UpdateAccountInfoType {
+  id: string;
+  account: string;
+  nickname: string;
+  bird_date: string;
+  social: string;
+  motto: string;
+  avatar: string;
+  update_time: string;
+  add_time: string;
+}
+
+
+export const apiGetAndUpdateAccountInfo = async (data: {
+  account: string;
+  update_time: string;
+}): Promise<UpdateAccountInfoType> =>
+  await request.post<UpdateAccountInfoType>(`/ttalk/getAndUpdateInfo`, data, {
+    timeout: 15000
+  });

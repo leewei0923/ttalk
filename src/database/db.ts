@@ -88,7 +88,7 @@ class ChatDataBase extends Dexie {
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(11).stores({
+    this.version(15).stores({
       friends:
         '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag],[friend_account+type],[friend_account+type+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,type, ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
