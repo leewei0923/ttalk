@@ -30,7 +30,6 @@ import { nanoid } from '@reduxjs/toolkit';
 import {
   messageFeedbackDB,
   messageFeedbackList,
-  messageFeedbackRes
 } from './handleScoket';
 
 export function ChatPageMain(): JSX.Element {
@@ -273,14 +272,34 @@ export function ChatPageMain(): JSX.Element {
   };
 
   /**
-   * 阅读标记反馈消息处理(接收方(消息发送方))
+   * 阅读标记反馈消息处理
    */
-  const onListenerMessageFeedback =  (res: messageFeedbackRes): void => {
+  interface feedbackRes {
+    send_account: string; // 发送者(friend_account)
+    receive_account: string; // 接收者(user_account)
+    message_ids: string;
+  }
+
+  const onListenerMessageFeedback = (res: feedbackRes): void => {
+    const { send_account, receive_account, message_ids } = res;
     // 用户界面操作
-    const newchatS = messageFeedbackList({ chatDatas, feedback: res });
+    const newchatS = messageFeedbackList({
+      chatDatas,
+      feedback: {
+        user_account: receive_account,
+        friend_account: send_account,
+        message_ids
+      }
+    });
     setChatDatas(newchatS);
+
     // 数据库操作
-    messageFeedbackDB(res);
+
+    messageFeedbackDB({
+      user_account: receive_account,
+      friend_account: send_account,
+      message_ids
+    });
 
     setRefresh(refresh + 1);
   };

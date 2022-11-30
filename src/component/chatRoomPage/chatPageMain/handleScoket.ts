@@ -5,9 +5,9 @@ import { MessageData } from '@src/util/handleChat';
  * 阅读标记反馈提示处理反馈接收方(消息发送方)
  */
 export interface messageFeedbackRes {
-  user_account: string;
-  friend_account: string;
-  message_ids: string;
+  user_account: string; // 当前登录的账号
+  friend_account: string; // 好友账号
+  message_ids: string; // 唯一的id
 }
 
 interface listProps {
@@ -31,11 +31,18 @@ export function messageFeedbackList(props: listProps): MessageData[] | '' {
 }
 
 // 对信息的数据库处理
+/**
+ * 
+ * @param res user_account 本地登录的账号 friend_account 朋友的账号
+ */
 export function messageFeedbackDB(res: messageFeedbackRes): void {
+  // 对阅读信息反馈更改
   const { friend_account, message_ids } = res;
 
+  // friend_account 朋友的账号
+
   db.messageData
-    .where(['user_account', 'remote_id'])
+    .where(['friend_account', 'remote_id'])
     .equals([friend_account, message_ids])
     .modify({
       read_flag: true

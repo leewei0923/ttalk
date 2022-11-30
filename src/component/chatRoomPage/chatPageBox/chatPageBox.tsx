@@ -92,15 +92,22 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
   );
 
   const onCardRead = (messageId: string, message: MessageDetailData): void => {
-    // 阅读后发个信息给friend_account, 通知对方已经阅读了
+    if (friendAccount === '') return;
 
-    if (message.friend_account !== loginAccount && message.type === 'receive') {
+    // 阅读后发个信息给friend_account, 通知对方已经阅读了
+    if (
+      message.friend_account !== loginAccount &&
+      message.type === 'receive' &&
+      !message.read_flag
+    ) {
       socket.emit('read', {
         send_account: loginAccount,
         receive_account: friendAccount,
         remote_id: messageId
       });
     }
+
+    console.log(message);
     messageFeedbackDB({
       user_account: loginAccount,
       friend_account: friendAccount,

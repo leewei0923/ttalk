@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/semi': ['off', 'always'],
     'space-before-function-paren': [0, 'always'],
     '@typescript-eslint/space-before-function-paren': [0, 'alway'],
-    'multiline-ternary': [0, 'always']
+    'multiline-ternary': [0, 'always'],
+    '@typescript-eslint/naming-convention': [0, 'always']
   }
 };

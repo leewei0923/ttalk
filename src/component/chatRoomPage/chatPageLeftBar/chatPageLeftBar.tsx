@@ -13,13 +13,8 @@ import { LeftUserCard } from './leftUserCard/leftUserCard';
 import { MoodDataType } from '@src/common/data';
 import { GetMood, getMoodType, SetMood } from '@src/common/handleMood';
 import { useSocket } from '@src/contexts/socket';
-import {
-  apiLoadLastestMessage,
-  apiOfflineEvents,
-  LoadLastestMessage
-} from '@src/api/chat';
-import { HandleChat, MessageDetailData } from '@src/util/handleChat';
-import dayjs from 'dayjs';
+import { apiOfflineEvents, LoadLastestMessage } from '@src/api/chat';
+import { OFFLINE_EVENTS } from './handleOfflineEvents';
 
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
@@ -28,7 +23,6 @@ export function ChatPageLeftBar(): JSX.Element {
   const { chatId } = useParams();
   const userInfoData = GetTtakLoginUser();
   const socket = useSocket();
-  const handleChat = new HandleChat();
 
   console.log(globalAccount);
 
@@ -61,6 +55,7 @@ export function ChatPageLeftBar(): JSX.Element {
     apiOfflineEvents({ account: userInfoData[0].account })
       .then((res) => {
         if (res.code === 200) {
+          console.log(res);
           onHandleEvent(res.info);
         }
       })
@@ -71,49 +66,10 @@ export function ChatPageLeftBar(): JSX.Element {
 
   const onHandleEvent = (data: LoadLastestMessage[]): void => {
     for (let i = 0; i < data.length; i++) {
-      const { user_account, friend_account, create_time, event_type } = data[i];
-
-      if (event_type === 'messaging') {
-        onHandleMessage(user_account, friend_account, create_time);
-      }
+      const { user_account, friend_account, create_time, event_type, event_detail } = data[i];
+      const offlineEvent = OFFLINE_EVENTS[event_type]();
+      offlineEvent.handleEvent({ user_account, friend_account, create_time , event_detail});
     }
-  };
-
-  const onHandleMessage = (
-    user_account: string,
-    friend_account: string,
-    create_time: string
-  ): void => {
-    const curDate = dayjs().format('YYYY-MM-DD HH-mm');
-    apiLoadLastestMessage({
-      user_account,
-      friend_account,
-      create_time
-    })
-      .then((res) => {
-        console.log(res);
-        if (res.code === 200) {
-          for (let i = 0; i < res.info.length; i++) {
-            const messageRes = res.info[i];
-
-            const message: MessageDetailData = {
-              remote_id: messageRes.message_id,
-              user_account: messageRes.friend_account,
-              friend_account: messageRes.user_account,
-              mood_state: messageRes.mood_state,
-              type: 'receive',
-              message_style: messageRes.message_style,
-              message: messageRes.message,
-              read_flag: messageRes.read_flag,
-              create_time: messageRes.create_time,
-              update_time: curDate
-            };
-
-            handleChat.addDb(message);
-          }
-        }
-      })
-      .catch((err) => console.log('更新出现问题', err));
   };
 
   useEffect(() => {

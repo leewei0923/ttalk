@@ -289,4 +289,21 @@ export class HandleChat {
         console.log('添加聊天数据失败', err);
       });
   }
+
+  // 更新阅读标记
+  updateReadFlagDb(friend_account: string, message_id: string): void {
+    console.log(
+      'friend_account: string, message_id: string: ',
+      friend_account,
+      message_id
+    );
+
+    db.messageData
+      .where(['friend_account', 'remote_id'])
+      .equals([friend_account, message_id])
+      .modify({ read_flag: true })
+      .catch((err) => {
+        console.log('更新消息阅读标记失败', err);
+      });
+  }
 }

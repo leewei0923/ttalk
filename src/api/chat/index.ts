@@ -41,9 +41,10 @@ export const apiUpdateFriendShip = async (
 export interface LoadLastestMessage {
   user_account: string;
   friend_account: string;
-  event_type: string;
+  event_type: 'messaging' | 'read' | 'addFriend';
   create_time: string;
   update_time: string;
+  event_detail?: string;
 }
 
 export interface LoadLastestMessageRes extends CommonRes {
@@ -81,5 +82,21 @@ export const apiLoadLastestMessage = async (data: {
   create_time: string;
 }): Promise<MessagesRes> =>
   await request.post<MessagesRes>(`/ttalk/loadLatestMessages`, data, {
+    timeout: 15000
+  });
+
+export interface UpdateReadFlagRes extends CommonRes {
+  info: {
+    send_account: string; // 当前登录的账号
+    receive_account: string; // 朋友账号
+    message_ids: string[];
+  };
+}
+
+export const apiUpdateReadFlag = async (data: {
+  send_account: string;
+  receive_account: string;
+}): Promise<UpdateReadFlagRes> =>
+  await request.post<UpdateReadFlagRes>(`/ttalk/updateReadFlag`, data, {
     timeout: 15000
   });
