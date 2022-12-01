@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  height: 80px;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(209, 209, 209);
+
+  .left_content_box {
+    width: 70%;
+    padding: 10px;
+
+    p {
+      line-height: 1rem;
+      height: 3rem;
+      overflow: hidden;
+
+    }
+  }
+
+  .evnet_origin_box {
+    width: 30%;
+    text-align: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-around;
+    color: rgba(0, 0, 0, 0.5);
+
+    .quote_text {
+      text-align: end;
+      width: 60%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

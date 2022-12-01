@@ -1,0 +1,29 @@
+.container {
+  width: 250px;
+  height: calc(100% - 0.33px);
+  background-color: #ebebeb;
+  border-radius: 20px 0 0 0;
+  margin: 0;
+
+  .main_button {
+    width: 80%;
+    height: 40px;
+    margin: 20px 25px;
+  }
+  .minor_options_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 10px;
+
+    .minor_button {
+      width: 100%;
+      height: 40px;
+    }
+  }
+
+  .icon {
+    font-size: 1.2rem;
+    margin: -3px 0;
+  }
+}

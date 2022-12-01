@@ -1,0 +1,17 @@
+.container {
+  width: 100%;
+  height: calc(100% - 0.33px);
+  margin: 0;
+
+  .collect_box {
+    height: calc(100% - 51px);
+    overflow: scroll;
+    behavior: smooth;
+  }
+}
+
+.top_title {
+  margin: 10px 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}

@@ -7,9 +7,9 @@ import { useParams } from 'react-router-dom';
 import AddressBook from '../addressBook/addressBook';
 import Application from '../application/application';
 import Mine from './mine/mine';
-import Collect from '../collect/collect';
 import { AuthRoute } from '@src/routes/authRoutes';
 import LostPage from '../lostPage';
+import CollectPage from '../collectPage/collectPage';
 
 function ChatPageFragment(): JSX.Element {
   /**
@@ -18,8 +18,6 @@ function ChatPageFragment(): JSX.Element {
 
   const { chatId } = useParams();
 
-
-  
   function onChangeItem(): JSX.Element {
     switch (chatId) {
       case 'message':
@@ -31,7 +29,7 @@ function ChatPageFragment(): JSX.Element {
       case 'mine':
         return <AuthRoute element={<Mine />} />;
       case 'collect':
-        return <AuthRoute element={<Collect />} />;
+        return <AuthRoute element={<CollectPage />} />;
       default:
         return <LostPage />;
     }

@@ -63,6 +63,20 @@ export interface chat_message_data_entry {
   update_time: string;
 }
 
+/**
+ * 存储收藏
+ */
+export interface collect_data_entry {
+  id?: string;
+  collect_id: string;
+  account: string;
+  content: string;
+  origin: string;
+  type: string;
+  create_time: string;
+  update_time: string;
+}
+
 type chat_user_concat_table<
   T extends chat_user_concat_entry = chat_user_concat_entry
 > = Dexie.Table<T, chat_user_concat_entry>;
@@ -79,27 +93,33 @@ type chat_message_data_table<
   T extends chat_message_data_entry = chat_message_data_entry
 > = Dexie.Table<T, chat_message_data_entry>;
 
+type collect_data_table<T extends collect_data_entry = collect_data_entry> =
+  Dexie.Table<T, collect_data_entry>;
+
 class ChatDataBase extends Dexie {
   friends: chat_user_concat_table;
   userInfoData: chat_user_info_table;
   concatList: chat_concat_list_table;
   messageData: chat_message_data_table;
+  collectData: collect_data_table;
 
   constructor(DBName: string) {
     super(DBName);
 
-    this.version(15).stores({
+    this.version(17).stores({
       friends:
         '++id,[user_account+friend_flag+blacklist],[friend_account+friend_flag],[friend_account+type],[friend_account+type+friend_flag], remote_id,user_account,friend_account,add_time,update_time,friend_flag,verifyInformation,remark,blacklist,tags,type, ip',
       userInfoData: `++id, remote_id, nickname, motto, account, avatar, bird_date, social, create_time, add_time, update_time`,
       concatList: `++id, friend_account, create_time, update_time, message_count`,
-      messageData: `++id,remote_id,[friend_account+remote_id], [user_account+type],[user_account+remote_id], [user_account+friend_account],[friend_account+type+read_flag], user_account, friend_account, mood_state, type, message_style, message, read_flag, create_time, update_time`
+      messageData: `++id,remote_id,[friend_account+remote_id], [user_account+type],[user_account+remote_id], [user_account+friend_account],[friend_account+type+read_flag], user_account, friend_account, mood_state, type, message_style, message, read_flag, create_time, update_time`,
+      collectData: `++id, [account+type], remote_id, account, type, collect_id`
     });
 
     this.friends = this.table('friends');
     this.userInfoData = this.table('userInfoData');
     this.concatList = this.table('concatList');
     this.messageData = this.table('messageData');
+    this.collectData = this.table('collectData');
   }
 }
 

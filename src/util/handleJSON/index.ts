@@ -86,6 +86,31 @@ export function handleJSON(doc: JSONContent, target: string): handleJSONRes {
   };
 }
 
+let text = '';
+export function handleText(doc: JSONContent): string {
+  if (typeof doc !== 'object') {
+    return text;
+  }
+  if (typeof doc.text === 'string') {
+    text += doc.text;
+  }
+
+  if (typeof doc.content === 'object' && Array.isArray(doc.content)) {
+    const len = doc.content.length;
+
+    for (let i = 0; i < len; i++) {
+      const content = doc.content[i];
+      handleText(content);
+    }
+  }
+
+  return text;
+}
+
+export function clearText(): void {
+  text = '';
+}
+
 export function MakeFlase(): void {
   flag = false;
 }
