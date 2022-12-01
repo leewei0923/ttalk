@@ -37,6 +37,7 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
   const userInfo: userInfoType[] = JSON.parse(
     localStorage.getStorage('chat-user-info')
   );
+  const [refresh, setRefresh] = useState(1);
 
   // =========================
 
@@ -134,6 +135,7 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
       .catch((err) => {
         console.log('err', err);
       });
+    setRefresh(refresh + 1);
   };
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
       // 页面卸载后移除socket监听
       socket.off('addFriend');
     };
-  }, [socket]);
+  }, [socket, refresh]);
 
   return (
     <div className={styles.container}>
