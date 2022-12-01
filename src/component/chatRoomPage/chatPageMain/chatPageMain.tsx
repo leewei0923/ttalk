@@ -27,10 +27,7 @@ import { FriendSetting } from '../chatPageBox/friendSetting/friendSetting';
 import { HistoryMessageBox } from '../chatPageBox/historyMessageBox/historyMessage';
 // import { chatData } from '../chatPageBox/data';
 import { nanoid } from '@reduxjs/toolkit';
-import {
-  messageFeedbackDB,
-  messageFeedbackList,
-} from './handleScoket';
+import { messageFeedbackDB, messageFeedbackList } from './handleScoket';
 
 export function ChatPageMain(): JSX.Element {
   /**
@@ -304,6 +301,39 @@ export function ChatPageMain(): JSX.Element {
     setRefresh(refresh + 1);
   };
 
+  /**
+   * 删除消息
+   * @param _e
+   * @param message
+   */
+  const onMessageDelete = (
+    _e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    message: MessageDetailData
+  ): void => {
+    db.messageData
+      .where({
+        friend_account: message.friend_account,
+        remote_id: message.remote_id
+      })
+      .delete()
+      .catch((err) => console.log('删除消息出现错误', err));
+
+    if (Array.isArray(chatDatas)) {
+      for (let i = 0; i < chatDatas.length; i++) {
+        for (let j = 0; j < chatDatas[i].children.length; j++) {
+          // console.log(chatDatas[i].children[j]);
+          if (chatDatas[i].children[j].remote_id === message.remote_id) {
+            chatDatas[i].children.splice(j, 1);
+            break;
+          }
+        }
+      }
+    }
+
+    setChatDatas(chatDatas);
+    setRefresh(refresh + 1);
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -373,6 +403,7 @@ export function ChatPageMain(): JSX.Element {
                 loginUserInfo !== '' ? loginUserInfo[0].account : ''
               }
               friendAccount={globalAccount}
+              onMessageDelete={onMessageDelete}
             />
           )}
 

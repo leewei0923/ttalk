@@ -22,6 +22,10 @@ interface ChatPageBoxProps {
   setCorrespond?: (sign: string) => void;
   loginAccount: string;
   friendAccount: string;
+  onMessageDelete: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    message: MessageDetailData
+  ) => void;
 }
 
 export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
@@ -33,7 +37,8 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
     fetchHistory,
     loginAvatar,
     loginAccount,
-    friendAccount
+    friendAccount,
+    onMessageDelete
   } = props;
 
   const [lodingFlag, setLodingFlag] = useState(false);
@@ -107,7 +112,6 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
       });
     }
 
-    console.log(message);
     messageFeedbackDB({
       user_account: loginAccount,
       friend_account: friendAccount,
@@ -188,6 +192,7 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
                     type={item2.type}
                     flag={item2.read_flag}
                     onRead={onCardRead}
+                    onMessageDelete={onMessageDelete}
                   />
                 );
               })}

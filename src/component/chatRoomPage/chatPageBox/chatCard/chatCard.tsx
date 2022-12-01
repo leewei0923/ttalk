@@ -1,10 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
 import styles from './chatCard.module.scss';
-import { Avatar, Tooltip } from '@arco-design/web-react';
+import { Avatar, Message, Tooltip } from '@arco-design/web-react';
 import { IconMore } from '@arco-design/web-react/icon';
 import { MessageDetailData } from '@src/util/handleChat';
-// import { isInViewPort } from '@src/util/util';
+import { clearText, handleText } from '@src/util/handleJSON';
+import { JSONContent } from '@tiptap/react';
+import { apiInsertCollect } from '@src/api/collect';
+import { nanoid } from '@reduxjs/toolkit';
+import { HandleCollectDB } from '@src/database/hanleDbService';
 
 type readFunction = (remoteId: string, message: MessageDetailData) => void;
 interface ChatCardPropsType {
@@ -16,12 +20,26 @@ interface ChatCardPropsType {
   flag: boolean;
   onRead: readFunction | undefined;
   message: MessageDetailData;
+  onMessageDelete: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    message: MessageDetailData
+  ) => void;
 }
 
 export function ChatCard(props: ChatCardPropsType): JSX.Element {
-  const { remoteId, content, time, type, avatar, flag, onRead, message } =
-    props;
+  const {
+    remoteId,
+    content,
+    time,
+    type,
+    avatar,
+    flag,
+    onRead,
+    message,
+    onMessageDelete
+  } = props;
   const timeFormat = time.split(' ')[1];
+  const handleCollectDB = new HandleCollectDB();
 
   const defaultClass = {
     container: classnames({
@@ -61,13 +79,55 @@ export function ChatCard(props: ChatCardPropsType): JSX.Element {
   const onPopupMenu = (): JSX.Element => {
     return (
       <div className={styles.menus}>
-        <button className={styles.menuItem}>复制</button>
-        <button className={styles.menuItem}>收藏</button>
+        <button className={styles.menuItem} onClick={() => onCopy()}>
+          复制
+        </button>
+        <button className={styles.menuItem} onClick={() => onCollect()}>
+          收藏
+        </button>
         <button className={styles.menuItem}>多选</button>
-        <button className={styles.menuItem}>删除</button>
+        <button className={styles.menuItem} onClick={(e) => onDelete(e)}>
+          删除
+        </button>
       </div>
     );
   };
+
+  function onCopy(): void {
+    const chatData: JSONContent = JSON.parse(message.message);
+    const text = handleText(chatData);
+
+    void navigator.clipboard.writeText(text).catch((error) => {
+      Message.error('复制文字出错');
+      console.log(error);
+    });
+    clearText();
+
+    Message.success('复制成功');
+  }
+
+  function onCollect(): void {
+    const reqObj = {
+      collect_id: nanoid(),
+      account: message.user_account,
+      content: message.message,
+      origin: message.friend_account,
+      type: 'messageNote'
+    };
+
+    apiInsertCollect(reqObj).catch((err) => console.log('保存到网络出错', err));
+    handleCollectDB.insert(reqObj);
+
+    Message.info('收藏成功');
+  }
+
+  function onDelete(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    if (typeof onDelete === 'function') {
+      onMessageDelete(e, message);
+    }
+  }
+
+  // ========================
 
   useEffect(() => {
     init();
