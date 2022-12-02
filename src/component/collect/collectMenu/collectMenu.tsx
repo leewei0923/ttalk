@@ -20,7 +20,9 @@ export function CollectMenu(props: CollectMenuProps): JSX.Element {
       <Button
         className={styles.main_button}
         icon={<IconPlus className={styles.icon} />}
-        onClick={() => typeof onClick === 'function' ? onClick(CollectMenuType.NEWNOTE) : ''}
+        onClick={() =>
+          typeof onClick === 'function' ? onClick(CollectMenuType.NEWNOTE) : ''
+        }
       >
         新建笔记
       </Button>
@@ -29,21 +31,31 @@ export function CollectMenu(props: CollectMenuProps): JSX.Element {
         <Button
           className={styles.minor_button}
           icon={<IconApps className={styles.icon} />}
-          onClick={() => typeof onClick === 'function' ? onClick(CollectMenuType.ALLCOLLECT) : ''}
+          onClick={() =>
+            typeof onClick === 'function'
+              ? onClick(CollectMenuType.ALLCOLLECT)
+              : ''
+          }
         >
           全部收藏
         </Button>
         <Button
           className={styles.minor_button}
           icon={<IconBook className={styles.icon} />}
-          onClick={() => typeof onClick === 'function' ? onClick(CollectMenuType.NOTE) : ''}
+          onClick={() =>
+            typeof onClick === 'function' ? onClick(CollectMenuType.NOTE) : ''
+          }
         >
           笔 记
         </Button>
         <Button
           className={styles.minor_button}
           icon={<IconMessage className={styles.icon} />}
-          onClick={() => typeof onClick === 'function' ? onClick(CollectMenuType.MESSAGENOTE) : ''}
+          onClick={() =>
+            typeof onClick === 'function'
+              ? onClick(CollectMenuType.MESSAGENOTE)
+              : ''
+          }
         >
           聊天记录
         </Button>

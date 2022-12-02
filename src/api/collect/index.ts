@@ -19,6 +19,7 @@ export const apiInsertCollect = async (
 export const apiUpdateCollect = async (data: {
   account: string;
   collect_id: string;
+  content: string;
 }): Promise<CommonRes> =>
   await request.post<CommonRes>(`/ttalk/updateCollect`, data, {
     timeout: 15000
@@ -27,7 +28,6 @@ export const apiUpdateCollect = async (data: {
 export const apiDeleteCollect = async (data: {
   account: string;
   collect_id: string;
-  content: string;
 }): Promise<CommonRes> =>
   await request.post<CommonRes>(`/ttalk/deleteCollect`, data, {
     timeout: 15000

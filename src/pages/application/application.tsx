@@ -1,11 +1,10 @@
-import MyEditor from '@src/component/NotePage/Editor/editor';
 import React from 'react';
 import styles from './application.module.scss';
 
 function Application(): JSX.Element {
   return (
     <div className={styles.container}>
-      <MyEditor />
+      <p>应用</p>
     </div>
   );
 }

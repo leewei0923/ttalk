@@ -11,14 +11,18 @@ import styles from './collectBox.module.scss';
 interface CollectBoxProps {
   menuType: CollectMenuType;
   collectData: collect_data_entry[];
+  onCardClick: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    collect: collect_data_entry
+  ) => void;
 }
 
 export function CollectBox(props: CollectBoxProps): JSX.Element {
   /**
    * 公共区域
    */
-  const { collectData } = props;
-  const { menuType } = props;
+  const { menuType, collectData, onCardClick } = props;
+
   const topTitleText = {
     allCollect: '所有收藏',
     newNote: '新的笔记',
@@ -44,6 +48,13 @@ export function CollectBox(props: CollectBoxProps): JSX.Element {
               content={htmlContent}
               time={res.create_time}
               origin={res.origin}
+              collect={res}
+              onClick={function (
+                e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+                collect: collect_data_entry
+              ): void {
+                onCardClick(e, collect);
+              }}
             />
           );
         })}

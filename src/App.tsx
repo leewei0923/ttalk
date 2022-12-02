@@ -4,7 +4,6 @@ import ChatPageFragment from './pages/chatPageFragment/chatPageFragment';
 import Home from './pages/home/Home';
 import LoginPage from './pages/login/loginPage';
 import LostPage from './pages/lostPage';
-import NotePage from './pages/note/note';
 import { AuthRoute } from './routes/authRoutes';
 
 function App(): JSX.Element {
@@ -18,7 +17,6 @@ function App(): JSX.Element {
           path="chat/:chatId/*"
           element={<AuthRoute element={<ChatPageFragment />} />}
         />
-        <Route path="note" element={<NotePage />} />
         <Route path="*" element={<LostPage />} />
       </Routes>
     </div>

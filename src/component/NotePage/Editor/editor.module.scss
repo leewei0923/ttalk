@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   height: 100vh;
-//   background-color: bisque;
+  // background-color: bisque;
   position: relative;
 }
 
@@ -15,13 +15,14 @@
   transform: translate(-50%, -50%);
   border: 3px solid black;
   border-radius: 25px;
+  // background-color: cadetblue;
+  z-index: 20;
 }
 
 .input_box {
-//   background-color: chartreuse;
+  // background-color: chartreuse;
   height: calc(100% - 40px);
   border-radius: 0 0 20px 20px;
   overflow: scroll;
-
   
 }

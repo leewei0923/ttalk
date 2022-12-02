@@ -41,8 +41,20 @@ export class HandleCollectDB {
       .catch((err) => console.log('插入collect出错', err));
   }
 
-  update(collect_id: string, content: string): void {
+  update(
+    collect_id: string,
+    content: string,
+    collects: collect_data_entry[]
+  ): collect_data_entry[] {
     const curDate = dayjs().format('YYYY-MM-DD HH:mm');
+
+    for (let i = 0; i < collects.length; i++) {
+      if (collects[i].collect_id === collect_id) {
+        collects[i].content = content;
+        collects[i].update_time = curDate;
+        break;
+      }
+    }
     db.collectData
       .where('collect_id')
       .equals(collect_id)
@@ -51,14 +63,27 @@ export class HandleCollectDB {
         update_time: curDate
       })
       .catch((err) => console.log('更新collect出错', err));
+
+    return collects;
   }
 
-  delete(collect_id: string): void {
+  delete(
+    collect_id: string,
+    collects: collect_data_entry[]
+  ): collect_data_entry[] {
+    for (let i = 0; i < collects.length; i++) {
+      if (collects[i].collect_id === collect_id) {
+        collects.splice(i, 1);
+        break;
+      }
+    }
     db.collectData
       .where({
         collect_id
       })
       .delete()
       .catch((err) => console.log('更新collect出错', err));
+
+    return collects;
   }
 }
