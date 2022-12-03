@@ -34,12 +34,17 @@ export function trimmedDate(target: string): string {
   const curTime = Date.now();
   const dateList = target.split(' ');
 
-  if (targetTime - curTime < 86400000) {
+  if (curTime - targetTime < 86400000) {
     return `${dateList[1]}`;
   }
 
   if (targetTime - curTime > 86400000 && targetTime - curTime < 172800000) {
     return `昨天 ${dateList[1]}`;
+  } else if (
+    targetTime - curTime > 86400000 &&
+    targetTime - curTime > 172800000
+  ) {
+    return `${dateList.join()}`;
   } else {
     return `${dateList[0]}`;
   }
