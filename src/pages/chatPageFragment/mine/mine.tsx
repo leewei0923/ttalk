@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Form,
   Input,
@@ -22,6 +22,9 @@ import styles from './mine.module.scss';
 import Storage from '@src/util/localStorage';
 import { apiUpdateUserInfo } from '@src/api/user';
 import { GetTtakLoginUser } from '@src/common/personInfo';
+import dayjs from 'dayjs';
+import { upload } from '@src/request/upload';
+import { uploadURL } from '@src/request/url';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -34,6 +37,7 @@ interface UserInfoType {
   bird_date: string;
   add_time: string;
   nickname: string;
+  avatar: string;
 }
 
 function Mine(): JSX.Element {
@@ -61,13 +65,55 @@ function Mine(): JSX.Element {
   };
   getInitData();
 
+  const [curAvatar, setCurAvatar] = useState('');
+
+  function genImg(): string | JSX.Element | undefined {
+    if (
+      (typeof userInfoRef.current === 'object' &&
+        userInfoRef.current?.avatar.length > 10) ||
+      curAvatar !== ''
+    ) {
+      return (
+        <img src={curAvatar !== '' ? curAvatar : userInfoRef.current?.avatar} />
+      );
+    } else {
+      return userInfoRef.current?.account.substring(0, 1).toLocaleUpperCase();
+    }
+  }
+
+  const onAvatarChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const formDatas = new FormData();
+    const file = e.target.files;
+    if (typeof userInfoRef.current !== 'object') return;
+
+    const curDate = dayjs().format('YYYY-MM-DD');
+    const year = dayjs().format('YYYY');
+    const month = dayjs().format('MM');
+    const day = dayjs().format('DD');
+    const randomNum = Math.floor(Math.random() * 100000).toString();
+    const account = userInfoRef.current.account;
+
+    if (file !== null) {
+      const suffixName = file[0].type.split('/')[1];
+      const fileName = `${curDate}-${randomNum}_${account}.${suffixName}`;
+      formDatas.set('image', file[0], fileName);
+      upload('/file/uploadAvatar', formDatas)
+        .then((res) => {
+          const url = `${uploadURL}${year}/${month}/${day}/${randomNum}_${account}.${suffixName}`;
+          setTimeout(() => {
+            setCurAvatar(url);
+          }, 200);
+        })
+        .catch((err) => console.log('请求图片出现问题', err));
+    }
+  };
+
   /**
    * 点击保存提交
    * @param forms
    */
   const onSubmit = (forms: any): void => {
     const {
-      avatar,
       bird_date,
       githubAccount,
       motto,
@@ -77,6 +123,7 @@ function Mine(): JSX.Element {
       weChatAccount,
       weiboAccount
     } = forms;
+
     const social = JSON.stringify({
       social_account: {
         github: githubAccount,
@@ -88,7 +135,8 @@ function Mine(): JSX.Element {
     });
     apiUpdateUserInfo({
       account: userInfoRef.current?.account ?? '',
-      avatar: avatar ?? '',
+      avatar:
+        curAvatar.length > 5 ? curAvatar : userInfoRef.current?.avatar ?? '',
       bird_date: bird_date ?? '',
       motto: motto ?? '',
       nickname: nickname ?? '',
@@ -103,7 +151,10 @@ function Mine(): JSX.Element {
             JSON.stringify([
               {
                 account: userInfoRef.current?.account ?? '',
-                avatar: avatar ?? '',
+                avatar:
+                  curAvatar.length > 5
+                    ? curAvatar
+                    : userInfoRef.current?.avatar ?? '',
                 bird_date: bird_date ?? '',
                 motto: motto ?? '',
                 nickname: nickname ?? '',
@@ -124,7 +175,7 @@ function Mine(): JSX.Element {
 
   // upload
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [curAvatar]);
 
   return (
     <div className={styles.container}>
@@ -147,10 +198,10 @@ function Mine(): JSX.Element {
                   autoFixFontSize={true}
                   style={{ backgroundColor: '#3370ff' }}
                 >
-                  {userInfoRef.current?.account
-                    .substring(0, 1)
-                    .toLocaleUpperCase()}
+                  {genImg()}
                 </Avatar>
+
+                <input type="file" onChange={(e) => onAvatarChange(e)} />
               </FormItem>
 
               <FormItem label="账号" wrapperCol={{ span: 16 }}>
