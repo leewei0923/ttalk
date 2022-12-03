@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { leftTabOptions } from './leftOptions';
 import styles from './chatPageLeftBar.module.scss';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '@src/redux/hook';
-import { selectGlobalAccount } from '@src/redux/account/index';
+// import { useAppSelector } from '@src/redux/hook';
+// import { selectGlobalAccount } from '@src/redux/account/index';
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { Avatar } from '@arco-design/web-react';
 import { firstValidNumber } from '@src/util/util';
@@ -19,12 +19,12 @@ import { OFFLINE_EVENTS } from './handleOfflineEvents';
 export function ChatPageLeftBar(): JSX.Element {
   const [curentTabr, setCurrentTab] = useState(0);
   const navigateTo = useNavigate();
-  const globalAccount = useAppSelector(selectGlobalAccount);
+  // const globalAccount = useAppSelector(selectGlobalAccount);
   const { chatId } = useParams();
   const userInfoData = GetTtakLoginUser();
   const socket = useSocket();
 
-  console.log(globalAccount);
+  if (typeof userInfoData !== 'object') return <></>;
 
   const onSwitchTab = function (index: number, path: string): void {
     setCurrentTab(index);
@@ -51,7 +51,6 @@ export function ChatPageLeftBar(): JSX.Element {
 
   const firstLoadRef = useRef(false);
   const onLoadOfflineInfo = (): void => {
-    if (userInfoData === '') return;
     apiOfflineEvents({ account: userInfoData[0].account })
       .then((res) => {
         if (res.code === 200) {
@@ -66,9 +65,20 @@ export function ChatPageLeftBar(): JSX.Element {
 
   const onHandleEvent = (data: LoadLastestMessage[]): void => {
     for (let i = 0; i < data.length; i++) {
-      const { user_account, friend_account, create_time, event_type, event_detail } = data[i];
+      const {
+        user_account,
+        friend_account,
+        create_time,
+        event_type,
+        event_detail
+      } = data[i];
       const offlineEvent = OFFLINE_EVENTS[event_type]();
-      offlineEvent.handleEvent({ user_account, friend_account, create_time , event_detail});
+      offlineEvent.handleEvent({
+        user_account,
+        friend_account,
+        create_time,
+        event_detail
+      });
     }
   };
 
@@ -91,25 +101,22 @@ export function ChatPageLeftBar(): JSX.Element {
     <div className={styles.container}>
       {/* 头像 */}
       <div className={styles.avatar_box} onClick={() => setLeftUserFlag(false)}>
-        {typeof userInfoData[0] === 'object' &&
-        userInfoData[0]?.avatar !== '' ? (
-          <img src={userInfoData[0]?.avatar} className={styles.avatar_img} />
-        ) : (
-          <Avatar
-            style={{ backgroundColor: '#165DFF' }}
-            autoFixFontSize={false}
-            size={50}
-            shape="square"
-          >
-            {typeof userInfoData[0] === 'object' &&
-            (userInfoData[0]?.nickname ?? '').length > 0
-              ? firstValidNumber([
-                  userInfoData[0].nickname.charAt(0),
-                  userInfoData[0].account.charAt(0)
-                ])
-              : ''}
-          </Avatar>
-        )}
+        <Avatar
+          style={{ backgroundColor: '#165DFF' }}
+          autoFixFontSize={false}
+          size={50}
+          shape="square"
+        >
+          {typeof userInfoData[0] === 'object' &&
+          userInfoData[0]?.avatar.length > 5 ? (
+            <img src={userInfoData[0]?.avatar} className={styles.avatar_img} />
+          ) : (
+            firstValidNumber([
+              userInfoData[0].nickname.charAt(0),
+              userInfoData[0].account.charAt(0)
+            ])
+          )}
+        </Avatar>
 
         <div className={styles.current_mood}>
           {typeof leftBarMood === 'object' ? (

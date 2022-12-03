@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { Button, Switch } from '@arco-design/web-react';
+import { Button, Checkbox, Modal, Switch, Tag } from '@arco-design/web-react';
 import { IconRight } from '@arco-design/web-react/icon';
 import { apiAddFriendBlackList } from '@src/api/chat';
 import { chat_user_concat_entry, db } from '@src/database/db';
@@ -151,6 +151,28 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
     localStorage.setStorage('chat_top_chatlist', JSON.stringify(list));
   };
 
+  const OPTIONS = [
+    {
+      key: 'list',
+      name: '删除列表'
+    },
+    {
+      key: 'user',
+      name: '删除好友'
+    },
+    {
+      key: 'reord',
+      name: '删除聊天记录'
+    }
+  ];
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const onDeleteUser = (): void => {};
+
+  const onCheckBoxChange = (e: React.ReactText[]): void => {
+    console.log(e);
+  };
+
   const options = [
     {
       title: '拉黑',
@@ -188,7 +210,6 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
       )
     }
   ];
- 
 
   useEffect(() => {
     if (globalAccount !== '') {
@@ -218,11 +239,48 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
 
           <div className={styles.clear_btn}>清除聊天记录</div>
 
-          <Button type="primary" status="danger" shape="round">
+          <Button
+            type="primary"
+            status="danger"
+            shape="round"
+            onClick={() => setDeleteModal(true)}
+          >
             删除
           </Button>
         </div>
       </section>
+
+      <Modal
+        title="删除?"
+        visible={deleteModal}
+        onOk={() => onDeleteUser()}
+        onCancel={() => setDeleteModal(false)}
+        autoFocus={false}
+        focusLock={true}
+      >
+        <Checkbox.Group
+          direction="vertical"
+          defaultValue={[]}
+          onChange={(e) => onCheckBoxChange(e)}
+        >
+          {OPTIONS.map((item) => {
+            return (
+              <Checkbox key={item.key} value={item.key}>
+                {({ checked }) => {
+                  return (
+                    <Tag
+                      key={item.key + 'tag'}
+                      color={checked ? 'arcoblue' : ''}
+                    >
+                      {item.name}
+                    </Tag>
+                  );
+                }}
+              </Checkbox>
+            );
+          })}
+        </Checkbox.Group>
+      </Modal>
     </div>
   );
 }
