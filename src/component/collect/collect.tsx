@@ -87,7 +87,6 @@ export function Collect(): JSX.Element {
   }
   const collectIdRef = useRef<collect_data_entry | null>(null); // collect_id
   const onSave = (): void => {
-    console.log(editorRef.current);
     if (editorRef.current !== null) {
       const content = JSON.stringify(editorRef.current.getJSON());
 

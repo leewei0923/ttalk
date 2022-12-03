@@ -12,6 +12,7 @@ import useDebounce from '@src/hooks/debounce';
 import { IconClose } from '@arco-design/web-react/icon';
 import { useSocket } from '@src/contexts/socket';
 import { messageFeedbackDB } from '../chatPageMain/handleScoket';
+import Image from '@tiptap/extension-image';
 
 interface ChatPageBoxProps {
   messageData: MessageData[] | '';
@@ -173,7 +174,8 @@ export function ChatPageBox(props: ChatPageBoxProps): JSX.Element {
                 const htmlContent = generateHTML(JSON.parse(item2.message), [
                   StarterKit,
                   TextStyle,
-                  Color
+                  Color,
+                  Image
                 ]);
 
                 let userAvatar = avatar;

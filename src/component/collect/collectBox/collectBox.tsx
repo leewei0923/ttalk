@@ -7,6 +7,7 @@ import React from 'react';
 import { CollectCard } from '../collectCard/collectCard';
 import { CollectMenuType } from '../types';
 import styles from './collectBox.module.scss';
+import Image from '@tiptap/extension-image';
 
 interface CollectBoxProps {
   menuType: CollectMenuType;
@@ -39,7 +40,8 @@ export function CollectBox(props: CollectBoxProps): JSX.Element {
           const htmlContent = generateHTML(JSON.parse(res.content), [
             StarterKit,
             TextStyle,
-            Color
+            Color,
+            Image
           ]);
 
           return (

@@ -18,6 +18,7 @@ import classnames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './historyMessage.module.scss';
 import { HistoryMessageCard } from './historyMessageCard/historyMessageCard';
+import Image from '@tiptap/extension-image';
 
 interface HistoryMessageBoxprops {
   loginAccount: string;
@@ -190,6 +191,7 @@ export function HistoryMessageBox(props: HistoryMessageBoxprops): JSX.Element {
                 StarterKit,
                 TextStyle,
                 Color,
+                Image,
                 Highlight.configure({ multicolor: true })
               ]);
 

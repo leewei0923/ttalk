@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import React, { useEffect, useState } from 'react';
 import face from '@pic/icon/face.svg';
 import { IconFileImage, IconShrink } from '@arco-design/web-react/icon';
@@ -9,6 +10,11 @@ import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import CharacterCount from '@tiptap/extension-character-count';
 import styles from './chatExpandChatBox.module.scss';
+import Image from '@tiptap/extension-image';
+import { upload } from '@src/request/upload';
+import { GetTtakLoginUser } from '@src/common/personInfo';
+import dayjs from 'dayjs';
+import { uploadURL } from '@src/request/url';
 
 interface ExpandChatBoxProps {
   expandSwitch: () => void;
@@ -21,6 +27,8 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
    */
   const { expandSwitch, onSubmit } = props;
 
+  const loginAccount = GetTtakLoginUser();
+
   //   ======================
 
   /**
@@ -32,6 +40,7 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
       StarterKit,
       TextStyle,
       Color,
+      Image,
       CharacterCount.configure({
         limit
       })
@@ -46,6 +55,43 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
   const onGetEmoji = (emoji: string): void => {
     if (editor !== null) {
       editor.commands.insertContent(emoji);
+    }
+  };
+
+  /**
+   * 图片上传
+   */
+  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const formDatas = new FormData();
+    const file = e.target.files;
+    if (loginAccount === '') return;
+
+    const curDate = dayjs().format('YYYY-MM-DD');
+    const year = dayjs().format('YYYY');
+    const month = dayjs().format('MM');
+    const day = dayjs().format('DD');
+    const randomNum = Math.floor(Math.random() * 100000).toString();
+    const account = loginAccount[0].account;
+
+    if (file !== null) {
+      const suffixName = file[0].type.split('/')[1];
+      const fileName = `${curDate}-${randomNum}_${account}.${suffixName}`;
+      formDatas.set('image', file[0], fileName);
+      upload('/file/uploadAvatar', formDatas)
+        .then((res) => {
+          if (editor !== null) {
+            setTimeout(() => {
+              editor
+                .chain()
+                .focus()
+                .setImage({
+                  src: `${uploadURL}${year}/${month}/${day}/${randomNum}_${account}.${suffixName}`
+                })
+                .run();
+            }, 500);
+          }
+        })
+        .catch((err) => console.log('请求图片出现问题', err));
     }
   };
 
@@ -73,10 +119,13 @@ export function ExpandChatBox(props: ExpandChatBoxProps): JSX.Element {
             <img src={face} style={{ width: '20px', strokeWidth: 2 }} />
           </span>
 
-          <span
-            className={styles.photo}
-            // onClick={() => setEmojiFlag(!emojiFlag)}
-          >
+          <span className={styles.photo}>
+            <input
+              className={styles.upload}
+              type="file"
+              accept="image/jpg, image/jpeg, image/png"
+              onChange={(e) => onUploadImage(e)}
+            />
             <IconFileImage style={{ width: '20px', strokeWidth: 5 }} />
           </span>
         </div>

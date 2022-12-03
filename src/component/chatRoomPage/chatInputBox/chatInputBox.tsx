@@ -11,6 +11,7 @@ import Emoji from './emoji/emoji';
 import { EditorContent, JSONContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
+import Image from '@tiptap/extension-image';
 import CharacterCount from '@tiptap/extension-character-count';
 import useDebounce from '@src/hooks/debounce';
 
@@ -35,6 +36,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     extensions: [
       StarterKit,
       TextStyle,
+      Image,
       CharacterCount.configure({
         limit
       })
@@ -74,6 +76,7 @@ export function ChatInputBox(props: ChatInputBoxProps): JSX.Element {
     500,
     []
   );
+
 
   return (
     <div className={styles.container}>

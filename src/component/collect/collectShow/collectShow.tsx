@@ -4,7 +4,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import { generateHTML } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React, { useEffect, useState } from 'react';
-
+import Image from '@tiptap/extension-image';
 import styles from './collectShow.module.scss';
 
 interface CollectShowProps {
@@ -20,7 +20,8 @@ export function CollectShow(props: CollectShowProps): JSX.Element {
       const contentHtml = generateHTML(JSON.parse(collect?.content), [
         StarterKit,
         TextStyle,
-        Color
+        Color,
+        Image
       ]);
 
       setContent(contentHtml);

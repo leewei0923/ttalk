@@ -18,7 +18,7 @@
 
   // 正常
   .chat_content_box {
-    max-width: calc(100% - 120px);
+    max-width: calc(100% - 135px);
     margin: 0 10px;
     border-radius: 10px;
     font-size: 0.9em;
@@ -71,6 +71,13 @@
   .worriedFace {
     background-color: #e5e2d3;
     color: #37aba9;
+  }
+
+  img {
+    width: 30%;
+    // height: 300px;
+    height: auto;
+    object-fit: contain;
   }
 
   // ======

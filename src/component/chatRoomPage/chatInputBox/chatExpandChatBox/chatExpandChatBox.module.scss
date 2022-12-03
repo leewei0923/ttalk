@@ -28,6 +28,13 @@
       padding: 10px 20px;
       display: inline-block;
       white-space: wrap;
+
+      img {
+        width: 30%;
+        // height: 300px;
+        height: auto;
+        object-fit: contain;
+      }
     }
 
     .editor::after {
@@ -37,7 +44,7 @@
       left: 20px;
       top: 50px;
     }
-  } 
+  }
 
   .send_btn_container {
     position: absolute;
@@ -46,10 +53,7 @@
     height: 39px;
     border-top: 1px solid #e3e7e8;
     display: flex;
-
   }
-
-
 }
 
 .emoji_and_photo {
@@ -102,6 +106,16 @@
     &:hover::after {
       visibility: visible;
     }
+
+    .upload {
+      position: absolute;
+      top: 0;
+      z-index: 20;
+      width: 110%;
+      height: 90%;
+      opacity: 0;
+      cursor: pointer;
+    }
   }
 }
 
@@ -145,7 +159,6 @@
     }
   }
 }
-
 
 .emoji_picker {
   position: absolute;
