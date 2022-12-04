@@ -62,8 +62,8 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
         .toArray();
       const newFriend: FriendType = {
         account: friendApplicants[i].user_account,
-        avatar: userInfoData[i].avatar,
-        nickname: userInfoData[i].nickname,
+        avatar: userInfoData[i]?.avatar ?? '',
+        nickname: userInfoData[i]?.nickname ?? '',
         validText: friendApplicants[i].verifyInformation,
         date: friendApplicants[i].update_time,
         active: friendApplicants[i].friend_flag
@@ -131,11 +131,11 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
         });
 
         setModelVisible(false);
+        setRefresh(refresh + 1);
       })
       .catch((err) => {
         console.log('err', err);
       });
-    setRefresh(refresh + 1);
   };
 
   useEffect(() => {
@@ -166,6 +166,7 @@ export function NewFriends(props: NewFriendsProps): JSX.Element {
                 onClickAdd={function (account: string) {
                   setFriendAccount(account);
                   setModelVisible(true);
+                  setRefresh(refresh + 1);
                 }}
               />
             );

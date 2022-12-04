@@ -1,15 +1,43 @@
 import classnames from 'classnames';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { IconDragDot } from '@arco-design/web-react/icon';
 import avatar from '@pic/pic/logo.png';
 import styles from './homeHeader.module.scss';
+import { Avatar, Message, Popconfirm } from '@arco-design/web-react';
+import { GetTtakLoginUser } from '@src/common/personInfo';
+import Storage from '@src/util/localStorage';
+import { useNavigate } from 'react-router-dom';
 
 export function HomeHeader(): JSX.Element {
   // 控制menu显/藏 , true 为显示, false 为隐藏
   const [menuFlag, setMenuFlag] = useState(false);
+  const loginAccount = GetTtakLoginUser();
+  const localstorage = new Storage();
+  const navigate = useNavigate();
 
   const onOpenMenu = (): void => {
     setMenuFlag(!menuFlag);
+  };
+
+  const genAvatar = (): string | JSX.Element => {
+    if (loginAccount === '') return 'Hello';
+
+    if (loginAccount[0].avatar.length > 5) {
+      return (
+        <img
+          src={loginAccount[0].avatar}
+          onClick={() => navigate('/chat/message')}
+        />
+      );
+    } else {
+      return loginAccount[0].account.substring(0, 1);
+    }
+  };
+
+  const [refrsh, setRefresh] = useState(0);
+  const onLoginOut = (): void => {
+    localstorage.setStorage('chat-user-info', '');
+    setRefresh(refrsh + 1);
   };
 
   const classOptions = {
@@ -26,6 +54,9 @@ export function HomeHeader(): JSX.Element {
       [styles.nav_selected]: menuFlag
     })
   };
+
+  useEffect(() => {}, [refrsh]);
+
   return (
     <div className={styles.container}>
       <section className={styles.title_box}>
@@ -76,11 +107,34 @@ export function HomeHeader(): JSX.Element {
         </div>
 
         <div className={styles.right_box}>
-          <a className={styles.link} href="/login/in">登录</a>
-          <a className={styles.link} href="/login/up">注册</a>
-
-          <img src={avatar} className={styles.img_pc} />
-          <button className={styles.login_out_btn}>退出</button>
+          {loginAccount === '' ? (
+            <>
+              <a className={styles.link} href="/login/in">
+                登录
+              </a>
+              <a className={styles.link} href="/login/up">
+                注册
+              </a>
+            </>
+          ) : (
+            ''
+          )}
+          <Avatar size={40}>{genAvatar()}</Avatar>
+          {/* <img src={avatar} className={styles.img_pc} /> */}
+          <Popconfirm
+            focusLock
+            title="确定要退出登录吗?"
+            onOk={() => {
+              onLoginOut();
+            }}
+            onCancel={() => {
+              Message.error({
+                content: '已取消'
+              });
+            }}
+          >
+            <button className={styles.login_out_btn}>退出</button>
+          </Popconfirm>
         </div>
       </section>
     </div>

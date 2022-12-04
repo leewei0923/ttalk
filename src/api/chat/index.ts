@@ -100,3 +100,48 @@ export const apiUpdateReadFlag = async (data: {
   await request.post<UpdateReadFlagRes>(`/ttalk/updateReadFlag`, data, {
     timeout: 15000
   });
+
+/**
+ * 点击通讯录就更新拉取信息，比对更新信息
+ */
+
+interface apiLoadMyfriendsRes extends CommonRes {
+  info: string[];
+}
+
+export const apiLoadMyfriends = async (data: {
+  friend_account: string;
+}): Promise<apiLoadMyfriendsRes> =>
+  await request.post<apiLoadMyfriendsRes>(`/ttalk/loadAllfriend`, data, {
+    timeout: 15000
+  });
+
+/**
+ * 获取concat
+ */
+export interface concatRes {
+  id: string;
+  user_account: string;
+  friend_account: string;
+  add_time: string;
+  update_time: string;
+  friend_flag: boolean;
+  verifyInformation: string;
+  remark: string;
+  blacklist: boolean;
+  tags: string;
+  ip: string;
+  type: 'accept' | 'apply';
+}
+
+interface apiLoadConcatType extends CommonRes {
+  info: concatRes[];
+}
+
+export const apiLoadConcat = async (data: {
+  user_account: string;
+  accounts: string[];
+}): Promise<apiLoadConcatType> =>
+  await request.post<apiLoadConcatType>(`/ttalk/loadConcat`, data, {
+    timeout: 15000
+  });

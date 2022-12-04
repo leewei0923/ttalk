@@ -4,7 +4,10 @@ import styles from './application.module.scss';
 function Application(): JSX.Element {
   return (
     <div className={styles.container}>
-      <p>应用</p>
+      <iframe
+        src="https://qwerty.kaiyi.cool/"
+        style={{ width: 'calc(100% - 10px)', height: 'calc(100% - 10px)' }}
+      ></iframe>
     </div>
   );
 }

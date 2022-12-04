@@ -28,6 +28,7 @@ import {
   setMessageAlert
 } from '@src/redux/topBarMessageAlert';
 import { getMessageCount } from '@src/database/getMeesageCount';
+import { onDbConcatList } from './handleMessage';
 
 export function ChatPageTopBar(): JSX.Element {
   /**
@@ -462,7 +463,7 @@ export function ChatPageTopBar(): JSX.Element {
     friend_account: string;
     message: string;
     mood_state: string;
-    message_style: "rich" | 'normal';
+    message_style: 'rich' | 'normal';
     read_flag: boolean;
     create_time: string;
     update_time: string;
@@ -484,6 +485,7 @@ export function ChatPageTopBar(): JSX.Element {
     };
 
     if (typeof res === 'object') {
+      void onDbConcatList(res.friend_account);
       handleChat.addDb(message);
       dispatch(
         setDetailNotice({
@@ -492,6 +494,8 @@ export function ChatPageTopBar(): JSX.Element {
           friend_account: res.friend_account
         })
       );
+
+      
     }
   };
 
@@ -508,16 +512,12 @@ export function ChatPageTopBar(): JSX.Element {
       .catch((err) => console.log('无法获取数量', err));
   };
 
-  
-
-
   useEffect(() => {
     // 监听添加好友
     onListenAddFriend();
 
     socket.on('messaging', onListenerMessages);
-    getMessageAlertCount ();
-    
+    getMessageAlertCount();
 
     return () => {
       // 页面卸载后移除socket监听

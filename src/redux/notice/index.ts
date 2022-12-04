@@ -8,7 +8,7 @@ interface newMessageType {
   friend_account: string;
 }
 
-type noticeType = 'addFriend' | newMessageType | '';
+type noticeType = 'addFriend' | newMessageType | '' ;
 
 const initialNotice: noticeType = '';
 

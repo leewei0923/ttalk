@@ -341,6 +341,14 @@ export function ChatPageMain(): JSX.Element {
     setCloudVisible(!cloudVisible);
   };
 
+  /**
+   * 删除列表后刷新
+   */
+  const [refreshConcat, setRefreshConcat] = useState(1);
+  function onRefreshConcat(): void {
+    setRefreshConcat(refreshConcat + 1);
+  }
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -377,7 +385,7 @@ export function ChatPageMain(): JSX.Element {
         {/* 联系人展示区域 */}
 
         <div className={styles.contact_box}>
-          <ChatConcatList />
+          <ChatConcatList refreshConcat={refreshConcat} />
         </div>
 
         <section
@@ -458,6 +466,7 @@ export function ChatPageMain(): JSX.Element {
             visibleFlag={showFriendFlag}
             setVisibleFlag={changeFriendVisible}
             onChatCloud={onSwitchChatCloud}
+            onRefreshConcat={onRefreshConcat}
           />
         )}
 

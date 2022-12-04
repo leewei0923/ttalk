@@ -1,8 +1,10 @@
+import { apiLoadMyfriends } from '@src/api/chat';
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
 import { TosortTheConcat, UpdateConcatList } from '@src/database/setConcatList';
 import { selectGlobalAccount, setGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
+import { selectGlobalNotice, setDetailNotice } from '@src/redux/notice';
 import { trimmedDate } from '@src/util/handleTime';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,7 +12,11 @@ import { ContcatSumaryCard } from '../contactSumaryCard/contactSummaryCard';
 import styles from './chatConcatList.module.scss';
 import { updateUserInfo } from './handleUpdateUserInfo';
 
-export function ChatConcatList(): JSX.Element {
+interface ChatConcatProps {
+  refreshConcat: number;
+}
+
+export function ChatConcatList(props: ChatConcatProps): JSX.Element {
   // const data = new Array(10).fill(0);
 
   /**
@@ -18,7 +24,12 @@ export function ChatConcatList(): JSX.Element {
    */
   const loginUser = GetTtakLoginUser();
   const globalAccount = useAppSelector(selectGlobalAccount);
+  const globalNotice = useAppSelector(selectGlobalNotice);
   const dispatch = useDispatch();
+
+  const { refreshConcat } = props;
+
+  if (loginUser === '') return <></>;
 
   // ===============
 
@@ -93,11 +104,18 @@ export function ChatConcatList(): JSX.Element {
     }
   };
 
+  function loadAllFriends() {
+    if (loginUser === '') return;
+    apiLoadMyfriends(loginUser[0].account).then((res) => {
+      
+    });
+  }
+
   useEffect(() => {
-    if (concatList.length <= 0) {
-      void getDataBaseConcatList();
-    }
-  }, [globalAccount, concatList]);
+    void getDataBaseConcatList();
+
+    dispatch(setDetailNotice(''));
+  }, [globalAccount, refreshConcat, globalNotice]);
 
   return (
     <div className={styles.container}>

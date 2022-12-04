@@ -70,7 +70,7 @@ function Mine(): JSX.Element {
   function genImg(): string | JSX.Element | undefined {
     if (
       (typeof userInfoRef.current === 'object' &&
-        userInfoRef.current?.avatar.length > 10) ||
+        (userInfoRef.current?.avatar ?? '').length > 10) ||
       curAvatar !== ''
     ) {
       return (
@@ -201,7 +201,11 @@ function Mine(): JSX.Element {
                   {genImg()}
                 </Avatar>
 
-                <input type="file" onChange={(e) => onAvatarChange(e)} />
+                <input
+                  type="file"
+                  className={styles.avatar_upload}
+                  onChange={(e) => onAvatarChange(e)}
+                />
               </FormItem>
 
               <FormItem label="账号" wrapperCol={{ span: 16 }}>

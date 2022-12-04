@@ -23,7 +23,6 @@ export function ChatPageLeftBar(): JSX.Element {
   const { chatId } = useParams();
   const userInfoData = GetTtakLoginUser();
   const socket = useSocket();
-
   if (typeof userInfoData !== 'object') return <></>;
 
   const onSwitchTab = function (index: number, path: string): void {
@@ -54,7 +53,7 @@ export function ChatPageLeftBar(): JSX.Element {
     apiOfflineEvents({ account: userInfoData[0].account })
       .then((res) => {
         if (res.code === 200) {
-          console.log(res);
+
           onHandleEvent(res.info);
         }
       })
@@ -97,6 +96,8 @@ export function ChatPageLeftBar(): JSX.Element {
     };
   }, [leftBarMood, socket]);
 
+  console.log();
+
   return (
     <div className={styles.container}>
       {/* 头像 */}
@@ -108,12 +109,12 @@ export function ChatPageLeftBar(): JSX.Element {
           shape="square"
         >
           {typeof userInfoData[0] === 'object' &&
-          userInfoData[0]?.avatar.length > 5 ? (
+          (userInfoData[0]?.avatar ?? '').length > 5 ? (
             <img src={userInfoData[0]?.avatar} className={styles.avatar_img} />
           ) : (
             firstValidNumber([
-              userInfoData[0].nickname.charAt(0),
-              userInfoData[0].account.charAt(0)
+              (userInfoData[0]?.nickname ?? '').charAt(0),
+              (userInfoData[0]?.account ?? '').charAt(0)
             ])
           )}
         </Avatar>

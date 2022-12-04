@@ -3,23 +3,27 @@ import { Button, Checkbox, Modal, Switch, Tag } from '@arco-design/web-react';
 import { IconRight } from '@arco-design/web-react/icon';
 import { apiAddFriendBlackList } from '@src/api/chat';
 import { chat_user_concat_entry, db } from '@src/database/db';
-import { selectGlobalAccount } from '@src/redux/account';
+import { selectGlobalAccount, setGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
 import Storage from '@src/util/localStorage';
 import classnames from 'classnames';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './friendSetting.module.scss';
+import { deleteUser, deleteUserChatRecord, onDeleteList } from './handleDelete';
 
 interface friendSettingProps {
   loginAccount: string;
   visibleFlag: boolean;
   setVisibleFlag: () => void;
   onChatCloud: () => void;
+  onRefreshConcat: () => void;
 }
 
 export function FriendSetting(props: friendSettingProps): JSX.Element {
-  const { visibleFlag, loginAccount, onChatCloud } = props;
+  const { visibleFlag, loginAccount, onChatCloud, onRefreshConcat } = props;
   const globalAccount = useAppSelector(selectGlobalAccount);
+  const dispatch = useDispatch();
   const localStorage = new Storage();
 
   const container = classnames({
@@ -167,11 +171,29 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
     }
   ];
   const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteList, setDeleteList] = useState<React.ReactText[]>([]);
+  const onDeleteUser = (): void => {
+    if (deleteList.includes('list')) {
+      onDeleteList(globalAccount);
+    }
 
-  const onDeleteUser = (): void => {};
+    if (deleteList.includes('user')) {
+      deleteUser(loginAccount, globalAccount);
+    }
 
-  const onCheckBoxChange = (e: React.ReactText[]): void => {
-    console.log(e);
+    if (deleteList.includes('record')) {
+      deleteUserChatRecord(loginAccount, globalAccount);
+    }
+
+    setDeleteModal(false);
+    if (typeof onRefreshConcat === 'function') {
+      onRefreshConcat();
+    }
+    dispatch(setGlobalAccount(''));
+  };
+
+  const onCheckBoxChange = (list: React.ReactText[]): void => {
+    setDeleteList(list);
   };
 
   const options = [

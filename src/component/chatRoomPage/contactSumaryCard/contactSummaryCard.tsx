@@ -69,7 +69,7 @@ export function ContcatSumaryCard(props: ContcatSumaryCardProps): JSX.Element {
             size={40}
             shape="circle"
           >
-            {(nickname ?? '').length > 0
+            {(nickname ?? '').length > 5
               ? (nickname ?? '')?.charAt(0)
               : account?.charAt(0)}
           </Avatar>
