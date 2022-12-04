@@ -14,10 +14,11 @@ interface friendSettingProps {
   loginAccount: string;
   visibleFlag: boolean;
   setVisibleFlag: () => void;
+  onChatCloud: () => void;
 }
 
 export function FriendSetting(props: friendSettingProps): JSX.Element {
-  const { visibleFlag, loginAccount } = props;
+  const { visibleFlag, loginAccount, onChatCloud } = props;
   const globalAccount = useAppSelector(selectGlobalAccount);
   const localStorage = new Storage();
 
@@ -225,6 +226,11 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
         <div className={styles.items}>
           <div className={styles.item}>
             <p>聊天记录</p>
+            <IconRight style={{ fontSize: 20 }} />
+          </div>
+
+          <div className={styles.item} onClick={onChatCloud}>
+            <p>好友词云</p>
             <IconRight style={{ fontSize: 20 }} />
           </div>
 

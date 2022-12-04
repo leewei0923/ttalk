@@ -28,6 +28,7 @@ import { HistoryMessageBox } from '../chatPageBox/historyMessageBox/historyMessa
 // import { chatData } from '../chatPageBox/data';
 import { nanoid } from '@reduxjs/toolkit';
 import { messageFeedbackDB, messageFeedbackList } from './handleScoket';
+import { ChatCloud } from '../chatPageBox/chatCloud/chatCloud';
 
 export function ChatPageMain(): JSX.Element {
   /**
@@ -334,6 +335,12 @@ export function ChatPageMain(): JSX.Element {
     setRefresh(refresh + 1);
   };
 
+  // 关闭词云
+  const [cloudVisible, setCloudVisible] = useState(false);
+  const onSwitchChatCloud = (): void => {
+    setCloudVisible(!cloudVisible);
+  };
+
   useEffect(() => {
     void getFriendInfo();
 
@@ -355,7 +362,14 @@ export function ChatPageMain(): JSX.Element {
     return () => {
       // socket.off('read');
     };
-  }, [globalAccount, friendavatar, refresh, socket, globalNotice]);
+  }, [
+    globalAccount,
+    friendavatar,
+    refresh,
+    socket,
+    globalNotice,
+    cloudVisible
+  ]);
 
   return (
     <div className={styles.container}>
@@ -443,6 +457,7 @@ export function ChatPageMain(): JSX.Element {
             })()}
             visibleFlag={showFriendFlag}
             setVisibleFlag={changeFriendVisible}
+            onChatCloud={onSwitchChatCloud}
           />
         )}
 
@@ -461,6 +476,9 @@ export function ChatPageMain(): JSX.Element {
           visible={historyShow}
           onClose={changeHistoryVisible}
         />
+
+        {/* 词云图 */}
+        {cloudVisible ? <ChatCloud onClose={() => onSwitchChatCloud()} /> : ''}
       </section>
     </div>
   );

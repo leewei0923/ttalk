@@ -72,3 +72,14 @@
     }
   }
 }
+
+.qrcode_container {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #fff;
+
+  p {
+    color: rgb(27, 27, 27);
+    text-align: center;
+  }
+}

@@ -9,7 +9,7 @@ import { db } from './db';
  */
 export async function GetUnreadCount(account: string): Promise<number> {
   const count = await db.messageData
-    .where(['account', 'type'])
+    .where(['friend_account', 'type'])
     .equals([account, 'receive'])
     .filter((res) => {
       return !res.read_flag;

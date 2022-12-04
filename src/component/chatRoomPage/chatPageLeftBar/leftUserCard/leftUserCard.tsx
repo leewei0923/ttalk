@@ -6,6 +6,7 @@ import { Avatar, Tooltip } from '@arco-design/web-react';
 import { firstValidNumber } from '@src/util/util';
 import { IconRight } from '@arco-design/web-react/icon';
 import { MOODDATAS, MoodDataType } from '@src/common/data';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface LeftUserCardProps {
   onclick?: (
@@ -17,6 +18,8 @@ interface LeftUserCardProps {
 export function LeftUserCard(props: LeftUserCardProps): JSX.Element {
   const { onclick } = props;
   const userInfoData = GetTtakLoginUser();
+
+  if (typeof userInfoData !== 'object') return <></>;
 
   return (
     <div className={styles.container}>
@@ -77,10 +80,24 @@ export function LeftUserCard(props: LeftUserCardProps): JSX.Element {
       </section>
 
       <section className={styles.menus}>
-        <div className={styles.menu_item}>
-          <p>我的二维码</p>
-          <IconRight style={{ fontSize: 20, marginRight: '20px' }} />
-        </div>
+        <Tooltip
+          position="right"
+          trigger="hover"
+          style={{ borderRadius: '10px' }}
+          blurToHide={false}
+          color={'#F2F3F5'}
+          content={
+            <div className={styles.qrcode_container}>
+              <QRCodeSVG value={userInfoData[0].account} />
+              <p>@{userInfoData[0].account}</p>
+            </div>
+          }
+        >
+          <div className={styles.menu_item}>
+            <p>我的二维码</p>
+            <IconRight style={{ fontSize: 20, marginRight: '20px' }} />
+          </div>
+        </Tooltip>
 
         <div className={styles.menu_item}>
           <p>设置</p>
