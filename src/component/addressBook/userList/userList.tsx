@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import { IconUserAdd } from '@arco-design/web-react/icon';
+import { apiLoadMyfriends, apiUserDetailInfo } from '@src/api/chat';
 import { apiCheckOnline } from '@src/api/user';
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { pageStateType } from '@src/types';
@@ -10,6 +11,12 @@ import {
   userListTyep
 } from '@src/util/genUserList';
 import React, { useEffect, useState } from 'react';
+import {
+  addDb,
+  genFriendNameList,
+  insertUserInfo,
+  updateUserInfo
+} from './handlekeepFriendList';
 // import { user } from './stateData';
 import styles from './userList.module.scss';
 import { UserListCard } from './userListCard/userListCard';
@@ -23,6 +30,7 @@ export function UserList(props: UserListProps): JSX.Element {
    * 公共区域
    */
   const { onChangePageMode } = props;
+  const loginUser = GetTtakLoginUser();
 
   // ========================
 
@@ -49,8 +57,43 @@ export function UserList(props: UserListProps): JSX.Element {
     return onlineStatus.account_status;
   };
 
+  async function loadAllFriends(): Promise<void> {
+    if (loginUser === '') return;
+    const list = await genFriendNameList(loginUser[0].account);
+    apiLoadMyfriends({
+      user_account: loginUser[0].account,
+      friend_accounts: list
+    })
+      .then((res) => {
+        if (res.code === 200) {
+          for (let i = 0; i < res.info.length; i++) {
+            void addDb(res.info[i]);
+          }
+        }
+      })
+      .catch((err) => console.log('出错了', err));
+
+    updateUserInfo(loginUser[0].account)
+      .then((res) => {
+        apiUserDetailInfo({
+          user_account: loginUser[0].account,
+          accounts: res
+        })
+          .then((userinfos) => {
+            if (userinfos.code === 200) {
+              void insertUserInfo(userinfos.info);
+            }
+          })
+          .catch((err) => console.log('出错了', err));
+      })
+      .catch((err) => console.log('出错了', err));
+  }
+
   // 点击人物卡片获取account
   useEffect(() => {
+    // 加载用户的信息，是否存在差异
+    void loadAllFriends();
+
     if (GetTtakLoginUser() !== '') {
       void onGetOnlineStatus().then((res) => {
         genUserList((list) => {
@@ -60,11 +103,7 @@ export function UserList(props: UserListProps): JSX.Element {
         });
       });
     }
-
-    
   }, []);
-
-  // console.log(userData);
 
   return (
     <div className={styles.container}>

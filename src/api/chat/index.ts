@@ -104,21 +104,6 @@ export const apiUpdateReadFlag = async (data: {
 /**
  * 点击通讯录就更新拉取信息，比对更新信息
  */
-
-interface apiLoadMyfriendsRes extends CommonRes {
-  info: string[];
-}
-
-export const apiLoadMyfriends = async (data: {
-  friend_account: string;
-}): Promise<apiLoadMyfriendsRes> =>
-  await request.post<apiLoadMyfriendsRes>(`/ttalk/loadAllfriend`, data, {
-    timeout: 15000
-  });
-
-/**
- * 获取concat
- */
 export interface concatRes {
   id: string;
   user_account: string;
@@ -134,14 +119,42 @@ export interface concatRes {
   type: 'accept' | 'apply';
 }
 
-interface apiLoadConcatType extends CommonRes {
+interface apiLoadMyfriendsRes extends CommonRes {
   info: concatRes[];
 }
 
-export const apiLoadConcat = async (data: {
+export const apiLoadMyfriends = async (data: {
+  user_account: string;
+  friend_accounts: string[];
+}): Promise<apiLoadMyfriendsRes> =>
+  await request.post<apiLoadMyfriendsRes>(`/ttalk/loadAllfriend`, data, {
+    timeout: 15000
+  });
+
+/**
+ * 获取concat
+ */
+
+export interface userInfoRes {
+  account: string;
+  nickname: string;
+  bird_date: string;
+  social: string;
+  motto: string;
+  avatar: string;
+  ip: string;
+  add_time: string;
+  update_time: string;
+}
+
+interface apiLoadConcatType extends CommonRes {
+  info: userInfoRes[];
+}
+
+export const apiUserDetailInfo = async (data: {
   user_account: string;
   accounts: string[];
 }): Promise<apiLoadConcatType> =>
-  await request.post<apiLoadConcatType>(`/ttalk/loadConcat`, data, {
+  await request.post<apiLoadConcatType>(`/ttalk/getUserDetailInfo`, data, {
     timeout: 15000
   });

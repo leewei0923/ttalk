@@ -95,7 +95,7 @@ export function UserInfo(props: userInfoType): JSX.Element {
 
             <p className={styles.nickname}>
               {typeof userInfoData === 'object' &&
-              userInfoData?.nickname.length > 1
+              (userInfoData?.nickname ?? '').length > 1
                 ? userInfoData?.nickname
                 : account}
             </p>

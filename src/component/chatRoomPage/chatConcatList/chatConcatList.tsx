@@ -1,4 +1,3 @@
-import { apiLoadMyfriends } from '@src/api/chat';
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
 import { TosortTheConcat, UpdateConcatList } from '@src/database/setConcatList';
@@ -103,13 +102,6 @@ export function ChatConcatList(props: ChatConcatProps): JSX.Element {
       updateUserInfo(account);
     }
   };
-
-  function loadAllFriends() {
-    if (loginUser === '') return;
-    apiLoadMyfriends(loginUser[0].account).then((res) => {
-      
-    });
-  }
 
   useEffect(() => {
     void getDataBaseConcatList();
