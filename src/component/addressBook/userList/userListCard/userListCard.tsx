@@ -1,5 +1,7 @@
 import { Avatar } from '@arco-design/web-react';
-import React from 'react';
+import { readFriendRemark } from '@src/database/read/readFriend';
+import { firstValidNumber } from '@src/util/util';
+import React, { useEffect, useState } from 'react';
 import styles from './userListCard.module.scss';
 
 interface UserListCardPropsType {
@@ -12,6 +14,19 @@ interface UserListCardPropsType {
 
 export function UserListCard(props: UserListCardPropsType): JSX.Element {
   const { avatarUrl, name, status, account, onClick } = props;
+
+  /**
+   * 规范昵称
+   */
+  const [nickname, setNickname] = useState('');
+  async function nicknameFunc(): Promise<void> {
+    const remark = await readFriendRemark(account);
+    setNickname(firstValidNumber([remark, name, account]));
+  }
+
+  useEffect(() => {
+    void nicknameFunc();
+  }, [account]);
 
   return (
     <div
@@ -32,9 +47,7 @@ export function UserListCard(props: UserListCardPropsType): JSX.Element {
             : account?.charAt(0)}
         </Avatar>
       )}
-      <p className={styles.name}>
-        {typeof name === 'string' && name.length > 0 ? name : account}
-      </p>
+      <p className={styles.name}>{nickname}</p>
 
       <div className={styles.status_box}>
         <span

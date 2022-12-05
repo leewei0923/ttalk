@@ -1,10 +1,12 @@
 import { GetTtakLoginUser } from '@src/common/personInfo';
 import { db } from '@src/database/db';
+import { readFriendRemark } from '@src/database/read/readFriend';
 import { TosortTheConcat, UpdateConcatList } from '@src/database/setConcatList';
 import { selectGlobalAccount, setGlobalAccount } from '@src/redux/account';
 import { useAppSelector } from '@src/redux/hook';
 import { selectGlobalNotice, setDetailNotice } from '@src/redux/notice';
 import { trimmedDate } from '@src/util/handleTime';
+import { firstValidNumber } from '@src/util/util';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { ContcatSumaryCard } from '../contactSumaryCard/contactSummaryCard';
@@ -58,10 +60,15 @@ export function ChatConcatList(props: ChatConcatProps): JSX.Element {
         .first();
 
       if (friendInfo !== undefined) {
+        const remark = await readFriendRemark(friendInfo.account);
         list.push({
           account: friendInfo.account,
           avatar: friendInfo.avatar,
-          nickname: friendInfo.nickname,
+          nickname: firstValidNumber([
+            remark,
+            friendInfo.nickname,
+            friendInfo.account
+          ]),
           count: friendsRes[i].message_count,
           update_time: friendsRes[i].update_time,
           message: ''

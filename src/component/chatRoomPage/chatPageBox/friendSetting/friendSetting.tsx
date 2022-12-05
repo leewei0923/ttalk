@@ -246,11 +246,6 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
         <h3 className={styles.setting_title}>好友设置</h3>
 
         <div className={styles.items}>
-          <div className={styles.item}>
-            <p>聊天记录</p>
-            <IconRight style={{ fontSize: 20 }} />
-          </div>
-
           <div className={styles.item} onClick={onChatCloud}>
             <p>好友词云</p>
             <IconRight style={{ fontSize: 20 }} />
@@ -264,8 +259,6 @@ export function FriendSetting(props: friendSettingProps): JSX.Element {
               </div>
             );
           })}
-
-          <div className={styles.clear_btn}>清除聊天记录</div>
 
           <Button
             type="primary"
