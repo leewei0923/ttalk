@@ -96,8 +96,8 @@ export function ChatPageLeftBar(): JSX.Element {
     };
   }, [leftBarMood, socket]);
 
-  console.log();
 
+  
   return (
     <div className={styles.container}>
       {/* 头像 */}

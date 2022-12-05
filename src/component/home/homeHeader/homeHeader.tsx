@@ -22,7 +22,7 @@ export function HomeHeader(): JSX.Element {
   const genAvatar = (): string | JSX.Element => {
     if (loginAccount === '') return 'Hello';
 
-    if (loginAccount[0].avatar.length > 5) {
+    if ((loginAccount[0].avatar ?? '').length > 5) {
       return (
         <img
           src={loginAccount[0].avatar}
@@ -92,7 +92,12 @@ export function HomeHeader(): JSX.Element {
         <div className={styles.nav_item}>登录</div>
         <div className={styles.login}>
           <img src={avatar} className={styles.img} />
-          <div className={styles.login_out_btn}>退出</div>
+          <div
+            className={styles.login_out_btn}
+            style={{ visibility: loginAccount === '' ? 'hidden' : 'visible' }}
+          >
+            退出
+          </div>
         </div>
       </section>
 
@@ -102,8 +107,12 @@ export function HomeHeader(): JSX.Element {
         <div className={styles.left_box}>
           <a className={styles.link}>首页</a>
           <a className={styles.link}>了解新特性</a>
-          <a className={styles.link}>我的空间</a>
-          <a className={styles.link}>我的笔记</a>
+          <a className={styles.link} href="/chat/message">
+            我的空间
+          </a>
+          <a className={styles.link} href="/chat/collect">
+            我的笔记
+          </a>
         </div>
 
         <div className={styles.right_box}>
@@ -133,7 +142,12 @@ export function HomeHeader(): JSX.Element {
               });
             }}
           >
-            <button className={styles.login_out_btn}>退出</button>
+            <button
+              className={styles.login_out_btn}
+              style={{ visibility: loginAccount === '' ? 'hidden' : 'visible' }}
+            >
+              退出
+            </button>
           </Popconfirm>
         </div>
       </section>

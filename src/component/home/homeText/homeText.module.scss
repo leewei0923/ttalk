@@ -1,7 +1,7 @@
 .container {
   width: 100%;
   height: calc(100% - 50px);
-  background-color: #5e3434;
+  background-color: #F5F8FF;
 }
 
 .content {
@@ -14,7 +14,7 @@
   font-family: 'Lato', sans-serif;
   font-size: 35px;
   line-height: 40px;
-  color: #fff;
+  color: #0C296E;
 }
 
 .content_container {
@@ -39,7 +39,7 @@
 .content_container:after {
   position: absolute;
   top: 0;
-  color: #a04d16;
+  color: #3370FF;
   font-size: 42px;
   line-height: 40px;
   -webkit-animation-name: opacity;

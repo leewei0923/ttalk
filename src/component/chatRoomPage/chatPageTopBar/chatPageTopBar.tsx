@@ -72,6 +72,7 @@ export function ChatPageTopBar(): JSX.Element {
   const onSearchUser = async () => {
     const searchVal = searchRef.current?.value;
 
+    if (searchVal === undefined) return;
     // 先判断是不是自己账号
     if (searchVal === userInfo[0].account) {
       setButtonState('friend');
@@ -85,13 +86,13 @@ export function ChatPageTopBar(): JSX.Element {
       return;
     }
 
-    // 再在自己的数据库中查找
+    // // 再在自己的数据库中查找
     let contineFlag = true;
-
     db.friends
-      .where({
-        friend_account: searchVal,
-        friend_flag: false
+      .where('friend_account')
+      .equals(searchVal)
+      .filter((res) => {
+        return !res.friend_flag;
       })
       .toArray()
       .then(async (res) => {
@@ -494,8 +495,6 @@ export function ChatPageTopBar(): JSX.Element {
           friend_account: res.friend_account
         })
       );
-
-      
     }
   };
 

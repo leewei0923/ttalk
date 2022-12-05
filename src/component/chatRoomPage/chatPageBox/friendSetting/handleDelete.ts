@@ -13,9 +13,14 @@ export function onDeleteList(friend_account: string): void {
 export function deleteUser(loginAccount: string, friend_account: string): void {
   if (loginAccount === friend_account) return;
   db.friends
-    .where({
-      friend_account
-    })
+    .where(['user_account', 'friend_account'])
+    .equals([loginAccount, friend_account])
+    .delete()
+    .catch((err) => console.log('无法删除好友账号', err));
+
+  db.friends
+    .where(['user_account', 'friend_account'])
+    .equals([friend_account, loginAccount])
     .delete()
     .catch((err) => console.log('无法删除好友账号', err));
 
