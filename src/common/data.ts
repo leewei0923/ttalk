@@ -1,9 +1,9 @@
-import IconExpressionlessFace from 'src/images/icon/expressionless_face_color.svg';
-import grinningFaceWithSmilingEyes from 'src/images/icon/grinning_face_with_smiling_eyes_color.svg';
-import loudlyCryingFace from 'src/images/icon/loudly_crying_face_color.svg';
-import pleadingFace from 'src/images/icon/pleading_face_color.svg';
-import smilingFaceWithSmilingEyes from 'src/images/icon/smiling_face_with_smiling_eyes_color.svg';
-import worriedFace from 'src/images/icon/worried_face_color.svg';
+import IconExpressionlessFace from '@src/images/icon/expressionless_face_color.svg';
+import grinningFaceWithSmilingEyes from '@src/images/icon/grinning_face_with_smiling_eyes_color.svg';
+import loudlyCryingFace from '@src/images/icon/loudly_crying_face_color.svg';
+import pleadingFace from '@src/images/icon/pleading_face_color.svg';
+import smilingFaceWithSmilingEyes from '@src/images/icon/smiling_face_with_smiling_eyes_color.svg';
+import worriedFace from '@src/images/icon/worried_face_color.svg';
 
 export interface MoodDataType {
   name: string;
